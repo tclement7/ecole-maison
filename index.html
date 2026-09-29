@@ -1,0 +1,2236 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>L'école à la maison</title>
+<link rel="manifest" href="manifest.webmanifest">
+<meta name="theme-color" content="#221E4E">
+<link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="École">
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;600;700;800&display=swap');
+:root{
+  --encre:#221E4E; --encre-clair:#3A3579; --encre-fonce:#1A1740;
+  --craie:#F4F6FF; --gris:#C9C5F0; --pale:#A9A4E0;
+  --citron:#FFC94A; --menthe:#3FC1A0; --framboise:#F0567F; --bleu:#6CA8FF;
+  --r-u:#FF9F43; --r-d:#3FC1A0; --r-c:#6CA8FF; --r-m:#B38CFF; --r-dm:#F0567F;
+  --accent:var(--menthe);
+  --rayon:18px;
+  --police:'Baloo 2', ui-rounded, 'Segoe UI Rounded', system-ui, -apple-system, sans-serif;
+}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+[hidden]{display:none !important}
+html,body{min-height:100%}
+body{font-family:var(--police);color:var(--craie);background-color:var(--encre);
+  background-image:radial-gradient(rgba(244,246,255,.10) 1.5px, transparent 1.6px);
+  background-size:26px 26px;background-position:13px 13px;
+  display:flex;justify-content:center;
+  padding:calc(18px + env(safe-area-inset-top)) 16px calc(24px + env(safe-area-inset-bottom))}
+.appli{width:100%;max-width:560px}
+.ecran{display:flex;flex-direction:column;gap:18px}
+h1{font-size:1.9rem;font-weight:800;line-height:1.05}
+h2{font-size:1.25rem;font-weight:800;color:var(--citron)}
+p.consigne{font-weight:600;color:var(--gris);line-height:1.45}
+button{font-family:var(--police);color:inherit;cursor:pointer}
+button:focus-visible,input:focus-visible,summary:focus-visible{outline:4px solid var(--citron);outline-offset:3px}
+
+.bouton{font-size:1.25rem;font-weight:800;border:0;border-radius:var(--rayon);padding:14px 18px;
+  background:var(--accent);color:var(--encre);box-shadow:0 5px 0 rgba(0,0,0,.28)}
+.bouton:active{transform:translateY(3px);box-shadow:0 2px 0 rgba(0,0,0,.28)}
+.bouton.second{background:transparent;color:var(--craie);border:2.5px solid var(--encre-clair);box-shadow:none}
+.bouton.petit{font-size:1rem;padding:8px 14px}
+.lien{background:none;border:0;color:var(--pale);font-weight:700;font-size:1rem;text-decoration:underline;padding:6px}
+.pile{display:flex;flex-direction:column;gap:10px}
+.ligne{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+.ligne > .bouton{flex:1}
+
+/* profils */
+.profils{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.profil{border:3px solid var(--encre-clair);background:var(--encre-fonce);border-radius:24px;padding:20px 10px;
+  display:flex;flex-direction:column;align-items:center;gap:4px}
+.profil .ava{font-size:3.6rem;line-height:1}
+.profil b{font-size:1.6rem;font-weight:800}
+.profil small{color:var(--pale);font-weight:700;font-size:1rem}
+
+/* accueil */
+.tete{display:flex;align-items:center;gap:12px}
+.tete .ava{font-size:2.6rem;background:var(--encre-fonce);border:3px solid var(--accent);border-radius:50%;
+  width:64px;height:64px;display:grid;place-items:center}
+.tete .qui{flex:1}
+.tete .qui small{display:block;color:var(--pale);font-weight:700}
+.modules{display:grid;gap:12px}
+.module{display:flex;align-items:center;gap:14px;text-align:left;border:3px solid var(--encre-clair);
+  background:var(--encre-fonce);border-radius:22px;padding:14px 16px}
+.module .ico{font-size:2rem;font-weight:800;width:58px;height:58px;border-radius:16px;display:grid;place-items:center;
+  background:var(--c,var(--menthe));color:var(--encre);flex:none}
+.module b{display:block;font-size:1.3rem;font-weight:800}
+.module small{color:var(--pale);font-weight:600;font-size:.98rem}
+
+/* choix tables */
+.grille-tables{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
+.jeton{font-size:1.6rem;font-weight:800;aspect-ratio:1;border:2.5px solid var(--encre-clair);border-radius:var(--rayon);background:transparent}
+.jeton[aria-pressed="true"]{background:var(--citron);border-color:var(--citron);color:var(--encre)}
+.segments{display:flex;gap:8px}
+.segments button{flex:1;font-size:1.05rem;font-weight:800;border:2.5px solid var(--encre-clair);background:transparent;border-radius:14px;padding:8px 4px}
+.segments button[aria-pressed="true"]{background:var(--craie);color:var(--encre);border-color:var(--craie)}
+.etiq{font-weight:700;color:var(--pale);font-size:.98rem;margin-bottom:6px;display:block}
+
+/* écran de calcul */
+.barre-haut{display:flex;align-items:center;gap:10px}
+.barre-haut .titre{flex:1;font-weight:800;font-size:1.1rem}
+.badge{display:inline-block;background:var(--citron);color:var(--encre);border-radius:999px;padding:1px 12px;font-weight:800;font-size:.95rem}
+.progres{height:10px;background:var(--encre-clair);border-radius:99px;overflow:hidden}
+.progres i{display:block;height:100%;width:0;background:var(--accent);transition:width .3s}
+.chrono{height:8px;background:var(--encre-clair);border-radius:99px;overflow:hidden}
+.chrono i{display:block;height:100%;width:100%;background:var(--citron)}
+.enonce{text-align:center;font-size:clamp(2.4rem,10vw,3.6rem);font-weight:800;line-height:1.1;letter-spacing:.01em}
+.enonce.long{font-size:clamp(1.9rem,8vw,2.8rem)}
+.reponse{text-align:center;font-size:2.6rem;font-weight:800;min-height:72px;border:3px dashed var(--encre-clair);border-radius:var(--rayon);
+  padding:4px 10px;color:var(--citron)}
+.reponse.ok{border:3px solid var(--menthe);color:var(--menthe)}
+.reponse.ko{border:3px solid var(--framboise);color:var(--framboise)}
+.retour{text-align:center;font-weight:800;font-size:1.3rem;min-height:1.6em}
+.retour.ok{color:var(--menthe)} .retour.ko{color:var(--framboise)}
+.aide{text-align:center;font-weight:700;color:var(--gris);line-height:1.4}
+.monte{text-align:center;font-weight:800;color:var(--citron);font-size:1.15rem}
+.correction{background:var(--encre-fonce);border-radius:var(--rayon);padding:12px 14px;font-weight:700;font-size:1.15rem;line-height:1.7;overflow-x:auto}
+.correction .rg{font-weight:800}
+.pave{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.pave button{font-size:1.9rem;font-weight:800;border:0;border-radius:var(--rayon);padding:12px 0;background:var(--encre-clair)}
+.pave button:active{background:var(--encre-fonce)}
+.pave .valider{background:var(--accent);color:var(--encre)}
+
+/* fractions */
+.frac{display:inline-flex;flex-direction:column;align-items:center;font-weight:800;line-height:1;vertical-align:middle}
+.frac b{padding:0 .15em .08em}
+.frac i{font-style:normal;border-top:.09em solid currentColor;padding:.08em .15em 0}
+.modele{display:flex;justify-content:center;align-items:center;min-height:130px;font-size:3.6rem}
+.modele svg{width:180px;height:auto}
+.choix{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.choix button,.paires button{background:var(--craie);color:var(--encre);border:4px solid var(--craie);border-radius:var(--rayon);
+  padding:10px;display:flex;align-items:center;justify-content:center;min-height:110px;font-size:2.4rem}
+.choix button svg{width:100%;max-width:150px;height:auto}
+.choix button.ok,.paires button.ok{border-color:var(--menthe);background:#D8F5EC}
+.choix button.ko,.paires button.ko{border-color:var(--framboise);background:#FFDDE6}
+.paires{display:grid;grid-template-columns:1fr 1.4fr;gap:10px 14px}
+.paires .col{display:flex;flex-direction:column;gap:10px}
+.paires button{min-height:84px;font-size:2rem;padding:6px}
+.paires button svg{width:100%;max-width:120px;max-height:70px}
+.paires button.sel{border-color:var(--citron);box-shadow:0 0 0 3px var(--citron)}
+.paires button.fait{opacity:.45}
+
+/* bilan & suivi */
+.score{text-align:center}
+.score .gros{font-size:4.2rem;font-weight:800;line-height:1;color:var(--citron)}
+.score .sur{color:var(--pale);font-weight:700}
+.mot{text-align:center;font-weight:700;color:var(--gris);line-height:1.45}
+.carte{background:var(--encre-fonce);border:2.5px solid var(--encre-clair);border-radius:20px;padding:14px 16px;display:flex;flex-direction:column;gap:10px}
+.carte ul{list-style:none;display:flex;flex-direction:column;gap:6px}
+.carte li{font-weight:700;line-height:1.35}
+.carte li small{display:block;color:var(--pale);font-weight:600}
+li.faute{color:var(--framboise)} li.lent{color:var(--citron)}
+.legende{color:var(--pale);font-weight:600;font-size:.95rem;line-height:1.4}
+.onglets{display:flex;gap:8px}
+.onglets button{flex:1;font-weight:800;font-size:1rem;border:2.5px solid var(--encre-clair);background:transparent;border-radius:14px;padding:8px 2px}
+.onglets button[aria-pressed="true"]{background:var(--accent);border-color:var(--accent);color:var(--encre)}
+.jauge{display:grid;grid-template-columns:minmax(90px,38%) 1fr auto;gap:10px;align-items:center;font-weight:700}
+.jauge .fond{height:14px;background:var(--encre-clair);border-radius:99px;overflow:hidden}
+.jauge .fond i{display:block;height:100%;border-radius:99px}
+.jauge span:last-child{color:var(--pale);font-size:.92rem;white-space:nowrap}
+details{border-top:1.5px solid var(--encre-clair);padding-top:6px}
+details:first-of-type{border-top:0}
+summary{list-style:none;cursor:pointer}
+summary::-webkit-details-marker{display:none}
+.faits{display:flex;flex-wrap:wrap;gap:6px;padding:8px 0 4px}
+.fait{border-radius:10px;padding:2px 8px;font-weight:700;font-size:.92rem;background:var(--encre-clair)}
+.fait.v{background:#1f5f50} .fait.j{background:#6b5520} .fait.r{background:#6e2640} .fait.n{opacity:.5}
+.courbe{width:100%;height:auto}
+.alerte{background:#6e2640;border-radius:14px;padding:10px 12px;font-weight:700}
+input.champ{font-family:var(--police);font-size:1.1rem;font-weight:700;padding:10px 12px;border-radius:14px;border:2.5px solid var(--encre-clair);
+  background:var(--encre-fonce);color:var(--craie);width:100%}
+/* lecture */
+.textes{display:grid;gap:10px}
+.textes button{text-align:left;border:3px solid var(--encre-clair);background:var(--encre-fonce);border-radius:18px;padding:12px 14px}
+.textes b{display:block;font-size:1.2rem;font-weight:800}
+.textes small{color:var(--pale);font-weight:600;font-size:.95rem}
+.chrono-lec{display:flex;align-items:center;gap:12px;font-weight:800;font-size:1.2rem;position:sticky;top:env(safe-area-inset-top,0px);z-index:5;
+  background:var(--encre);padding:10px 0;margin:-10px 0}
+.chrono-lec.fin{color:var(--framboise)}
+#s-lecture{padding-bottom:96px}
+.voile{position:fixed;inset:0;z-index:20;display:grid;place-items:center;background:rgba(26,23,64,.45);cursor:pointer;padding:24px}
+.voile div{background:var(--citron);color:var(--encre);border-radius:28px;padding:26px 30px;text-align:center;box-shadow:0 12px 40px rgba(0,0,0,.4)}
+.voile b{display:block;font-size:clamp(2.2rem,9vw,3.4rem);font-weight:800;line-height:1.05}
+.voile small{display:block;margin-top:8px;font-size:1.1rem;font-weight:700}
+.alerte-fin{position:fixed;left:0;right:0;bottom:0;z-index:10;background:var(--citron);color:var(--encre);
+  padding:12px 16px calc(12px + env(safe-area-inset-bottom,0px));display:flex;align-items:center;justify-content:center;gap:14px;
+  font-weight:800;font-size:1.15rem;box-shadow:0 -6px 20px rgba(0,0,0,.35)}
+.alerte-fin span{flex:1;max-width:380px;line-height:1.25}
+.alerte-fin .bouton{background:var(--encre);color:var(--craie);flex:none}
+.chrono-lec .chrono{flex:1;height:12px}
+.texte{background:var(--craie);color:var(--encre);border-radius:var(--rayon);padding:18px;font-size:1.5rem;line-height:1.95;font-weight:600}
+.texte .m{border-radius:6px;padding:0 2px;cursor:pointer}
+.texte .m.err{background:#FFC2D1;color:#9B1239;text-decoration:line-through;text-decoration-thickness:2px}
+.texte .m.apres{opacity:.28}
+.texte .m.dernier{background:#FFE08A;box-shadow:0 0 0 3px var(--citron)}
+.texte.cache{filter:blur(7px);user-select:none;pointer-events:none}
+.texte .m.guide{background:#FFE08A;box-shadow:0 0 0 3px #FFE08A}
+.texte .sep{display:inline-block;width:3px;height:1.05em;background:#B7B3E3;margin:0 .3em;vertical-align:-.12em;border-radius:2px}
+.flottant{position:fixed;right:16px;bottom:calc(16px + env(safe-area-inset-bottom,0px));z-index:10;box-shadow:0 6px 18px rgba(0,0,0,.4)}
+.vitesse{justify-content:center;gap:16px}
+.vitesse b{font-size:1.5rem;font-weight:800;min-width:8ch;text-align:center}
+.vitesse .bouton{font-size:1.6rem;width:56px;padding:4px 0}
+.flash{background:var(--craie);color:var(--encre);border-radius:24px;min-height:200px;display:grid;place-items:center;text-align:center;
+  font-size:clamp(2.2rem,9vw,3.4rem);font-weight:800;padding:18px;line-height:1.15}
+.flash.masque{color:#B7B3E3;letter-spacing:.3em}
+.flash.revele{color:var(--framboise)}
+.flash.fix{color:#8A86C2}
+.duo{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.duo .bouton{font-size:1.4rem;padding:18px 10px}
+.duo .ko{background:var(--framboise)}
+.mission{border-color:var(--citron)}
+.mission h2{display:flex;justify-content:space-between;align-items:center;gap:8px}
+.mission h2 small{color:var(--pale);font-size:.95rem;font-weight:700}
+.etapes{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.etape{border:2px dashed var(--encre-clair);border-radius:12px;padding:6px 10px;font-weight:700;color:var(--pale)}
+.etape.fait{border:2px solid var(--menthe);background:#1f5f50;color:var(--craie)}
+.module.verrou{opacity:.55;border-style:dashed}
+.fete{background:var(--citron);color:var(--encre);border-radius:18px;padding:12px 14px;font-weight:800;text-align:center;font-size:1.15rem}
+.p-profil .ligne .bouton{font-size:1rem;padding:10px 12px}
+.hist li{display:flex;align-items:center;gap:10px}
+.hist li > span{flex:1}
+.poubelle{background:transparent;border:2px solid var(--encre-clair);border-radius:12px;font-size:1.15rem;width:44px;height:40px;flex:none}
+.poubelle:active{background:#6e2640}
+.arme{background:var(--framboise) !important;color:#fff !important;border-color:var(--framboise) !important;text-decoration:none !important}
+.poubelle.arme{width:auto;padding:0 12px;font-size:1rem;font-weight:800}
+.hist summary{font-weight:800;color:var(--citron)}
+.points-code{display:flex;justify-content:center;gap:18px;margin:6px 0}
+.points-code i{width:22px;height:22px;border-radius:50%;border:3px solid var(--craie)}
+.points-code i.plein{background:var(--craie)}
+.enq{font-weight:800;font-size:1.2rem;line-height:1.35}
+.compte{text-align:center;font-size:3rem;font-weight:800;color:var(--citron);line-height:1}
+.proso{display:grid;gap:8px}
+.proso button{text-align:left;border:2.5px solid var(--encre-clair);background:transparent;border-radius:14px;padding:10px 12px;font-weight:800;font-size:1.05rem}
+.proso button small{display:block;font-weight:600;color:var(--pale)}
+.proso button[aria-pressed="true"]{background:var(--accent);color:var(--encre);border-color:var(--accent)}
+.proso button[aria-pressed="true"] small{color:var(--encre)}
+.puces{display:flex;flex-wrap:wrap;gap:6px}
+@media (prefers-reduced-motion:no-preference){
+  .secoue{animation:secoue .35s}
+  @keyframes secoue{25%{transform:translateX(-6px)}75%{transform:translateX(6px)}}
+}
+</style>
+</head>
+<body>
+<div class="appli">
+
+<!-- ===== Profils ===== -->
+<section class="ecran" id="s-profils">
+  <h1>Qui travaille aujourd'hui ?</h1>
+  <div class="profils" id="liste-profils"></div>
+  <button class="bouton second" id="pr-parents">Suivi des parents</button>
+  <p class="alerte" id="alerte-stock" hidden>Ce navigateur bloque l'enregistrement : les séances ne seront pas gardées après fermeture.</p>
+</section>
+
+<!-- ===== Code parents ===== -->
+<section class="ecran" id="s-code" hidden>
+  <div class="barre-haut"><button class="bouton second petit" id="co-annuler">Annuler</button><span class="titre" id="co-entete">Espace parents</span></div>
+  <h1 id="co-titre" style="text-align:center"></h1>
+  <p class="consigne" id="co-texte" style="text-align:center"></p>
+  <div class="points-code" id="co-points"><i></i><i></i><i></i><i></i></div>
+  <p class="retour ko" id="co-msg" aria-live="polite"></p>
+  <div class="pave" id="co-pave">
+    <button data-k="1">1</button><button data-k="2">2</button><button data-k="3">3</button>
+    <button data-k="4">4</button><button data-k="5">5</button><button data-k="6">6</button>
+    <button data-k="7">7</button><button data-k="8">8</button><button data-k="9">9</button>
+    <button data-k="del" aria-label="Effacer">⌫</button><button data-k="0">0</button><span></span>
+  </div>
+  <div class="pile" id="co-recup" hidden>
+    <label class="etiq" for="co-mail">Adresse mail enregistrée dans l'espace parents</label>
+    <input class="champ" id="co-mail" type="email" autocomplete="off">
+    <button class="bouton" id="co-mail-ok">Valider</button>
+  </div>
+  <button class="lien" id="co-oubli" hidden>Code oublié ?</button>
+  <p class="legende" id="co-oubli-enfant" hidden style="text-align:center">Code oublié ? Demande à un parent, il peut le retrouver dans le suivi des parents.</p>
+</section>
+
+<!-- ===== Vue parents ===== -->
+<section class="ecran" id="s-vue-parents" hidden>
+  <div class="barre-haut"><button class="bouton second petit" id="vp-retour">Retour</button><span class="titre">Suivi des parents</span></div>
+  <div class="pile" id="vp-contenu"></div>
+</section>
+
+<!-- ===== Accueil ===== -->
+<section class="ecran" id="s-accueil" hidden>
+  <div class="tete">
+    <button class="ava" id="a-ava" aria-label="Changer d'avatar"></button>
+    <div class="qui"><h1 id="a-nom"></h1><small id="a-classe"></small></div>
+    <button class="bouton second petit" id="a-changer">Changer</button>
+  </div>
+  <p class="fete" id="a-fete" hidden></p>
+  <div class="carte mission" id="a-mission">
+    <h2>Mission du jour <small id="a-etoiles"></small></h2>
+    <div class="etapes" id="a-etapes"></div>
+    <p class="legende" id="a-mission-leg"></p>
+  </div>
+  <div class="modules">
+    <button class="module" data-module="tables" style="--c:var(--citron)"><span class="ico">×</span>
+      <span><b>Tables de multiplication</b><small id="a-sub-tables">Choisis tes tables</small></span></button>
+    <button class="module" id="a-mod-arbre" data-module="arbre" style="--c:var(--menthe)"><span class="ico">+</span>
+      <span><b>L'arbre à calculs</b><small id="a-sub-arbre"></small></span></button>
+    <button class="module" data-module="fractions" style="--c:var(--bleu)"><span class="ico"><span class="frac" style="font-size:1.1rem"><b>1</b><i>2</i></span></span>
+      <span><b>Les fractions</b><small id="a-sub-fractions"></small></span></button>
+    <button class="module" data-module="lecture" style="--c:var(--framboise)"><span class="ico">Aa</span>
+      <span><b>Lecture à voix haute</b><small>Chronométrée ou guidée, avec un adulte</small></span></button>
+    <button class="module" data-module="flash" style="--c:#FF9F43"><span class="ico">⚡</span>
+      <span><b>Lecture flash</b><small id="a-sub-flash"></small></span></button>
+  </div>
+  <button class="bouton" id="a-progres">Mes progrès</button>
+  <button class="lien" id="a-parents">Espace parents</button>
+</section>
+
+<!-- ===== Choix des tables ===== -->
+<section class="ecran" id="s-tables" hidden>
+  <div class="barre-haut"><button class="bouton second petit" data-retour>Retour</button><span class="titre">Tables de multiplication</span></div>
+  <p class="consigne">Quelles tables veux-tu réviser ?</p>
+  <p class="legende" id="t-mission-info" hidden>Pour la mission du jour : au moins 5 calculs des tables de 2 à 9 (celles de 0, 1 et 10 ne comptent pas) et une série globalement réussie.</p>
+  <div class="grille-tables" id="t-grille"></div>
+  <div class="ligne"><button class="bouton second petit" id="t-toutes">Toutes</button><button class="bouton second petit" id="t-aucune">Aucune</button></div>
+  <div><span class="etiq">Nombre de calculs</span>
+    <div class="segments" id="t-longueur"><button data-v="10">10</button><button data-v="20">20</button><button data-v="all">Tout</button></div></div>
+  <div><span class="etiq">Temps pour répondre</span>
+    <div class="segments" id="t-limite"><button data-v="10">10 s</button><button data-v="20">20 s</button><button data-v="30">30 s</button></div></div>
+  <button class="bouton" id="t-go" disabled>C'est parti</button>
+</section>
+
+<!-- ===== Calcul (tables et arbre) ===== -->
+<section class="ecran" id="s-calcul" hidden>
+  <div class="barre-haut"><span class="titre" id="c-titre"></span><button class="bouton second petit" id="c-stop">Arrêter</button></div>
+  <div class="progres"><i id="c-prog"></i></div>
+  <div class="chrono" id="c-chrono-zone"><i id="c-chrono"></i></div>
+  <p class="aide" id="c-aide"></p>
+  <div class="enonce" id="c-enonce"></div>
+  <div class="reponse" id="c-reponse" aria-live="polite"></div>
+  <p class="retour" id="c-retour" aria-live="polite"></p>
+  <p class="aide" id="c-diag" hidden></p>
+  <div class="correction" id="c-correction" hidden></div>
+  <p class="monte" id="c-monte" hidden></p>
+  <button class="bouton" id="c-suivant" hidden>Suivant</button>
+  <div class="pave" id="c-pave">
+    <button data-k="1">1</button><button data-k="2">2</button><button data-k="3">3</button>
+    <button data-k="4">4</button><button data-k="5">5</button><button data-k="6">6</button>
+    <button data-k="7">7</button><button data-k="8">8</button><button data-k="9">9</button>
+    <button data-k="del" aria-label="Effacer">⌫</button><button data-k="0">0</button><button data-k="ok" class="valider" aria-label="Valider">✓</button>
+  </div>
+</section>
+
+<!-- ===== Fractions ===== -->
+<section class="ecran" id="s-fractions" hidden>
+  <div class="barre-haut"><span class="titre" id="f-titre"></span><button class="bouton second petit" id="f-stop">Arrêter</button></div>
+  <div class="progres"><i id="f-prog"></i></div>
+  <p class="consigne" id="f-consigne" style="text-align:center;font-size:1.2rem"></p>
+  <div class="modele" id="f-modele"></div>
+  <div class="choix" id="f-choix"></div>
+  <div class="paires" id="f-paires" hidden><div class="col" id="f-gauche"></div><div class="col" id="f-droite"></div></div>
+  <p class="retour" id="f-retour" aria-live="polite"></p>
+  <p class="aide" id="f-diag" hidden></p>
+  <p class="monte" id="f-monte" hidden></p>
+  <button class="bouton" id="f-suivant" hidden>Suivant</button>
+</section>
+
+<!-- ===== Lecture : choix du texte ===== -->
+<section class="ecran" id="s-lecture-choix" hidden>
+  <div class="barre-haut"><button class="bouton second petit" data-retour>Retour</button><span class="titre">Lecture à voix haute</span></div>
+  <div class="onglets" id="l-classes"><button data-c="CE2">Textes CE2</button><button data-c="CM1">Textes CM1</button></div>
+  <div><span class="etiq">Façon de lire</span>
+    <div class="segments" id="l-mode"><button data-v="chrono">Chronométrée</button><button data-v="guidee">Guidée</button></div></div>
+  <div><span class="etiq">Groupes de sens</span>
+    <div class="segments" id="l-groupes"><button data-v="non">Texte normal</button><button data-v="oui">Découpé en groupes</button></div></div>
+  <div id="l-vitesse-zone" hidden><span class="etiq">Vitesse du guide</span>
+    <div class="ligne vitesse"><button class="bouton second" id="l-moins" aria-label="Moins vite">−</button><b id="l-vitesse"></b><button class="bouton second" id="l-plus" aria-label="Plus vite">+</button></div>
+    <p class="legende" id="l-vitesse-leg"></p></div>
+  <p class="consigne">Choisis un texte. Relire le même texte plusieurs fois dans la semaine, c'est la meilleure façon de gagner en fluidité.</p>
+  <div class="textes" id="l-liste"></div>
+</section>
+
+<!-- ===== Lecture : séance ===== -->
+<section class="ecran" id="s-lecture" hidden>
+  <div class="barre-haut"><span class="titre" id="l-titre"></span><button class="bouton second petit" id="l-stop">Arrêter</button></div>
+  <div class="chrono-lec"><div class="chrono"><i id="l-chrono"></i></div><span id="l-sec">60 s</span></div>
+  <p class="aide" id="l-consigne"></p>
+  <button class="bouton" id="l-demarrer">Démarrer</button>
+  <p class="compte" id="l-compte" hidden aria-live="assertive"></p>
+  <div class="texte" id="l-texte"></div>
+  <button class="bouton" id="l-fini" hidden>Elle a fini le texte</button>
+</section>
+<div class="voile" id="l-voile" hidden role="alert">
+  <div><b>Temps écoulé !</b><small>Touche l'écran pour continuer</small></div>
+</div>
+<div class="alerte-fin" id="l-alerte" hidden>
+  <span>Temps écoulé ! Touche le dernier mot lu.</span>
+  <button class="bouton" id="l-valider">Valider</button>
+</div>
+
+<!-- ===== Lecture guidée ===== -->
+<section class="ecran" id="s-guidee" hidden>
+  <div class="barre-haut"><span class="titre" id="g-titre"></span><button class="bouton second petit" id="g-stop">Arrêter</button></div>
+  <div class="progres"><i id="g-prog"></i></div>
+  <p class="aide" id="g-consigne"></p>
+  <button class="bouton" id="g-demarrer">Démarrer</button>
+  <p class="compte" id="g-compte" hidden aria-live="assertive"></p>
+  <div class="texte" id="g-texte"></div>
+  <div class="carte" id="g-avis" hidden>
+    <h2>Pour l'adulte : le guide allait…</h2>
+    <div class="proso" id="g-avis-btns">
+      <button data-f="0.9">Trop vite<small>Elle a décroché ou s'est essoufflée. On ralentit un peu.</small></button>
+      <button data-f="1.03">Bien<small>Elle a suivi en faisant un effort. On accélère très légèrement.</small></button>
+      <button data-f="1.1">Trop lentement<small>Elle attendait le guide. On accélère.</small></button>
+    </div>
+  </div>
+  <div class="carte" id="g-enigme" hidden>
+    <h2>🧩 L'énigme</h2>
+    <p class="enq" id="g-eq"></p>
+    <div class="ligne"><input class="champ" id="g-er" inputmode="numeric" autocomplete="off" placeholder="Ta réponse" style="flex:1;min-width:0"><button class="bouton petit" id="g-ev">Vérifier</button></div>
+    <p class="retour" id="g-eres"></p>
+    <button class="lien" id="g-esol" hidden>Voir la solution</button>
+    <p class="legende" id="g-esol-txt" hidden></p>
+  </div>
+  <div class="ligne" id="g-fin-btns" hidden><button class="bouton" id="g-relire">Relire ce texte</button><button class="bouton second" id="g-autre">Autre texte</button></div>
+</section>
+<button class="bouton second flottant" id="g-pause" hidden style="background:var(--encre)">Pause</button>
+
+<!-- ===== Lecture flash ===== -->
+<section class="ecran" id="s-flash" hidden>
+  <div class="barre-haut"><span class="titre" id="fl-titre"></span><button class="bouton second petit" id="fl-stop">Arrêter</button></div>
+  <div class="progres"><i id="fl-prog"></i></div>
+  <p class="aide" id="fl-consigne"></p>
+  <div class="flash" id="fl-zone" aria-live="polite"></div>
+  <button class="bouton" id="fl-go">Commencer</button>
+  <div class="duo" id="fl-duo" hidden><button class="bouton" id="fl-ok">Lu ✓</button><button class="bouton ko" id="fl-ko">Pas lu</button></div>
+  <p class="monte" id="fl-monte" hidden></p>
+</section>
+
+<!-- ===== Lecture : résultat ===== -->
+<section class="ecran" id="s-lecture-fin" hidden>
+  <h1 id="lf-titre">Bilan de lecture</h1>
+  <div class="score"><div class="gros" id="lf-gros"></div><div class="sur">mots correctement lus par minute</div></div>
+  <p class="mot" id="lf-mot"></p>
+  <div class="carte"><h2>Pour l'adulte : comment était la lecture ?</h2><div class="proso" id="lf-proso"></div></div>
+  <div class="carte" id="lf-enigme" hidden>
+    <h2>🧩 L'énigme</h2>
+    <p class="enq" id="lf-eq"></p>
+    <details><summary class="lien">Revoir le texte</summary><div class="texte" id="lf-etexte" style="font-size:1.15rem;margin-top:8px"></div></details>
+    <div class="ligne"><input class="champ" id="lf-er" inputmode="numeric" autocomplete="off" placeholder="Ta réponse" style="flex:1;min-width:0"><button class="bouton petit" id="lf-ev">Vérifier</button></div>
+    <p class="retour" id="lf-eres"></p>
+    <button class="lien" id="lf-esol" hidden>Voir la solution</button>
+    <p class="legende" id="lf-esol-txt" hidden></p>
+  </div>
+  <div class="carte" id="lf-carte" hidden><h2>Mots à retravailler</h2><div class="puces" id="lf-mots"></div></div>
+  <div class="pile">
+    <button class="bouton" id="lf-relire">Relire ce texte</button>
+    <button class="bouton second" id="lf-autre">Choisir un autre texte</button>
+    <div class="ligne"><button class="bouton second" id="lf-progres">Mes progrès</button><button class="bouton second" id="lf-accueil">Accueil</button></div>
+  </div>
+</section>
+
+<!-- ===== Bilan ===== -->
+<section class="ecran" id="s-bilan" hidden>
+  <h1 id="b-titre">Bilan</h1>
+  <div class="score"><div class="gros" id="b-gros"></div><div class="sur" id="b-sur"></div></div>
+  <p class="mot" id="b-mot"></p>
+  <p class="fete" id="b-mission" hidden></p>
+  <div class="carte" id="b-carte" hidden><h2 id="b-carte-titre">À revoir</h2><ul id="b-liste"></ul><p class="legende" id="b-legende"></p></div>
+  <div class="pile">
+    <button class="bouton" id="b-erreurs" hidden>Refaire mes erreurs</button>
+    <button class="bouton" id="b-rejouer">Rejouer</button>
+    <div class="ligne"><button class="bouton second" id="b-progres">Mes progrès</button><button class="bouton second" id="b-accueil">Accueil</button></div>
+  </div>
+</section>
+
+<!-- ===== Progrès ===== -->
+<section class="ecran" id="s-progres" hidden>
+  <div class="barre-haut"><button class="bouton second petit" data-retour>Retour</button><span class="titre" id="p-titre">Mes progrès</span></div>
+  <div class="onglets" id="p-onglets">
+    <button data-o="tables">Tables</button><button data-o="arbre">Arbre</button><button data-o="fractions">Fractions</button><button data-o="lecture">Lecture</button>
+  </div>
+  <div class="pile" id="p-contenu"></div>
+</section>
+
+<!-- ===== Parents ===== -->
+<section class="ecran" id="s-parents" hidden>
+  <div class="barre-haut"><button class="bouton second petit" data-retour>Retour</button><span class="titre">Espace parents</span></div>
+  <div class="carte">
+    <h2 id="pa-titre"></h2>
+    <label class="etiq" for="pa-mail">Adresse mail pour recevoir les bilans (elle sert aussi à récupérer le code parents oublié)</label>
+    <input class="champ" id="pa-mail" type="email" autocomplete="email" placeholder="prenom@exemple.fr">
+    <button class="bouton" id="pa-envoyer">Envoyer le bilan par mail</button>
+    <button class="bouton second" id="pa-csv">Exporter l'historique (CSV)</button>
+    <button class="bouton second" id="pa-seances">Voir et gérer les séances</button>
+  </div>
+  <div class="carte">
+    <h2>Sauvegarde complète</h2>
+    <p class="legende">Toutes les données de la famille (les deux profils, les codes, les réglages et tout l'historique) dans un seul fichier. Sert à passer d'un appareil à l'autre ou à garder une sauvegarde.</p>
+    <button class="bouton second" id="pa-json">Exporter la sauvegarde</button>
+    <label class="bouton second" for="pa-import" style="text-align:center;cursor:pointer">Importer une sauvegarde</label>
+    <input type="file" id="pa-import" accept=".json,application/json" hidden>
+    <p class="retour" id="pa-import-msg" aria-live="polite"></p>
+    <button class="bouton" id="pa-import-ok" hidden>Remplacer les données de cet appareil</button>
+  </div>
+  <div class="carte">
+    <h2>Mission du jour</h2>
+    <p class="legende">Quand c'est activé, l'arbre à calculs ne s'ouvre qu'après une séance terminée de tables, de fractions, de lecture à voix haute et de lecture flash dans la journée.</p>
+    <div class="segments" id="pa-verrou"><button data-v="oui">Activée</button><button data-v="non">Désactivée</button></div>
+    <p class="legende">Réussite minimale pour valider chaque étape :</p>
+    <div><span class="etiq">Tables : réponses justes</span><div class="segments" data-seuil="tables"><button data-v="50">50 %</button><button data-v="60">60 %</button><button data-v="70">70 %</button><button data-v="80">80 %</button><button data-v="90">90 %</button></div></div>
+    <div><span class="etiq">Fractions : justes du premier coup</span><div class="segments" data-seuil="fractions"><button data-v="50">50 %</button><button data-v="60">60 %</button><button data-v="70">70 %</button><button data-v="80">80 %</button></div></div>
+    <div><span class="etiq">Lecture flash : mots lus</span><div class="segments" data-seuil="flash"><button data-v="50">50 %</button><button data-v="60">60 %</button><button data-v="70">70 %</button><button data-v="80">80 %</button></div></div>
+    <div><span class="etiq">Lecture chronométrée : part de sa moyenne récente</span><div class="segments" data-seuil="lecture"><button data-v="75">75 %</button><button data-v="80">80 %</button><button data-v="85">85 %</button><button data-v="90">90 %</button><button data-v="100">100 %</button></div></div>
+    <p class="legende">La moyenne récente est celle de ses 5 dernières lectures chronométrées. Tant qu'il y en a moins de 2, la lecture est validée d'office. La lecture guidée est validée sauf si tu indiques que le guide allait trop vite.</p>
+  </div>
+  <div class="carte">
+    <h2>Niveaux</h2>
+    <p class="legende">Les niveaux s'ajustent tout seuls. Tu peux aussi les régler ici.</p>
+    <div><span class="etiq">Arbre à calculs</span><div class="segments" id="pa-niv-arbre"></div></div>
+    <div><span class="etiq">Fractions</span><div class="segments" id="pa-niv-fractions"></div></div>
+    <div><span class="etiq">Lecture flash</span><div class="segments" id="pa-niv-flash"></div></div>
+  </div>
+  <div class="carte">
+    <h2>Effacer un historique</h2>
+    <p class="legende">Pratique après des essais faits par un adulte. Les niveaux atteints sont conservés, sauf pour la vitesse de lecture guidée qui repart de zéro.</p>
+    <div class="pile" id="pa-eff-modules">
+      <button class="bouton second petit" data-eff="lecture">Lecture à voix haute (chronométrée, guidée, énigmes)</button>
+      <button class="bouton second petit" data-eff="flash">Lecture flash</button>
+      <button class="bouton second petit" data-eff="tables">Tables de multiplication</button>
+      <button class="bouton second petit" data-eff="arbre">Arbre à calculs</button>
+      <button class="bouton second petit" data-eff="fractions">Fractions</button>
+    </div>
+    <p class="retour ok" id="pa-eff-msg" aria-live="polite"></p>
+  </div>
+  <button class="bouton second" id="pa-code">Changer le code parents</button>
+  <button class="lien" id="pa-effacer">Effacer tout l'historique de ce profil</button>
+</section>
+
+</div>
+
+<script>
+(function(){
+'use strict';
+/* ================= utilitaires ================= */
+var $ = function(id){ return document.getElementById(id); };
+var fmt = function(n){ return Number(n).toLocaleString('fr-FR'); };
+var rnd = function(a,b){ return a + Math.floor(Math.random()*(b-a+1)); };
+var pick = function(t){ return t[Math.floor(Math.random()*t.length)]; };
+function melanger(t){ t = t.slice(); for (var i=t.length-1;i>0;i--){ var j=Math.floor(Math.random()*(i+1)); var x=t[i]; t[i]=t[j]; t[j]=x; } return t; }
+function esc(s){ return String(s).replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c];}); }
+function dateCourte(d){ return new Date(d).toLocaleDateString('fr-FR',{day:'numeric',month:'short'}); }
+function pct(a,b){ return b ? Math.round(a/b*100) : 0; }
+function couleurPct(p){ return p>=80 ? 'var(--menthe)' : p>=55 ? 'var(--citron)' : 'var(--framboise)'; }
+function fracHTML(n,d,taille){ return '<span class="frac"'+(taille?' style="font-size:'+taille+'"':'')+'><b>'+n+'</b><i>'+d+'</i></span>'; }
+
+var ecranCourant = 's-profils', ecranPrecedent = 's-accueil';
+function montrer(id){
+  if (id !== 's-guidee'){ var gp = document.getElementById('g-pause'); if (gp) gp.hidden = true; }
+  if (id !== ecranCourant) ecranPrecedent = ecranCourant;
+  ecranCourant = id;
+  document.querySelectorAll('.ecran').forEach(function(e){ e.hidden = e.id !== id; });
+  window.scrollTo(0,0);
+}
+
+/* ================= stockage ================= */
+var CLE = 'ecole-maison-v1';
+var stockOK = true;
+function vide(na, nf){
+  return { tables:{ seances:[], limite:20, longueur:'10', choix:[2,3,5] },
+           arbre:{ niveau:na, seances:[] }, fractions:{ niveau:nf, seances:[] }, lecture:{ seances:[] } };
+}
+function base(){
+  return { email:'', profils:[
+    { id:'julia',  nom:'Julia',  classe:'CM1', avatar:'🦊', couleur:'#3FC1A0' },
+    { id:'louise', nom:'Louise', classe:'CE2', avatar:'🐼', couleur:'#F0567F' } ],
+    donnees:{ julia:vide(3,2), louise:vide(1,1) } };
+}
+var DB;
+try { var brut = localStorage.getItem(CLE); DB = brut ? JSON.parse(brut) : base(); }
+catch(e){ stockOK = false; DB = base(); }
+function aujourdhui(){ var d = new Date(); return d.getFullYear() + '-' + String(d.getMonth()+1).padStart(2,'0') + '-' + String(d.getDate()).padStart(2,'0'); }
+var ACTIVITES = [ {k:'tables', nom:'Tables'}, {k:'fractions', nom:'Fractions'}, {k:'lecture', nom:'Lecture à voix haute'}, {k:'flash', nom:'Lecture flash'} ];
+function missionDe(d){
+  if (!d.mission) d.mission = { jour:null, faits:{}, total:0 };
+  if (d.mission.jour !== aujourdhui()){ d.mission.jour = aujourdhui(); d.mission.faits = {}; d.mission.aFeter = false; }
+  return d.mission;
+}
+function mission(){ return missionDe(D()); }
+function nbFaits(m){ return ACTIVITES.filter(function(a){ return m.faits[a.k]; }).length; }
+function missionFaite(){ return nbFaits(mission()) === ACTIVITES.length; }
+function marquer(k){
+  var m = mission(); if (m.faits[k]) return;
+  m.faits[k] = true;
+  if (missionFaite()){ m.total = (m.total || 0) + 1; m.aFeter = true; }
+  sauver();
+}
+var SEUILS_DEF = { tables:70, fractions:60, flash:70, lecture:85 };
+function seuil(k){ var s = D().seuils || {}; return s[k] != null ? s[k] : SEUILS_DEF[k]; }
+var messageEtape = null;
+/* tente de valider une étape ; renvoie true si validée. Le message d'échec s'affiche au bilan. */
+function tenterEtape(k, ok, echec){
+  if (D().verrouArbre === false || mission().faits[k]) return ok;
+  if (ok) marquer(k); else messageEtape = echec + ' Tu peux refaire une séance pour valider l\u2019étape.';
+  return ok;
+}
+function moyenneLecture(){
+  var S = D().lecture.seances.slice(-5);
+  if (S.length < 2) return null;
+  return S.reduce(function(a,s){ return a + s.mclm; }, 0) / S.length;
+}
+function arbreVerrouille(){ return D().verrouArbre !== false && !missionFaite(); }
+function texteMission(){
+  var m = mission(), n = nbFaits(m);
+  if (D().verrouArbre === false) return '';
+  if (n === ACTIVITES.length) return 'Mission du jour accomplie : l\u2019arbre à calculs est débloqué !';
+  return 'Mission du jour : ' + n + ' sur ' + ACTIVITES.length + '. Encore ' + ACTIVITES.filter(function(a){ return !m.faits[a.k]; }).map(function(a){ return a.nom.toLowerCase(); }).join(', ') + ' pour débloquer l\u2019arbre à calculs.';
+}
+function completer(d, classe){
+  if (!d.lecture) d.lecture = { seances:[] };
+  var L = d.lecture;
+  if (!L.guidees) L.guidees = []; if (L.groupes == null) L.groupes = false; if (!L.mode) L.mode = 'chrono'; if (L.vitesseGuidee === undefined) L.vitesseGuidee = null;
+  if (!d.flash) d.flash = { niveau: classe === 'CM1' ? 2 : 1, ms:1300, seances:[] };
+}
+DB.profils.forEach(function(p){ if (!DB.donnees[p.id]) DB.donnees[p.id] = vide(1,1); completer(DB.donnees[p.id], p.classe); });
+function sauver(){ try { localStorage.setItem(CLE, JSON.stringify(DB)); } catch(e){ stockOK = false; $('alerte-stock').hidden = false; } }
+if (!stockOK) $('alerte-stock').hidden = false;
+
+var P = null;
+function prof(){ return DB.profils.filter(function(p){ return p.id===P; })[0]; }
+function D(){ return DB.donnees[P]; }
+var AVATARS = ['🦊','🐼','🦄','🐱','🐶','🐸','🦉','🐰','🐯','🐨','🐙','🦋'];
+
+/* ================= profils & accueil ================= */
+function dessinerProfils(){
+  $('liste-profils').innerHTML = DB.profils.map(function(p){
+    return '<button class="profil" data-p="'+p.id+'" style="border-color:'+p.couleur+'"><span class="ava">'+p.avatar+
+      '</span><b>'+esc(p.nom)+'</b><small>'+p.classe+(p.code ? ' · 🔒' : '')+'</small></button>';
+  }).join('');
+}
+$('liste-profils').addEventListener('click', function(e){
+  var b = e.target.closest('[data-p]'); if (!b) return;
+  var id = b.dataset.p, pr = DB.profils.filter(function(x){ return x.id === id; })[0];
+  var entrer = function(){ P = id; origine = 'enfant'; ouvrirAccueil(); };
+  if (!pr.code){ entrer(); return; }
+  co = { mode:'enfant', profil:pr, etape:'saisir', saisie:'', premier:'', suite:entrer, annuler:null, fautes:0, bloque:0 };
+  afficherCode(); montrer('s-code');
+});
+function ouvrirAccueil(){
+  gestion = false; codeOk = false;
+  var p = prof();
+  document.documentElement.style.setProperty('--accent', p.couleur);
+  $('a-ava').textContent = p.avatar;
+  $('a-nom').textContent = p.nom;
+  $('a-classe').textContent = p.classe;
+  $('a-sub-arbre').textContent = 'Niveau ' + D().arbre.niveau + ' : ' + ARBRE_NIV[D().arbre.niveau].nom;
+  $('a-sub-flash').textContent = 'Niveau ' + D().flash.niveau + ' : ' + FLASH[D().flash.niveau].nom + ', avec un adulte';
+  $('a-sub-fractions').textContent = 'Niveau ' + D().fractions.niveau + ' : ' + FRAC_NIV[D().fractions.niveau].nom;
+  var m = mission(), verrou = D().verrouArbre !== false;
+  $('a-mission').hidden = !verrou;
+  $('a-etapes').innerHTML = ACTIVITES.map(function(a){ return '<span class="etape' + (m.faits[a.k] ? ' fait' : '') + '">' + (m.faits[a.k] ? '✓ ' : '○ ') + a.nom + '</span>'; }).join('');
+  $('a-etoiles').textContent = '🌟 ' + (m.total || 0) + ' mission' + ((m.total||0) > 1 ? 's' : '') + ' réussie' + ((m.total||0) > 1 ? 's' : '');
+  $('a-mission-leg').textContent = missionFaite() ? 'Bravo, tout est fait ! L\u2019arbre à calculs est à toi.' : 'Fais un exercice de chaque pour débloquer l\u2019arbre à calculs.';
+  var lock = arbreVerrouille();
+  $('a-mod-arbre').classList.toggle('verrou', lock);
+  if (lock) $('a-sub-arbre').textContent = '🔒 Termine ta mission du jour pour le débloquer';
+  $('a-fete').hidden = !m.aFeter;
+  if (m.aFeter){ $('a-fete').textContent = '🎉 Mission accomplie ! L\u2019arbre à calculs est débloqué.'; m.aFeter = false; sauver(); }
+  montrer('s-accueil');
+}
+$('a-changer').addEventListener('click', function(){ dessinerProfils(); montrer('s-profils'); });
+$('a-ava').addEventListener('click', function(){
+  var p = prof(); var i = AVATARS.indexOf(p.avatar);
+  p.avatar = AVATARS[(i+1) % AVATARS.length]; sauver(); $('a-ava').textContent = p.avatar;
+});
+document.querySelectorAll('[data-module]').forEach(function(b){
+  b.addEventListener('click', function(){
+    var m = b.dataset.module;
+    if (m==='tables') ouvrirChoixTables();
+    else if (m==='arbre'){
+      if (arbreVerrouille()){
+        $('a-mission').classList.remove('secoue'); void $('a-mission').offsetWidth; $('a-mission').classList.add('secoue');
+        $('a-mission-leg').textContent = 'L\u2019arbre à calculs est encore fermé : termine d\u2019abord ta mission du jour !';
+        return;
+      }
+      arbreLancer(null);
+    }
+    else if (m==='lecture') ouvrirTextes(null);
+    else if (m==='flash') flashLancer(null);
+    else fractionsLancer();
+  });
+});
+$('a-progres').addEventListener('click', function(){ ouvrirProgres('tables'); });
+$('a-parents').addEventListener('click', function(){ exigerCode(ouvrirParents, ouvrirAccueil); });
+var origine = 'enfant';
+function retourner(){ if (origine === 'parents') ouvrirVueParents(); else ouvrirAccueil(); }
+document.querySelectorAll('[data-retour]').forEach(function(b){ b.addEventListener('click', retourner); });
+$('pr-parents').addEventListener('click', function(){ exigerCode(ouvrirVueParents, function(){ dessinerProfils(); montrer('s-profils'); }); });
+$('vp-retour').addEventListener('click', function(){ origine = 'enfant'; codeOk = false; dessinerProfils(); montrer('s-profils'); });
+
+/* ================= CODE PARENTS ================= */
+var codeOk = false, co = null;
+function hacher(s){ var x = 2166136261; s = 'ecole-maison:' + s; for (var i=0;i<s.length;i++){ x ^= s.charCodeAt(i); x = Math.imul(x, 16777619) >>> 0; } return x.toString(16); }
+function exigerCode(suite, annuler){
+  if (codeOk){ suite(); return; }
+  co = { etape: DB.codeHash ? 'saisir' : 'creer1', saisie:'', premier:'', suite:suite, annuler:annuler, fautes:0, bloque:0 };
+  afficherCode(); montrer('s-code');
+}
+function afficherCode(msg){
+  var enf = co.mode === 'enfant', cible = co.cible;
+  $('co-entete').textContent = enf ? co.profil.avatar + ' ' + co.profil.nom : cible ? 'Code de ' + cible.nom : 'Espace parents';
+  $('co-oubli-enfant').hidden = !enf;
+  var t = enf ? ['Code de ' + co.profil.nom, 'Tape ton code secret à 4 chiffres.']
+    : cible && co.etape === 'creer1' ? ['Nouveau code de ' + cible.nom, 'Choisis un code à 4 chiffres facile à retenir pour ' + cible.nom + '. Tu pourras le retrouver dans le suivi des parents.']
+    : ({ saisir:['Code parents','Tape le code à 4 chiffres.'], creer1:['Choisis un code','Ce code à 4 chiffres protégera l\u2019espace parents : réglages, suppressions et mission du jour.'],
+            creer2:['Confirme le code','Tape le même code une deuxième fois.'], recup:['Code oublié','Tape l\u2019adresse mail enregistrée dans l\u2019espace parents pour choisir un nouveau code.'] })[co.etape];
+  $('co-titre').textContent = t[0]; $('co-texte').textContent = t[1];
+  $('co-msg').textContent = msg || '';
+  var recup = co.etape === 'recup';
+  $('co-pave').hidden = recup; $('co-points').hidden = recup; $('co-recup').hidden = !recup;
+  $('co-oubli').hidden = co.etape !== 'saisir' || enf;
+  $('co-points').querySelectorAll('i').forEach(function(p, i){ p.classList.toggle('plein', i < co.saisie.length); });
+}
+function toucheCode(k){
+  if (!co || co.etape === 'recup') return;
+  if (co.bloque > Date.now()){ afficherCode('Trop d\u2019essais. Patiente quelques secondes.'); return; }
+  if (k === 'del'){ co.saisie = co.saisie.slice(0,-1); afficherCode(); return; }
+  if (co.saisie.length >= 4) return;
+  co.saisie += k; afficherCode();
+  if (co.saisie.length < 4) return;
+  var s = co.saisie;
+  setTimeout(function(){
+    co.saisie = '';
+    if (co.etape === 'saisir'){
+      if (co.mode === 'enfant' ? s === co.profil.code : hacher(s) === DB.codeHash){ if (co.mode !== 'enfant') codeOk = true; var f = co.suite; co = null; f(); return; }
+      co.fautes++;
+      if (co.fautes >= 3){ co.bloque = Date.now() + 30000; co.fautes = 0; afficherCode('Code incorrect. Réessaie dans 30 secondes.'); }
+      else afficherCode('Code incorrect.');
+      $('co-points').classList.remove('secoue'); void $('co-points').offsetWidth; $('co-points').classList.add('secoue');
+    } else if (co.etape === 'creer1'){ co.premier = s; co.etape = 'creer2'; afficherCode(); }
+    else if (co.etape === 'creer2'){
+      if (s !== co.premier){ co.etape = 'creer1'; afficherCode('Les deux codes sont différents. Recommence.'); return; }
+      if (co.cible) co.cible.code = s; else { DB.codeHash = hacher(s); codeOk = true; }
+      sauver();
+      var f2 = co.suite; co = null; f2();
+    }
+  }, 150);
+}
+$('co-pave').addEventListener('click', function(e){ var b = e.target.closest('[data-k]'); if (b) toucheCode(b.dataset.k); });
+$('co-annuler').addEventListener('click', function(){ var a = co && co.annuler; co = null; if (a) a(); else { dessinerProfils(); montrer('s-profils'); } });
+$('co-oubli').addEventListener('click', function(){ co.etape = 'recup'; $('co-mail').value = ''; afficherCode(DB.email ? '' : 'Aucune adresse mail n\u2019a été enregistrée, la récupération n\u2019est pas possible.'); });
+$('co-mail-ok').addEventListener('click', function(){
+  var v = $('co-mail').value.trim().toLowerCase();
+  if (DB.email && v === DB.email.trim().toLowerCase()){ co.etape = 'creer1'; co.saisie = ''; afficherCode(); }
+  else afficherCode('Cette adresse ne correspond pas.');
+});
+$('pa-code').addEventListener('click', function(){
+  co = { etape:'creer1', saisie:'', premier:'', suite:ouvrirParents, annuler:ouvrirParents, fautes:0, bloque:0 };
+  afficherCode(); montrer('s-code');
+});
+function derniere(t){ return t && t.length ? t[t.length-1] : null; }
+function ouvrirVueParents(){
+  origine = 'parents';
+  document.documentElement.style.setProperty('--accent', 'var(--menthe)');
+  $('vp-contenu').innerHTML = DB.profils.map(function(p){
+    var d = DB.donnees[p.id], m = missionDe(d), L = [];
+    var n = nbFaits(m);
+    L.push('<li>Mission du jour : ' + n + ' / ' + ACTIVITES.length + (d.verrouArbre === false ? ' (désactivée)' : '') + '<small>' +
+      ACTIVITES.map(function(a){ return (m.faits[a.k] ? '✓ ' : '○ ') + a.nom; }).join(' · ') + ' · 🌟 ' + (m.total||0) + ' au total</small></li>');
+    var t = derniere(d.tables.seances);
+    L.push('<li>Tables<small>' + (t ? dateCourte(t.date) + ' : tables ' + t.tables.join(', ') + ', ' + pct(t.points, t.maxi) + '% des points, ' + t.fautes + ' erreur' + (t.fautes>1?'s':'') : 'aucune séance') + '</small></li>');
+    var a = derniere(d.arbre.seances);
+    L.push('<li>Arbre à calculs : niveau ' + d.arbre.niveau + '<small>' + (a ? dateCourte(a.date) + ' : ' + a.items.filter(function(x){ return x.ok; }).length + ' / ' + a.items.length + ' justes' : 'aucune séance') + '</small></li>');
+    var f = derniere(d.fractions.seances);
+    L.push('<li>Fractions : niveau ' + d.fractions.niveau + '<small>' + (f ? dateCourte(f.date) + ' : ' + f.items.filter(function(x){ return x.ok; }).length + ' / ' + f.items.length + ' justes' : 'aucune séance') + '</small></li>');
+    var S = d.lecture.seances, l = derniere(S);
+    L.push('<li>Lecture chronométrée<small>' + (l ? dateCourte(l.date) + ' : ' + l.mclm + ' mots/min sur « ' + esc(l.titre) + ' »' + (S.length > 1 ? ' (première : ' + S[0].mclm + ')' : '') : 'aucune séance') + '</small></li>');
+    var g = derniere(d.lecture.guidees);
+    L.push('<li>Lecture guidée<small>' + (g ? dateCourte(g.date) + ' : ' + g.vitesse + ' mots/min, prochaine à ' + (d.lecture.vitesseGuidee || g.vitesse) : 'aucune séance') + '</small></li>');
+    var fl2 = derniere(d.flash.seances);
+    L.push('<li>Lecture flash : niveau ' + d.flash.niveau + '<small>' + (fl2 ? dateCourte(fl2.date) + ' : ' + fl2.items.filter(function(x){ return x.ok; }).length + ' / ' + fl2.items.length + ' mots, affichage ' + secondes(d.flash.ms) : 'aucune séance') + '</small></li>');
+    var E = d.lecture.enigmes || [];
+    if (E.length) L.push('<li>Énigmes<small>' + E.filter(function(x){ return x.ok; }).length + ' résolue(s) sur ' + E.length + '</small></li>');
+    return '<div class="carte p-profil" style="border-color:' + p.couleur + '"><h2 style="color:' + p.couleur + '">' + p.avatar + ' ' + esc(p.nom) + ' <small style="color:var(--pale)">' + p.classe + '</small></h2><ul>' + L.join('') + '</ul>' +
+      '<div class="ligne" style="justify-content:space-between"><span>Code de connexion : <b data-code="' + p.id + '">' + (p.code ? '••••' : 'aucun') + '</b></span>' +
+        (p.code ? '<button class="bouton second petit" data-voir="' + p.id + '">Afficher</button>' : '') +
+        '<button class="bouton second petit" data-chg="' + p.id + '">' + (p.code ? 'Changer' : 'Créer un code') + '</button>' +
+        (p.code ? '<button class="bouton second petit" data-supcode="' + p.id + '">Supprimer</button>' : '') + '</div>' +
+      '<div class="ligne"><button class="bouton" data-suivi="' + p.id + '">Suivi détaillé</button><button class="bouton second" data-regl="' + p.id + '">Réglages et bilan mail</button></div></div>';
+  }).join('');
+  montrer('s-vue-parents');
+}
+$('vp-contenu').addEventListener('click', function(e){
+  var pid = function(x){ return DB.profils.filter(function(p){ return p.id === x; })[0]; };
+  var v = e.target.closest('[data-voir]');
+  if (v){ var el = $('vp-contenu').querySelector('[data-code="' + v.dataset.voir + '"]'), pv = pid(v.dataset.voir);
+    var vis = el.textContent !== '••••'; el.textContent = vis ? '••••' : pv.code; v.textContent = vis ? 'Afficher' : 'Masquer'; return; }
+  var ch = e.target.closest('[data-chg]');
+  if (ch){ co = { mode:'parent', cible:pid(ch.dataset.chg), etape:'creer1', saisie:'', premier:'', suite:ouvrirVueParents, annuler:ouvrirVueParents, fautes:0, bloque:0 };
+    afficherCode(); montrer('s-code'); return; }
+  var sc = e.target.closest('[data-supcode]');
+  if (sc){ confirmer(sc, 'Sûr ?', function(){ delete pid(sc.dataset.supcode).code; sauver(); ouvrirVueParents(); }); return; }
+  var b = e.target.closest('[data-suivi],[data-regl]'); if (!b) return;
+  P = b.dataset.suivi || b.dataset.regl;
+  document.documentElement.style.setProperty('--accent', prof().couleur);
+  if (b.dataset.suivi) ouvrirProgres('tables'); else ouvrirParents();
+});
+
+/* ================= clavier numérique partagé ================= */
+var saisie = '', jeu = null, verrou = false;
+function afficherSaisie(){ $('c-reponse').textContent = saisie === '' ? '' : fmt(parseInt(saisie,10)); }
+function touche(k){
+  if (verrou || !jeu) return;
+  if (k === 'del') saisie = saisie.slice(0,-1);
+  else if (k === 'ok'){ if (saisie !== '') valider(); return; }
+  else if (saisie.length < 6) saisie = (saisie === '0' ? '' : saisie) + k;
+  afficherSaisie();
+}
+$('c-pave').addEventListener('click', function(e){ var b = e.target.closest('[data-k]'); if (b) touche(b.dataset.k); });
+document.addEventListener('keydown', function(e){
+  if (ecranCourant === 's-code'){
+    if (/^[0-9]$/.test(e.key)) toucheCode(e.key); else if (e.key === 'Backspace') toucheCode('del');
+    return;
+  }
+  if (ecranCourant === 's-calcul'){
+    if (/^[0-9]$/.test(e.key)) touche(e.key);
+    else if (e.key === 'Backspace') touche('del');
+    else if (e.key === 'Enter'){ e.preventDefault(); if (!$('c-suivant').hidden) $('c-suivant').click(); else touche('ok'); }
+  } else if (ecranCourant === 's-flash' && fl && fl.etat === 'attente'){
+    if (e.key === 'ArrowLeft' || e.key === 'Enter') flashNote(true); else if (e.key === 'ArrowRight' || e.key === 'Backspace') flashNote(false);
+  } else if (ecranCourant === 's-fractions' && e.key === 'Enter' && !$('f-suivant').hidden){ e.preventDefault(); $('f-suivant').click(); }
+});
+function valider(){ if (jeu.type === 'tables') tablesValider(); else arbreValider(); }
+function preparerCalcul(titre, avecChrono){
+  $('c-titre').innerHTML = titre;
+  $('c-chrono-zone').hidden = !avecChrono;
+  montrer('s-calcul');
+}
+function remiseQuestion(){
+  saisie = ''; verrou = false; afficherSaisie();
+  $('c-reponse').className = 'reponse';
+  $('c-retour').textContent = ''; $('c-retour').className = 'retour';
+  $('c-diag').hidden = true; $('c-correction').hidden = true; $('c-monte').hidden = true;
+  $('c-suivant').hidden = true; $('c-pave').hidden = false;
+}
+var minuteurSuivant = null;
+function apres(ok, fn){
+  verrou = true;
+  if (ok){ minuteurSuivant = setTimeout(fn, 900); }
+  else { $('c-pave').hidden = true; $('c-suivant').hidden = false; $('c-suivant').onclick = fn; $('c-suivant').focus(); }
+}
+$('c-stop').addEventListener('click', function(){
+  clearTimeout(minuteurSuivant);
+  if (jeu.type === 'tables') tablesFin(); else arbreFin();
+});
+
+/* ================= TABLES ================= */
+var LIMITES = { '10':10, '20':20, '30':30 };
+function ouvrirChoixTables(){
+  var t = D().tables;
+  $('t-grille').innerHTML = [0,1,2,3,4,5,6,7,8,9,10].map(function(n){
+    return '<button class="jeton" data-t="'+n+'" aria-pressed="'+(t.choix.indexOf(n)>=0)+'">'+n+'</button>';
+  }).join('');
+  majSegments('t-longueur', t.longueur); majSegments('t-limite', String(t.limite));
+  $('t-mission-info').hidden = D().verrouArbre === false || mission().faits.tables;
+  majGoTables(); montrer('s-tables');
+}
+function majSegments(id, v){ $(id).querySelectorAll('button').forEach(function(b){ b.setAttribute('aria-pressed', b.dataset.v===v); }); }
+function choixTables(){ return Array.prototype.map.call($('t-grille').querySelectorAll('[aria-pressed="true"]'), function(b){ return +b.dataset.t; }); }
+function majGoTables(){ $('t-go').disabled = choixTables().length === 0; $('t-go').style.opacity = $('t-go').disabled ? .5 : 1; }
+$('t-grille').addEventListener('click', function(e){
+  var b = e.target.closest('[data-t]'); if (!b) return;
+  b.setAttribute('aria-pressed', b.getAttribute('aria-pressed') !== 'true'); majGoTables();
+});
+$('t-toutes').addEventListener('click', function(){ $('t-grille').querySelectorAll('button').forEach(function(b){ b.setAttribute('aria-pressed','true'); }); majGoTables(); });
+$('t-aucune').addEventListener('click', function(){ $('t-grille').querySelectorAll('button').forEach(function(b){ b.setAttribute('aria-pressed','false'); }); majGoTables(); });
+$('t-longueur').addEventListener('click', function(e){ var b=e.target.closest('button'); if(b){ D().tables.longueur=b.dataset.v; majSegments('t-longueur', b.dataset.v); sauver(); } });
+$('t-limite').addEventListener('click', function(e){ var b=e.target.closest('button'); if(b){ D().tables.limite=+b.dataset.v; majSegments('t-limite', b.dataset.v); sauver(); } });
+$('t-go').addEventListener('click', function(){
+  var tables = choixTables(); if (!tables.length) return;
+  var t = D().tables; t.choix = tables; sauver();
+  var file = [];
+  tables.forEach(function(a){ for (var m=0;m<=10;m++) file.push({a:a,b:m}); });
+  file = melanger(file);
+  if (t.longueur !== 'all') file = file.slice(0, +t.longueur);
+  tablesLancer(file, tables);
+});
+function bareme(s, lim){
+  if (s < lim*0.2)  return { points:10, mot:'Éclair !' };
+  if (s < lim*0.35) return { points:7,  mot:'Bien vu !' };
+  if (s < lim)      return { points:4,  mot:'Juste.' };
+  return { points:1, mot:'Juste, mais un peu long.' };
+}
+var chronoDebut = 0;
+function tablesLancer(file, tables){
+  jeu = { type:'tables', file:file, pos:0, tables:tables, limite:D().tables.limite,
+          poses:0, justes:0, fautes:0, lents:0, points:0, maxi:0, faits:{}, aRevoir:[], replacees:{}, date:new Date().toISOString() };
+  preparerCalcul('Tables de multiplication', true);
+  tablesQuestion();
+}
+function tablesQuestion(){
+  var q = jeu.file[jeu.pos];
+  remiseQuestion();
+  $('c-aide').textContent = '';
+  $('c-enonce').className = 'enonce';
+  $('c-enonce').textContent = q.a + ' × ' + q.b;
+  $('c-prog').style.width = pct(jeu.pos, jeu.file.length) + '%';
+  var c = $('c-chrono');
+  c.style.transition = 'none'; c.style.width = '100%'; c.style.background = 'var(--citron)';
+  void c.offsetWidth;
+  c.style.transition = 'width ' + jeu.limite + 's linear'; c.style.width = '0%';
+  chronoDebut = performance.now();
+}
+function tablesValider(){
+  var q = jeu.file[jeu.pos];
+  var s = (performance.now() - chronoDebut) / 1000;
+  var c = $('c-chrono'); c.style.transition = 'none'; c.style.width = getComputedStyle(c).width;
+  var cle = q.a + '×' + q.b;
+  var f = jeu.faits[cle] || (jeu.faits[cle] = { n:0, justes:0, rapides:0, lents:0, fautes:0, temps:0, points:0 });
+  var ok = parseInt(saisie,10) === q.a*q.b;
+  jeu.poses++; jeu.maxi += 10; f.n++; f.temps += Math.min(s, 99);
+  if (ok){
+    var b = bareme(s, jeu.limite);
+    jeu.justes++; jeu.points += b.points; f.justes++; f.points += b.points;
+    if (b.points === 1){ jeu.lents++; f.lents++; ajouterRevoir(cle,'lent'); } else if (b.points >= 7) f.rapides++;
+    $('c-reponse').className = 'reponse ok';
+    $('c-retour').className = 'retour ok'; $('c-retour').textContent = b.mot;
+  } else {
+    jeu.fautes++; f.fautes++; ajouterRevoir(cle,'faute');
+    $('c-reponse').className = 'reponse ko';
+    $('c-retour').className = 'retour ko'; $('c-retour').textContent = q.a + ' × ' + q.b + ' = ' + (q.a*q.b);
+    if (!jeu.replacees[q.a]){
+      jeu.replacees[q.a] = true;
+      var t = []; for (var m=0;m<=10;m++) t.push({a:q.a,b:m});
+      jeu.file = jeu.file.concat(melanger(t));
+      $('c-diag').hidden = false; $('c-diag').textContent = 'Toute la table de ' + q.a + ' reviendra à la fin.';
+    }
+  }
+  apres(ok, function(){ jeu.pos++; if (jeu.pos < jeu.file.length) tablesQuestion(); else { jeu.complet = true; tablesFin(); } });
+}
+function calculsVrais(faits){
+  return Object.keys(faits || {}).reduce(function(n, cle){ var t = +cle.split('×')[0]; return n + (t >= 2 && t <= 9 ? faits[cle].n : 0); }, 0);
+}
+function ajouterRevoir(cle, raison){
+  var ex = jeu.aRevoir.filter(function(x){ return x.cle===cle; })[0];
+  if (ex){ if (raison==='faute') ex.raison='faute'; } else jeu.aRevoir.push({cle:cle, raison:raison});
+}
+function tablesFin(){
+  $('c-chrono').style.transition = 'none';
+  var tablesVraies = calculsVrais(jeu.faits) >= 5, pctT = pct(jeu.justes, jeu.poses), valT = false;
+  if (jeu.complet){
+    if (!tablesVraies) valT = tenterEtape('tables', false, 'Bien essayé 😉 Les tables de 0, 1 et 10 ne comptent pas pour la mission du jour : il faut au moins 5 calculs des tables de 2 à 9.');
+    else valT = tenterEtape('tables', pctT >= seuil('tables'), 'Étape « Tables » pas encore validée : ' + pctT + ' % de réponses justes, il en faut ' + seuil('tables') + ' %.');
+  }
+  if (jeu.poses > 0){
+    D().tables.seances.push({ date:jeu.date, tables:jeu.tables, limite:jeu.limite, poses:jeu.poses, justes:jeu.justes,
+      fautes:jeu.fautes, lents:jeu.lents, points:jeu.points, maxi:jeu.maxi, faits:jeu.faits, valideMission:valT });
+    sauver();
+  }
+  var part = jeu.maxi ? jeu.points / jeu.maxi : 0;
+  var mot;
+  if (!jeu.poses) mot = 'Aucun calcul fait cette fois.';
+  else if (part === 1) mot = 'Score parfait, et tout du premier coup. Ces tables sont sues !';
+  else if (part >= 0.85) mot = 'Excellent. Presque tous les calculs sortent tout seuls.';
+  else if (part >= 0.6) mot = 'Bien joué. Encore quelques calculs à rendre plus rapides.';
+  else if (jeu.fautes === 0) mot = 'Tout est juste, mais tu comptes encore dans ta tête. La vitesse viendra en refaisant les calculs ci-dessous.';
+  else mot = 'Ces tables sont encore neuves. On refait tranquillement celles d\u2019en bas.';
+  var liste = jeu.aRevoir.map(function(x){
+    var p = x.cle.split('×');
+    return '<li class="'+x.raison+'">'+p[0]+' × '+p[1]+' = '+(p[0]*p[1])+'</li>';
+  }).join('');
+  var revoir = jeu.aRevoir.map(function(x){ var p=x.cle.split('×'); return {a:+p[0], b:+p[1]}; });
+  var tables = jeu.tables;
+  bilan({ titre:'Bilan des tables', gros:jeu.points, sur:'point' + (jeu.points>1?'s':'') + ' sur ' + jeu.maxi, mot:mot,
+    carteTitre:'À revoir', liste:liste,
+    legende: liste ? 'En rose, les calculs ratés. En jaune, les calculs justes qui ont demandé plus de ' + jeu.limite + ' secondes.' : '',
+    erreurs: revoir.length ? function(){ tablesLancer(melanger(revoir), tables); } : null,
+    rejouer: ouvrirChoixTables, onglet:'tables' });
+}
+
+/* ================= ARBRE À CALCULS ================= */
+var RANGS  = ['unités','dizaines','centaines','milliers','dizaines de mille','centaines de mille'];
+var RANG1  = ['unité','dizaine','centaine','millier','dizaine de mille','centaine de mille'];
+var RCOUL  = ['var(--r-u)','var(--r-d)','var(--r-c)','var(--r-m)','var(--r-dm)','var(--r-dm)'];
+function colonnes(nums){
+  var L = Math.max.apply(null, nums.map(function(x){ return String(x).length; }));
+  var cs = [], c = [0];
+  for (var k=0;k<L;k++){
+    cs[k] = nums.reduce(function(s,x){ return s + Math.floor(x/Math.pow(10,k))%10; }, 0);
+    c[k+1] = Math.floor((cs[k] + c[k]) / 10);
+  }
+  return { L:L, cs:cs, c:c };
+}
+function nbRetenues(nums){ var col = colonnes(nums); return col.c.filter(function(x){ return x>0; }).length; }
+function somme(nums){ return nums.reduce(function(s,x){ return s+x; }, 0); }
+function tirer(gen, test){ for (var i=0;i<800;i++){ var n = gen(); if (test(n)) return n; } return gen(); }
+var n3 = function(){ return rnd(100,999); }, n4 = function(){ return rnd(1000,9999); }, n5 = function(){ return rnd(10000,99999); };
+var ARBRE_NIV = {
+  1:{ nom:'3 chiffres, sans retenue', gen:function(){ return tirer(function(){ return [n3(),n3()]; }, function(n){ return nbRetenues(n)===0; }); } },
+  2:{ nom:'3 chiffres, une retenue', gen:function(){ return tirer(function(){ return [n3(),n3()]; }, function(n){ return nbRetenues(n)===1 && somme(n)<1000; }); } },
+  3:{ nom:'3 chiffres, deux retenues', gen:function(){ return tirer(function(){ return [n3(),n3()]; }, function(n){ return nbRetenues(n)>=2 && somme(n)<1000; }); } },
+  4:{ nom:'on dépasse 1 000', gen:function(){ return tirer(function(){ return [n3(),n3()]; }, function(n){ return somme(n)>=1000 && nbRetenues(n)>=2; }); } },
+  5:{ nom:'milliers + centaines', gen:function(){ return tirer(function(){ return melanger([n4(),n3()]); }, function(n){ return nbRetenues(n)>=1 && somme(n)<10000; }); } },
+  6:{ nom:'milliers + milliers', gen:function(){ return tirer(function(){ return [n4(),n4()]; }, function(n){ return nbRetenues(n)>=2 && somme(n)<10000; }); } },
+  7:{ nom:'trois nombres', gen:function(){ return tirer(function(){ return [n3(),n3(),n3()]; }, function(n){ return nbRetenues(n)>=2; }); } },
+  8:{ nom:'grands nombres', gen:function(){ return tirer(function(){ return [n5(), pick([n4,n5])()]; }, function(n){ return nbRetenues(n)>=2 && somme(n)<100000; }); } }
+};
+var ARBRE_MAX = 8;
+var ERR_ARBRE = {
+  'retenue':'Oubli d\u2019une retenue', 'retenues':'Oubli de toutes les retenues', 'juxtaposition':'Résultats des branches collés',
+  'retenue-trop':'Retenue en trop', 'soustraction':'Soustraction au lieu d\u2019addition', 'inversion':'Chiffres inversés',
+  'chiffre-oublie':'Chiffre oublié', 'chiffre-en-trop':'Chiffre en trop', 'rang':'Erreur de calcul dans une branche', 'autre':'Autre erreur'
+};
+function diagnostiquer(nums, rep){
+  var s = somme(nums), col = colonnes(nums), L = col.L, cs = col.cs, c = col.c, k;
+  var sa = String(rep), ss = String(s);
+  var ret = []; for (k=0;k<L;k++) if (c[k+1]>0) ret.push(k);
+  var sansRet = 0; for (k=0;k<L;k++) sansRet += (k<L-1 ? cs[k]%10 : cs[k]) * Math.pow(10,k);
+  if (ret.length >= 2 && rep === sansRet)
+    return { code:'retenues', msg:'Tu as oublié les retenues. Quand une branche dépasse 9, les dizaines passent dans la branche d\u2019à côté.' };
+  for (var i=0;i<ret.length;i++){
+    k = ret[i];
+    if (rep === s - c[k+1]*Math.pow(10,k+1))
+      return { code:'retenue', rang:k+1, msg:'Tu as oublié une retenue : les ' + RANGS[k] + ' font ' + (cs[k]+c[k]) +
+        ', ça fait ' + c[k+1] + ' ' + RANG1[k+1] + (c[k+1]>1?'s':'') + ' de plus.' };
+  }
+  var coll = ''; for (k=L-1;k>=0;k--) coll += String(cs[k]);
+  if (sa === coll && ret.length)
+    return { code:'juxtaposition', msg:'Tu as écrit les résultats des branches côte à côte. Il faut les additionner : ' + recompo(nums) + '.' };
+  for (k=1;k<=L;k++) if (!c[k] && rep === s + Math.pow(10,k))
+    return { code:'retenue-trop', rang:k, msg:'Tu as ajouté une retenue aux ' + RANGS[k] + ' alors qu\u2019il n\u2019y en avait pas.' };
+  if (nums.length === 2 && rep === Math.abs(nums[0]-nums[1]))
+    return { code:'soustraction', msg:'Tu as fait une soustraction. Ici, on ajoute les deux nombres.' };
+  if (sa.length === ss.length && sa !== ss && sa.split('').sort().join('') === ss.split('').sort().join(''))
+    return { code:'inversion', msg:'Les bons chiffres sont là, mais pas dans le bon ordre. Vérifie chaque branche.' };
+  if (sa.length === ss.length - 1){ for (k=0;k<ss.length;k++) if (ss.slice(0,k)+ss.slice(k+1) === sa)
+    return { code:'chiffre-oublie', msg:'Il te manque un chiffre. Attention aux zéros quand tu regroupes.' }; }
+  if (sa.length === ss.length + 1){ for (k=0;k<sa.length;k++) if (sa.slice(0,k)+sa.slice(k+1) === ss)
+    return { code:'chiffre-en-trop', msg:'Tu as écrit un chiffre en trop.' }; }
+  if (sa.length === ss.length){
+    var diff = []; for (k=0;k<ss.length;k++) if (sa[k] !== ss[k]) diff.push(ss.length-1-k);
+    if (diff.length === 1){
+      k = diff[0];
+      var det = nums.map(function(x){ return Math.floor(x/Math.pow(10,k))%10; }).join(' + ') + (c[k] ? ' + ' + c[k] + ' de retenue' : '');
+      return { code:'rang', rang:k, msg:'Erreur de calcul dans la branche des ' + RANGS[k] + ' : refais ' + det + '.' };
+    }
+  }
+  return { code:'autre', msg:'Refais ton arbre étape par étape : décompose, additionne chaque branche, puis regroupe.' };
+}
+function parties(x, L){ var p=[]; for (var k=L-1;k>=0;k--) p.push({ k:k, v:(Math.floor(x/Math.pow(10,k))%10)*Math.pow(10,k) }); return p; }
+function recompo(nums){
+  var L = colonnes(nums).L, t = [];
+  for (var k=L-1;k>=0;k--) t.push(fmt(nums.reduce(function(s,x){ return s + (Math.floor(x/Math.pow(10,k))%10)*Math.pow(10,k); },0)));
+  return t.join(' + ') + ' = ' + fmt(somme(nums));
+}
+function arbreCorrection(nums){
+  var L = colonnes(nums).L, h = '';
+  nums.forEach(function(x){
+    h += fmt(x) + ' = ' + parties(x, String(x).length).map(function(p){ return '<span class="rg" style="color:'+RCOUL[p.k]+'">'+fmt(p.v)+'</span>'; }).join(' + ') + '<br>';
+  });
+  for (var k=L-1;k>=0;k--){
+    var vals = nums.map(function(x){ return (Math.floor(x/Math.pow(10,k))%10)*Math.pow(10,k); });
+    h += '<span class="rg" style="color:'+RCOUL[k]+'">' + vals.map(fmt).join(' + ') + ' = ' + fmt(somme(vals)) + '</span><br>';
+  }
+  return h + '<b>' + recompo(nums) + '</b>';
+}
+function arbreLancer(rejeu){
+  var a = D().arbre;
+  jeu = { type:'arbre', rejeu:rejeu, niveau:a.niveau, niveauDepart:a.niveau, pos:0, total: rejeu ? rejeu.length : 10,
+          items:[], suiteOk:0, suiteKo:0, date:new Date().toISOString(), courant:null };
+  arbreQuestion();
+}
+function arbreTitre(){ return 'Arbre à calculs <span class="badge">' + (jeu.rejeu ? 'erreurs' : 'niveau ' + jeu.niveau) + '</span>'; }
+function arbreQuestion(){
+  preparerCalcul(arbreTitre(), false);
+  remiseQuestion();
+  var nums = jeu.rejeu ? jeu.rejeu[jeu.pos] : ARBRE_NIV[jeu.niveau].gen();
+  jeu.courant = nums;
+  $('c-aide').textContent = jeu.pos === 0 ? 'Fais ton arbre sur ta feuille, puis écris le résultat.' : '';
+  $('c-enonce').className = 'enonce' + (nums.length>2 || somme(nums)>=10000 ? ' long' : '');
+  $('c-enonce').textContent = nums.map(fmt).join(' + ');
+  $('c-prog').style.width = pct(jeu.pos, jeu.total) + '%';
+  chronoDebut = performance.now();
+}
+function arbreValider(){
+  var nums = jeu.courant, rep = parseInt(saisie,10), s = somme(nums), ok = rep === s;
+  var t = Math.round((performance.now()-chronoDebut)/100)/10;
+  var d = ok ? null : diagnostiquer(nums, rep);
+  jeu.items.push({ n:nums, rep:rep, ok:ok, t:t, niv:jeu.rejeu ? null : jeu.niveau, err: d ? d.code : null, rang: d && d.rang!=null ? d.rang : null });
+  if (ok){
+    $('c-reponse').className = 'reponse ok';
+    $('c-retour').className = 'retour ok'; $('c-retour').textContent = pick(['Juste !','Bravo !','Parfait !','Super !']);
+  } else {
+    $('c-reponse').className = 'reponse ko';
+    $('c-retour').className = 'retour ko'; $('c-retour').textContent = 'C\u2019était ' + fmt(s) + '.';
+    $('c-diag').hidden = false; $('c-diag').textContent = d.msg;
+    $('c-correction').hidden = false; $('c-correction').innerHTML = arbreCorrection(nums);
+  }
+  if (!jeu.rejeu){
+    var msg = '';
+    if (ok){ jeu.suiteOk++; jeu.suiteKo = 0;
+      if (jeu.suiteOk >= 4 && jeu.niveau < ARBRE_MAX){ jeu.niveau++; jeu.suiteOk = 0; msg = 'Tu passes au niveau ' + jeu.niveau + ' : ' + ARBRE_NIV[jeu.niveau].nom + ' !'; } }
+    else { jeu.suiteKo++; jeu.suiteOk = 0;
+      if (jeu.suiteKo >= 2 && jeu.niveau > 1){ jeu.niveau--; jeu.suiteKo = 0; msg = 'On revient au niveau ' + jeu.niveau + ' pour s\u2019entraîner.'; } }
+    if (msg){ $('c-monte').hidden = false; $('c-monte').textContent = msg; D().arbre.niveau = jeu.niveau; sauver(); $('c-titre').innerHTML = arbreTitre(); }
+  }
+  apres(ok && !msg, suivant);
+  function suivant(){ jeu.pos++; if (jeu.pos < jeu.total) arbreQuestion(); else arbreFin(); }
+}
+function arbreFin(){
+  var items = jeu.items;
+  if (items.length){
+    if (!jeu.rejeu) D().arbre.niveau = jeu.niveau;
+    D().arbre.seances.push({ date:jeu.date, rejeu:!!jeu.rejeu, niveauDepart:jeu.niveauDepart, niveauFin:jeu.rejeu ? jeu.niveauDepart : jeu.niveau, items:items });
+    sauver();
+  }
+  var justes = items.filter(function(x){ return x.ok; }).length;
+  var fautes = items.filter(function(x){ return !x.ok; });
+  var mot = !items.length ? 'Aucun calcul fait cette fois.'
+    : justes === items.length ? 'Sans faute !' : justes >= items.length*0.7 ? 'Très bien, encore un petit effort.' : 'On continue à s\u2019entraîner, ça va venir.';
+  if (!jeu.rejeu && jeu.niveau !== jeu.niveauDepart)
+    mot += jeu.niveau > jeu.niveauDepart ? ' Tu es montée au niveau ' + jeu.niveau + '.' : ' Tu reprends au niveau ' + jeu.niveau + ' la prochaine fois.';
+  var liste = fautes.map(function(x){
+    return '<li class="faute">' + x.n.map(fmt).join(' + ') + ' = ' + fmt(somme(x.n)) +
+      '<small>Tu avais écrit ' + fmt(x.rep) + ' : ' + ERR_ARBRE[x.err].toLowerCase() + '</small></li>';
+  }).join('');
+  var rejeu = fautes.map(function(x){ return x.n; });
+  bilan({ titre:'Bilan de l\u2019arbre', gros:justes, sur:'juste' + (justes>1?'s':'') + ' sur ' + items.length, mot:mot,
+    carteTitre:'Mes erreurs', liste:liste, legende:'',
+    erreurs: rejeu.length ? function(){ arbreLancer(melanger(rejeu)); } : null,
+    rejouer: function(){ arbreLancer(null); }, onglet:'arbre' });
+}
+
+/* ================= FRACTIONS ================= */
+var FRAC_NIV = {
+  1:{ nom:'demis et quarts', d:[2,4] },
+  2:{ nom:'demis, tiers, quarts', d:[2,3,4] },
+  3:{ nom:'jusqu\u2019aux huitièmes', d:[2,3,4,5,6,8] },
+  4:{ nom:'jusqu\u2019aux douzièmes', d:[3,5,6,8,9,10,12] }
+};
+var FRAC_MAX = 4;
+var GRILLE = { 4:[2,2], 6:[2,3], 8:[2,4], 9:[3,3], 10:[2,5], 12:[3,4] };
+var FORMES = { disque:'disques', barre:'bandes', grille:'quadrillages' };
+var ERR_FRAC = {
+  'inverse':'Haut et bas inversés', 'complement':'A compté les parts blanches', 'colorie-blanc':'Coloriées comparées aux blanches',
+  'parts-inegales':'Parts pas égales', 'autre':'Autre erreur'
+};
+var MSG_FRAC = {
+  'inverse':'En bas, on écrit le nombre de parts en tout. En haut, les parts coloriées.',
+  'complement':'Tu as compté les parts blanches. En haut, on compte les parts coloriées.',
+  'colorie-blanc':'Le nombre du bas compte toutes les parts : les coloriées et les blanches ensemble.',
+  'parts-inegales':'Sur ce dessin, les parts ne sont pas de la même taille. Une fraction, c\u2019est des parts égales.',
+  'autre':'Compte bien : en bas toutes les parts, en haut les parts coloriées.'
+};
+function formesPossibles(d, niv, sauf){
+  var f = ['disque','barre']; if (GRILLE[d] && niv >= 2) f.push('grille');
+  return f.filter(function(x){ return x !== sauf; });
+}
+function spec(n, d, forme, inegal){
+  var s = { n:n, d:d, forme:forme, inegal:!!inegal };
+  if (forme === 'grille'){ s.pos = melanger(Array.from({length:d}, function(_,i){ return i; })).slice(0,n); }
+  if (inegal){
+    var w; do { w = Array.from({length:d}, function(){ return pick([1,1.6,2.4]); }); } while (Math.max.apply(null,w) === Math.min.apply(null,w));
+    s.poids = w;
+  }
+  return s;
+}
+function dessiner(s){
+  var BLEU = '#4C7DF0', BLANC = '#FFFFFF', TRAIT = '#221E4E', h = '', i;
+  if (s.forme === 'disque'){
+    var tot = s.poids ? s.poids.reduce(function(a,b){return a+b;},0) : s.d, ang = -90;
+    for (i=0;i<s.d;i++){
+      var part = (s.poids ? s.poids[i] : 1) / tot * 360, a0 = ang*Math.PI/180, a1 = (ang+part)*Math.PI/180;
+      var x0 = 50+46*Math.cos(a0), y0 = 50+46*Math.sin(a0), x1 = 50+46*Math.cos(a1), y1 = 50+46*Math.sin(a1);
+      h += '<path d="M50 50 L'+x0.toFixed(2)+' '+y0.toFixed(2)+' A46 46 0 '+(part>180?1:0)+' 1 '+x1.toFixed(2)+' '+y1.toFixed(2)+
+        ' Z" fill="'+(i<s.n?BLEU:BLANC)+'" stroke="'+TRAIT+'" stroke-width="2.2" stroke-linejoin="round"/>';
+      ang += part;
+    }
+    return '<svg viewBox="0 0 100 100" role="img" aria-label="disque">'+h+'</svg>';
+  }
+  if (s.forme === 'barre'){
+    var W = 140, H = 48, x = 2, tt = s.poids ? s.poids.reduce(function(a,b){return a+b;},0) : s.d;
+    for (i=0;i<s.d;i++){
+      var w = (s.poids ? s.poids[i] : 1) / tt * (W-4);
+      h += '<rect x="'+x.toFixed(2)+'" y="2" width="'+w.toFixed(2)+'" height="'+(H-4)+'" fill="'+(i<s.n?BLEU:BLANC)+'" stroke="'+TRAIT+'" stroke-width="2.2"/>';
+      x += w;
+    }
+    return '<svg viewBox="0 0 '+W+' '+H+'" role="img" aria-label="bande">'+h+'</svg>';
+  }
+  var g = GRILLE[s.d], L = g[0], C = g[1], cote = 26;
+  for (i=0;i<s.d;i++){
+    var r = Math.floor(i/C), cc = i%C;
+    h += '<rect x="'+(2+cc*cote)+'" y="'+(2+r*cote)+'" width="'+cote+'" height="'+cote+'" fill="'+(s.pos.indexOf(i)>=0?BLEU:BLANC)+'" stroke="'+TRAIT+'" stroke-width="2.2"/>';
+  }
+  return '<svg viewBox="0 0 '+(C*cote+4)+' '+(L*cote+4)+'" role="img" aria-label="quadrillage">'+h+'</svg>';
+}
+function memeValeur(a,b,c,d){ return a*d === b*c; }
+function tirerFraction(niv){ var d = pick(FRAC_NIV[niv].d); return { n:rnd(1,d-1), d:d }; }
+
+function fractionsLancer(){
+  var f = D().fractions;
+  var types = [];
+  for (var i=0;i<10;i++) types.push(i===4 || i===9 ? 'paires' : pick(['lire','trouver']));
+  jeu = { type:'fractions', niveau:f.niveau, niveauDepart:f.niveau, types:types, pos:0, items:[], suiteOk:0, suiteKo:0, date:new Date().toISOString() };
+  montrer('s-fractions');
+  fracQuestion();
+}
+function fracTitre(){ return 'Fractions <span class="badge">niveau ' + jeu.niveau + '</span>'; }
+function fracRemise(){
+  $('f-titre').innerHTML = fracTitre();
+  $('f-prog').style.width = pct(jeu.pos, jeu.types.length) + '%';
+  $('f-retour').textContent = ''; $('f-retour').className = 'retour';
+  $('f-diag').hidden = true; $('f-monte').hidden = true; $('f-suivant').hidden = true;
+  $('f-choix').hidden = true; $('f-paires').hidden = true; $('f-modele').hidden = false;
+  $('f-choix').innerHTML = '';
+}
+function fracQuestion(){
+  fracRemise();
+  var type = jeu.types[jeu.pos];
+  if (type === 'paires') return fracPaires();
+  var fr = tirerFraction(jeu.niveau), n = fr.n, d = fr.d;
+  var forme = pick(formesPossibles(d, jeu.niveau));
+  var choix = [], vus = [];
+  function ajoute(c){ choix.push(c); }
+  if (type === 'lire'){
+    $('f-consigne').textContent = 'Quelle fraction du dessin est coloriée en bleu ?';
+    $('f-modele').innerHTML = dessiner(spec(n, d, forme));
+    ajoute({ n:n, d:d, err:null });
+    var cand = melanger([ {n:d,d:n,err:'inverse'}, {n:d-n,d:d,err:'complement'}, {n:n,d:d-n,err:'colorie-blanc'} ]);
+    cand.forEach(function(c){
+      if (choix.length >= 4 || c.d < 1 || c.n < 1) return;
+      if (choix.some(function(x){ return x.n===c.n && x.d===c.d; }) || memeValeur(c.n,c.d,n,d)) return;
+      ajoute(c);
+    });
+    var essais = 0;
+    while (choix.length < 4 && essais++ < 200){
+      var dd = pick(FRAC_NIV[Math.max(jeu.niveau,2)].d), nn = rnd(1, dd-1);
+      if (choix.some(function(x){ return memeValeur(x.n,x.d,nn,dd); })) continue;
+      ajoute({ n:nn, d:dd, err:'autre' });
+    }
+    choix = melanger(choix);
+    $('f-choix').innerHTML = choix.map(function(c,i){ return '<button data-i="'+i+'">'+fracHTML(c.n,c.d)+'</button>'; }).join('');
+  } else {
+    $('f-consigne').textContent = 'Quel dessin montre cette fraction ?';
+    $('f-modele').innerHTML = fracHTML(n, d);
+    ajoute({ s:spec(n,d,forme), err:null });
+    var cands = [];
+    if (d-n !== n) cands.push({ s:spec(d-n,d,forme), err:'complement' });
+    if (n+d <= 12) cands.push({ s:spec(n, n+d, GRILLE[n+d] && forme==='grille' ? 'grille' : (forme==='grille'?'barre':forme)), err:'colorie-blanc' });
+    if (jeu.niveau >= 2 && d >= 3) cands.push({ s:spec(n, d, forme==='grille'?'barre':forme, true), err:'parts-inegales' });
+    melanger(cands).forEach(function(c){ if (choix.length < 4) ajoute(c); });
+    var e2 = 0;
+    while (choix.length < 4 && e2++ < 200){
+      var n2 = rnd(1, d-1), d2 = d;
+      if (d <= 3){ d2 = pick([2,3,4,5,6].filter(function(x){ return x!==d; })); n2 = rnd(1,d2-1); }
+      var f2 = d2===d ? forme : pick(formesPossibles(d2, jeu.niveau));
+      if (choix.some(function(x){ return !x.s.inegal && memeValeur(x.s.n,x.s.d,n2,d2); }) || memeValeur(n2,d2,n,d)) continue;
+      ajoute({ s:spec(n2,d2,f2), err:'autre' });
+    }
+    choix = melanger(choix);
+    $('f-choix').innerHTML = choix.map(function(c,i){ return '<button data-i="'+i+'" aria-label="dessin '+(i+1)+'">'+dessiner(c.s)+'</button>'; }).join('');
+  }
+  $('f-choix').hidden = false;
+  var t0 = performance.now();
+  $('f-choix').onclick = function(e){
+    var b = e.target.closest('[data-i]'); if (!b || $('f-choix').dataset.fini === '1') return;
+    $('f-choix').dataset.fini = '1';
+    var c = choix[+b.dataset.i], ok = c.err === null;
+    b.classList.add(ok ? 'ok' : 'ko');
+    if (!ok){
+      $('f-choix').querySelectorAll('[data-i]').forEach(function(x){ if (choix[+x.dataset.i].err === null) x.classList.add('ok'); });
+    }
+    fracResultat(ok, { type:type, n:n, d:d, forme:forme, ok:ok, err:c.err, t:Math.round((performance.now()-t0)/100)/10 });
+  };
+  $('f-choix').dataset.fini = '0';
+}
+function fracPaires(){
+  $('f-consigne').textContent = 'Relie chaque fraction à son dessin.';
+  $('f-modele').hidden = true;
+  var dispo = [];
+  FRAC_NIV[jeu.niveau].d.forEach(function(d){ for (var n=1;n<d;n++) if (!dispo.some(function(x){ return memeValeur(x.n,x.d,n,d); })) dispo.push({n:n,d:d}); });
+  var liste = melanger(dispo).slice(0, 4);
+  liste.forEach(function(f,i){ f.id = i; f.s = spec(f.n, f.d, pick(formesPossibles(f.d, jeu.niveau))); });
+  var droite = melanger(liste);
+  $('f-gauche').innerHTML = liste.map(function(f){ return '<button data-g="'+f.id+'">'+fracHTML(f.n,f.d)+'</button>'; }).join('');
+  $('f-droite').innerHTML = droite.map(function(f){ return '<button data-dr="'+f.id+'" aria-label="dessin">'+dessiner(f.s)+'</button>'; }).join('');
+  $('f-paires').hidden = false;
+  var sel = { g:null, dr:null }, fautes = 0, errs = [], faites = 0;
+  function nettoie(){ $('f-paires').querySelectorAll('.sel').forEach(function(x){ x.classList.remove('sel'); }); sel = { g:null, dr:null }; }
+  $('f-paires').onclick = function(e){
+    var b = e.target.closest('button'); if (!b || b.classList.contains('fait')) return;
+    if (b.dataset.g != null){ $('f-gauche').querySelectorAll('.sel').forEach(function(x){ x.classList.remove('sel'); }); sel.g = +b.dataset.g; }
+    else { $('f-droite').querySelectorAll('.sel').forEach(function(x){ x.classList.remove('sel'); }); sel.dr = +b.dataset.dr; }
+    b.classList.add('sel');
+    if (sel.g === null || sel.dr === null) return;
+    var bg = $('f-gauche').querySelector('[data-g="'+sel.g+'"]'), bd = $('f-droite').querySelector('[data-dr="'+sel.dr+'"]');
+    if (sel.g === sel.dr){
+      bg.classList.add('ok','fait'); bd.classList.add('ok','fait'); faites++;
+      nettoie();
+      if (faites === liste.length){
+        var ok = fautes === 0;
+        fracResultat(ok, { type:'paires', ok:ok, fautes:fautes, errs:errs, err: errs[0] || null });
+      }
+    } else {
+      fautes++;
+      var F = liste[sel.g], G = liste[sel.dr];
+      var code = (G.d===F.d && G.n===F.d-F.n) ? 'complement' : (G.d===F.n || G.n===F.d) ? 'inverse' : 'autre';
+      errs.push(code);
+      [bg,bd].forEach(function(x){ x.classList.add('ko','secoue'); });
+      setTimeout(function(){ [bg,bd].forEach(function(x){ x.classList.remove('ko','secoue'); }); }, 550);
+      $('f-retour').className = 'retour ko'; $('f-retour').textContent = 'Ce n\u2019est pas la bonne paire.';
+      $('f-diag').hidden = false; $('f-diag').textContent = MSG_FRAC[code];
+      nettoie();
+    }
+  };
+}
+function fracResultat(ok, item){
+  item.niv = jeu.niveau;
+  jeu.items.push(item);
+  $('f-retour').className = 'retour ' + (ok ? 'ok' : 'ko');
+  $('f-retour').textContent = ok ? pick(['Juste !','Bravo !','Parfait !','Bien vu !'])
+    : item.type === 'paires' ? 'Toutes les paires sont trouvées.' : 'Ce n\u2019était pas celle-là.';
+  if (!ok && item.type !== 'paires'){ $('f-diag').hidden = false; $('f-diag').textContent = MSG_FRAC[item.err]; }
+  else if (item.type === 'paires' && !ok){ $('f-diag').hidden = false; $('f-diag').textContent = item.fautes + ' erreur' + (item.fautes>1?'s':'') + ' en chemin.'; }
+  var msg = '';
+  if (ok){ jeu.suiteOk++; jeu.suiteKo = 0;
+    if (jeu.suiteOk >= 4 && jeu.niveau < FRAC_MAX){ jeu.niveau++; jeu.suiteOk = 0; msg = 'Tu passes au niveau ' + jeu.niveau + ' : ' + FRAC_NIV[jeu.niveau].nom + ' !'; } }
+  else { jeu.suiteKo++; jeu.suiteOk = 0;
+    if (jeu.suiteKo >= 2 && jeu.niveau > 1){ jeu.niveau--; jeu.suiteKo = 0; msg = 'On revient au niveau ' + jeu.niveau + ' pour s\u2019entraîner.'; } }
+  if (msg){ $('f-monte').hidden = false; $('f-monte').textContent = msg; D().fractions.niveau = jeu.niveau; sauver(); $('f-titre').innerHTML = fracTitre(); }
+  var suite = function(){ jeu.pos++; if (jeu.pos < jeu.types.length) fracQuestion(); else { jeu.complet = true; fracFin(); } };
+  if (ok && !msg){ minuteurSuivant = setTimeout(suite, 1000); }
+  else { $('f-suivant').hidden = false; $('f-suivant').onclick = suite; $('f-suivant').focus(); }
+}
+$('f-stop').addEventListener('click', function(){ clearTimeout(minuteurSuivant); fracFin(); });
+function fracFin(){
+  var items = jeu.items, pctF = pct(items.filter(function(x){ return x.ok; }).length, items.length), valF = false;
+  if (jeu.complet) valF = tenterEtape('fractions', pctF >= seuil('fractions'), 'Étape « Fractions » pas encore validée : ' + pctF + ' % de réussite du premier coup, il en faut ' + seuil('fractions') + ' %.');
+  if (items.length){
+    D().fractions.niveau = jeu.niveau;
+    D().fractions.seances.push({ date:jeu.date, niveauDepart:jeu.niveauDepart, niveauFin:jeu.niveau, items:items, valideMission:valF });
+    sauver();
+  }
+  var justes = items.filter(function(x){ return x.ok; }).length;
+  var mot = !items.length ? 'Aucun exercice fait cette fois.'
+    : justes === items.length ? 'Sans faute !' : justes >= items.length*0.7 ? 'Très bien, encore un petit effort.' : 'On continue, les fractions vont venir.';
+  if (items.length && jeu.niveau !== jeu.niveauDepart)
+    mot += jeu.niveau > jeu.niveauDepart ? ' Tu es montée au niveau ' + jeu.niveau + '.' : ' Tu reprends au niveau ' + jeu.niveau + ' la prochaine fois.';
+  var liste = items.filter(function(x){ return !x.ok; }).map(function(x){
+    if (x.type === 'paires') return '<li class="faute">Jeu des paires<small>' + x.fautes + ' erreur' + (x.fautes>1?'s':'') + '</small></li>';
+    return '<li class="faute">' + fracHTML(x.n,x.d,'1.1rem') + ' <small>' + ERR_FRAC[x.err] + '</small></li>';
+  }).join('');
+  bilan({ titre:'Bilan des fractions', gros:justes, sur:'juste' + (justes>1?'s':'') + ' sur ' + items.length, mot:mot,
+    carteTitre:'Mes erreurs', liste:liste, legende:'', erreurs:null, rejouer:fractionsLancer, onglet:'fractions' });
+}
+
+/* ================= BILAN ================= */
+var ongletBilan = 'tables';
+function bilan(o){
+  $('b-titre').textContent = o.titre; $('b-gros').textContent = o.gros; $('b-sur').textContent = o.sur; $('b-mot').textContent = o.mot;
+  $('b-carte').hidden = !o.liste; $('b-carte-titre').textContent = o.carteTitre; $('b-liste').innerHTML = o.liste || '';
+  $('b-legende').textContent = o.legende || ''; $('b-legende').hidden = !o.legende;
+  $('b-erreurs').hidden = !o.erreurs; $('b-erreurs').onclick = o.erreurs;
+  $('b-rejouer').onclick = o.rejouer;
+  var tm = messageEtape ? messageEtape + ' ' + texteMission() : texteMission(); messageEtape = null;
+  $('b-mission').hidden = !tm; $('b-mission').textContent = tm;
+  ongletBilan = o.onglet;
+  montrer('s-bilan');
+}
+$('b-accueil').addEventListener('click', function(){ origine = 'enfant'; ouvrirAccueil(); });
+$('b-progres').addEventListener('click', function(){ ouvrirProgres(ongletBilan); });
+
+/* ================= PROGRÈS ================= */
+function jauge(label, p, detail){
+  return '<div class="jauge"><span>'+label+'</span><span class="fond"><i style="width:'+p+'%;background:'+couleurPct(p)+'"></i></span><span>'+detail+'</span></div>';
+}
+function courbe(vals, ymax, etiq){
+  if (vals.length < 2) return '';
+  var W = 320, H = 130, g = 30, pts = vals.map(function(v,i){ return [g + i*(W-g-10)/(vals.length-1), H-18 - v/ymax*(H-34)]; });
+  var h = '<svg class="courbe" viewBox="0 0 '+W+' '+H+'" role="img" aria-label="courbe de progression">';
+  [0, ymax/2, ymax].forEach(function(v){ var y = H-18 - v/ymax*(H-34);
+    h += '<line x1="'+g+'" x2="'+(W-6)+'" y1="'+y+'" y2="'+y+'" stroke="#3A3579" stroke-width="1"/><text x="'+(g-6)+'" y="'+(y+4)+'" fill="#A9A4E0" font-size="11" text-anchor="end" font-family="inherit">'+etiq(v)+'</text>'; });
+  h += '<polyline fill="none" stroke="var(--accent)" stroke-width="3" stroke-linejoin="round" points="'+pts.map(function(p){ return p[0].toFixed(1)+','+p[1].toFixed(1); }).join(' ')+'"/>';
+  pts.forEach(function(p){ h += '<circle cx="'+p[0].toFixed(1)+'" cy="'+p[1].toFixed(1)+'" r="4" fill="var(--citron)"/>'; });
+  return h + '</svg>';
+}
+function carte(titre, corps, legende){ return '<div class="carte"><h2>'+titre+'</h2>'+corps+(legende?'<p class="legende">'+legende+'</p>':'')+'</div>'; }
+var ongletProgres = 'tables';
+function ouvrirProgres(o){
+  ongletProgres = o || ongletProgres;
+  $('p-titre').textContent = 'Les progrès de ' + prof().nom;
+  $('p-onglets').querySelectorAll('button').forEach(function(b){ b.setAttribute('aria-pressed', b.dataset.o === ongletProgres); });
+  var y = ecranCourant === 's-progres' && garderScroll ? window.scrollY : 0; garderScroll = false;
+  var hist = peutEffacer() ? (ongletProgres === 'lecture' ? histoire('lecture') + histoire('guidees') + histoire('enigmes') + histoire('flash') : histoire(ongletProgres)) : '';
+  $('p-contenu').innerHTML = (ongletProgres === 'tables' ? progresTables() : ongletProgres === 'arbre' ? progresArbre()
+    : ongletProgres === 'lecture' ? progresLecture() : progresFractions()) + hist;
+  montrer('s-progres');
+  if (y) window.scrollTo(0, y);
+}
+/* historique détaillé avec suppression (côté parents uniquement) */
+var gestion = false, garderScroll = false, histOuverts = {};
+function peutEffacer(){ return origine === 'parents' || gestion; }
+function jourDe(iso){ var d = new Date(iso); return d.getFullYear() + '-' + String(d.getMonth()+1).padStart(2,'0') + '-' + String(d.getDate()).padStart(2,'0'); }
+function heure(iso){ return new Date(iso).toLocaleTimeString('fr-FR', { hour:'2-digit', minute:'2-digit' }); }
+function nbJustes(s){ return s.items.filter(function(x){ return x.ok; }).length; }
+var HIST = {
+  tables:   { titre:'Séances de tables', liste:function(){ return D().tables.seances; }, mission:'tables',
+              valide:function(s){ return calculsVrais(s.faits) >= 5; },
+              txt:function(s){ return 'Tables ' + s.tables.join(', ') + '<small>' + s.points + ' / ' + s.maxi + ' points, ' + s.poses + ' calculs, ' + s.fautes + ' erreur' + (s.fautes>1?'s':'') + '</small>'; } },
+  arbre:    { titre:'Séances d\u2019arbre à calculs', liste:function(){ return D().arbre.seances; }, mission:null,
+              txt:function(s){ return (s.rejeu ? 'Erreurs refaites' : 'Niveau ' + s.niveauDepart + (s.niveauFin !== s.niveauDepart ? ' → ' + s.niveauFin : '')) + '<small>' + nbJustes(s) + ' / ' + s.items.length + ' justes</small>'; } },
+  fractions:{ titre:'Séances de fractions', liste:function(){ return D().fractions.seances; }, mission:'fractions',
+              txt:function(s){ return 'Niveau ' + s.niveauDepart + (s.niveauFin !== s.niveauDepart ? ' → ' + s.niveauFin : '') + '<small>' + nbJustes(s) + ' / ' + s.items.length + ' justes</small>'; } },
+  lecture:  { titre:'Lectures chronométrées', liste:function(){ return D().lecture.seances; }, mission:'lecture',
+              txt:function(s){ return esc(s.titre) + '<small>' + s.mclm + ' mots/min, ' + s.mots + ' mots en ' + String(s.temps).replace('.',',') + ' s, ' + s.erreurs + ' erreur' + (s.erreurs>1?'s':'') + '</small>'; } },
+  guidees:  { titre:'Lectures guidées', liste:function(){ return D().lecture.guidees; }, mission:'lecture',
+              txt:function(s){ return esc(s.titre) + '<small>' + s.vitesse + ' mots/min' + (s.groupes ? ', en groupes' : '') + ', avis : ' + esc(String(s.avis).toLowerCase()) + '</small>'; } },
+  enigmes:  { titre:'Énigmes', liste:function(){ return D().lecture.enigmes || []; }, mission:null,
+              txt:function(s){ return esc(s.titre) + '<small>' + (s.ok ? 'résolue' : 'non résolue') + ', ' + s.essais + ' essai' + (s.essais>1?'s':'') + '</small>'; } },
+  flash:    { titre:'Séances de lecture flash', liste:function(){ return D().flash.seances; }, mission:'flash',
+              txt:function(s){ return (s.rejeu ? 'Mots ratés refaits' : 'Niveau ' + s.niveauDepart + (s.niveauFin !== s.niveauDepart ? ' → ' + s.niveauFin : '')) + '<small>' + nbJustes(s) + ' / ' + s.items.length + ' mots lus</small>'; } }
+};
+function histoire(k){
+  var H = HIST[k], L = H.liste(); if (!L.length) return '';
+  var lignes = L.map(function(s, i){ return { s:s, i:i }; }).reverse().map(function(o){
+    return '<li><span>' + dateCourte(o.s.date) + ' à ' + heure(o.s.date) + ' : ' + H.txt(o.s) + '</span>' +
+      '<button class="poubelle" data-del="' + k + ':' + o.i + '" aria-label="Supprimer cette séance">🗑</button></li>';
+  }).join('');
+  return '<div class="carte hist"><details data-hist="' + k + '"' + (histOuverts[k] ? ' open' : '') + '><summary>' + H.titre + ' (' + L.length + ')</summary><ul style="margin-top:10px">' + lignes + '</ul></details></div>';
+}
+/* confirmation en deux touches (les fenêtres de confirmation sont bloquées dans certains lecteurs) */
+function confirmer(b, texte, action){
+  if (b.dataset.arme === '1'){ clearTimeout(b._minuteur); b.dataset.arme = ''; b.classList.remove('arme'); if (b._orig != null) b.innerHTML = b._orig; action(); return; }
+  document.querySelectorAll('.arme').forEach(function(x){ clearTimeout(x._minuteur); x.dataset.arme = ''; x.classList.remove('arme'); if (x._orig != null) x.innerHTML = x._orig; });
+  b.dataset.arme = '1'; b._orig = b.innerHTML; b.innerHTML = texte; b.classList.add('arme');
+  b._minuteur = setTimeout(function(){ b.dataset.arme = ''; b.classList.remove('arme'); b.innerHTML = b._orig; }, 4000);
+}
+$('p-contenu').addEventListener('toggle', function(e){ var d = e.target.closest && e.target.closest('[data-hist]'); if (d) histOuverts[d.dataset.hist] = d.open; }, true);
+$('p-contenu').addEventListener('click', function(e){
+  var b = e.target.closest('[data-del]'); if (!b) return;
+  confirmer(b, 'Supprimer ?', function(){ supprimerSeance(b.dataset.del); });
+});
+function supprimerSeance(ref){
+  var parts = ref.split(':'), k = parts[0], i = +parts[1], H = HIST[k], L = H.liste(), s = L[i];
+  if (!s) return;
+  L.splice(i, 1);
+  if (H.mission && jourDe(s.date) === aujourdhui()){
+    var m = mission(), reste = Object.keys(HIST).some(function(k2){
+      return HIST[k2].mission === H.mission && HIST[k2].liste().some(function(x){ return jourDe(x.date) === aujourdhui() && x.valideMission !== false && (!HIST[k2].valide || HIST[k2].valide(x)); });
+    });
+    if (m.faits[H.mission] && !reste){ var avant = missionFaite(); delete m.faits[H.mission]; if (avant && m.total) m.total--; }
+  }
+  if (k === 'guidees' && !L.length) D().lecture.vitesseGuidee = null;
+  sauver();
+  garderScroll = true; ouvrirProgres(ongletProgres);
+}
+$('p-onglets').addEventListener('click', function(e){ var b = e.target.closest('[data-o]'); if (b) ouvrirProgres(b.dataset.o); });
+
+function agregerTables(){
+  var parFait = {}, parTable = {};
+  D().tables.seances.forEach(function(s){
+    Object.keys(s.faits).forEach(function(cle){
+      var f = s.faits[cle], t = cle.split('×')[0];
+      [ [parFait, cle], [parTable, t] ].forEach(function(z){
+        var o = z[0][z[1]] || (z[0][z[1]] = { n:0, justes:0, rapides:0, lents:0, fautes:0, temps:0, points:0, lim:0 });
+        ['n','justes','rapides','lents','fautes','temps','points'].forEach(function(k){ o[k] += f[k] || 0; });
+        o.lim += s.limite * (f.n || 0);
+      });
+    });
+  });
+  return { parFait:parFait, parTable:parTable };
+}
+function progresTables(){
+  var S = D().tables.seances;
+  if (!S.length) return carte('Pas encore de séance', '<p class="legende">Fais une première série de tables pour voir tes progrès ici.</p>');
+  var agg = agregerTables(), h = '';
+  var vals = S.slice(-20).map(function(s){ return pct(s.points, s.maxi); });
+  if (vals.length >= 2) h += carte('Séance après séance', courbe(vals, 100, function(v){ return v+'%'; }), 'Score de chaque séance, en pourcentage des points possibles.');
+  var lignes = Object.keys(agg.parTable).sort(function(a,b){ return a-b; }).map(function(t){
+    var o = agg.parTable[t], p = pct(o.points, o.n*10);
+    var faits = '';
+    for (var m=0;m<=10;m++){
+      var f = agg.parFait[t+'×'+m];
+      if (!f){ faits += '<span class="fait n">'+t+'×'+m+'</span>'; continue; }
+      var moy = f.temps / f.n, lim = f.lim / f.n;
+      var cls = f.fautes ? 'r' : moy < lim*0.35 ? 'v' : moy < lim ? 'j' : 'r';
+      faits += '<span class="fait '+cls+'">'+t+'×'+m+' · '+moy.toFixed(1).replace('.',',')+' s</span>';
+    }
+    return '<details><summary>'+jauge('Table de '+t, p, p+'% · '+(o.temps/o.n).toFixed(1).replace('.',',')+' s')+'</summary><div class="faits">'+faits+'</div></details>';
+  }).join('');
+  h += carte('Réussite par table', lignes, 'Score pondéré par la vitesse. Touche une table pour voir chaque calcul et son temps moyen : vert rapide, jaune lent, rose raté ou trop long.');
+  var vol = Object.keys(agg.parTable).map(function(t){ return [t, agg.parTable[t].n]; }).sort(function(a,b){ return b[1]-a[1]; }).slice(0,5);
+  h += carte('Tables les plus travaillées', '<ul>'+vol.map(function(v){ return '<li>Table de '+v[0]+' <small>'+v[1]+' calculs</small></li>'; }).join('')+'</ul>');
+  var frag = Object.keys(agg.parFait).map(function(c){ var f = agg.parFait[c]; return [c, f.fautes*3 + f.lents, f]; })
+    .filter(function(x){ return x[1] > 0; }).sort(function(a,b){ return b[1]-a[1]; }).slice(0,8);
+  if (frag.length) h += carte('Calculs les plus fragiles', '<ul>'+frag.map(function(x){ var p = x[0].split('×');
+    return '<li class="'+(x[2].fautes?'faute':'lent')+'">'+p[0]+' × '+p[1]+' = '+(p[0]*p[1])+'<small>'+x[2].fautes+' erreur'+(x[2].fautes>1?'s':'')+', '+x[2].lents+' réponse'+(x[2].lents>1?'s':'')+' trop longue'+(x[2].lents>1?'s':'')+'</small></li>'; }).join('')+'</ul>',
+    'Une erreur compte trois fois plus qu\u2019une réponse lente dans ce classement.');
+  h += carte('Dernières séances', '<ul>'+S.slice(-6).reverse().map(function(s){ return '<li>'+dateCourte(s.date)+' : tables '+s.tables.join(', ')+'<small>'+s.points+' / '+s.maxi+' points, '+s.fautes+' erreur'+(s.fautes>1?'s':'')+'</small></li>'; }).join('')+'</ul>');
+  return h;
+}
+function compterErreurs(items, dico){
+  var c = {}; items.forEach(function(x){
+    var codes = x.errs && x.errs.length ? x.errs : (x.ok || !x.err ? [] : [x.err]);
+    codes.forEach(function(e){ c[e] = (c[e]||0) + 1; });
+  });
+  var tot = Object.keys(c).reduce(function(s,k){ return s + c[k]; }, 0);
+  return Object.keys(c).sort(function(a,b){ return c[b]-c[a]; }).map(function(k){
+    return '<div class="jauge"><span>'+dico[k]+'</span><span class="fond"><i style="width:'+pct(c[k],tot)+'%;background:var(--framboise)"></i></span><span>'+c[k]+'</span></div>';
+  }).join('');
+}
+function progresArbre(){
+  var A = D().arbre, S = A.seances, h = '';
+  h += carte('Niveau actuel : ' + A.niveau, '<p class="legende" style="font-size:1.05rem">'+ARBRE_NIV[A.niveau].nom+'</p>',
+    'Le niveau monte après 4 réponses justes d\u2019affilée et redescend après 2 erreurs d\u2019affilée.');
+  if (!S.length) return h + carte('Pas encore de séance', '<p class="legende">Fais une première série pour voir tes progrès ici.</p>');
+  var norm = S.filter(function(s){ return !s.rejeu; });
+  var niv = norm.slice(-20).map(function(s){ return s.niveauFin; });
+  if (niv.length >= 2) h += carte('Niveau atteint à chaque séance', courbe(niv, ARBRE_MAX, function(v){ return Math.round(v); }));
+  var items = []; S.forEach(function(s){ items = items.concat(s.items); });
+  var parNiv = {}; items.forEach(function(x){ if (x.niv == null) return; var o = parNiv[x.niv] || (parNiv[x.niv] = {n:0, ok:0}); o.n++; if (x.ok) o.ok++; });
+  h += carte('Réussite par niveau', Object.keys(parNiv).sort().map(function(k){ var o = parNiv[k], p = pct(o.ok,o.n);
+    return jauge('Niv. '+k+' <small style="color:var(--pale)">'+ARBRE_NIV[k].nom+'</small>', p, p+'% · '+o.n); }).join(''));
+  var err = compterErreurs(items, ERR_ARBRE);
+  if (err){
+    var ret = {}; items.forEach(function(x){ if (x.err==='retenue' && x.rang!=null) ret[x.rang] = (ret[x.rang]||0)+1; });
+    var detRet = Object.keys(ret).map(function(k){ return 'vers les ' + RANGS[k] + ' (' + ret[k] + ')'; }).join(', ');
+    h += carte('D\u2019où viennent les erreurs', err, detRet ? 'Retenues oubliées ' + detRet + '.' : '');
+    var dern = items.filter(function(x){ return !x.ok; }).slice(-8).reverse();
+    h += carte('Dernières erreurs', '<ul>'+dern.map(function(x){ return '<li class="faute">'+x.n.map(fmt).join(' + ')+' = '+fmt(somme(x.n))+
+      '<small>A écrit '+fmt(x.rep)+' : '+ERR_ARBRE[x.err].toLowerCase()+'</small></li>'; }).join('')+'</ul>');
+  }
+  h += carte('Dernières séances', '<ul>'+S.slice(-6).reverse().map(function(s){ var j = s.items.filter(function(x){ return x.ok; }).length;
+    return '<li>'+dateCourte(s.date)+(s.rejeu ? ' : erreurs refaites' : ' : niveau '+s.niveauDepart+(s.niveauFin!==s.niveauDepart?' → '+s.niveauFin:''))+'<small>'+j+' / '+s.items.length+' justes</small></li>'; }).join('')+'</ul>');
+  return h;
+}
+function progresFractions(){
+  var F = D().fractions, S = F.seances, h = '';
+  h += carte('Niveau actuel : ' + F.niveau, '<p class="legende" style="font-size:1.05rem">'+FRAC_NIV[F.niveau].nom+'</p>',
+    'Le niveau monte après 4 réponses justes d\u2019affilée et redescend après 2 erreurs d\u2019affilée.');
+  if (!S.length) return h + carte('Pas encore de séance', '<p class="legende">Fais une première série pour voir tes progrès ici.</p>');
+  var items = []; S.forEach(function(s){ items = items.concat(s.items); });
+  var vals = S.slice(-20).map(function(s){ return pct(s.items.filter(function(x){ return x.ok; }).length, s.items.length); });
+  if (vals.length >= 2) h += carte('Séance après séance', courbe(vals, 100, function(v){ return v+'%'; }), 'Pourcentage de réponses justes du premier coup.');
+  var types = { lire:'Lire la fraction d\u2019un dessin', trouver:'Trouver le bon dessin', paires:'Jeu des paires' };
+  h += carte('Réussite par exercice', Object.keys(types).map(function(t){
+    var l = items.filter(function(x){ return x.type===t; }); if (!l.length) return '';
+    var p = pct(l.filter(function(x){ return x.ok; }).length, l.length); return jauge(types[t], p, p+'% · '+l.length); }).join(''));
+  var fs = items.filter(function(x){ return x.forme; });
+  h += carte('Réussite par type de dessin', Object.keys(FORMES).map(function(f){
+    var l = fs.filter(function(x){ return x.forme===f; }); if (!l.length) return '';
+    var p = pct(l.filter(function(x){ return x.ok; }).length, l.length); return jauge('Les '+FORMES[f], p, p+'% · '+l.length); }).join(''));
+  var err = compterErreurs(items, ERR_FRAC);
+  if (err) h += carte('D\u2019où viennent les erreurs', err);
+  var rat = {}; items.forEach(function(x){ if (!x.ok && x.n){ var k = x.n+'/'+x.d; rat[k] = (rat[k]||0)+1; } });
+  var rk = Object.keys(rat).sort(function(a,b){ return rat[b]-rat[a]; }).slice(0,6);
+  if (rk.length) h += carte('Fractions à revoir', '<div class="ligne">'+rk.map(function(k){ var p = k.split('/');
+    return '<span class="fait r" style="font-size:1.2rem;padding:6px 12px">'+fracHTML(p[0],p[1])+' <small>×'+rat[k]+'</small></span>'; }).join('')+'</div>');
+  return h;
+}
+
+/* ================= PARENTS ================= */
+function ouvrirParents(){
+  $('pa-titre').textContent = 'Bilans de ' + prof().nom;
+  $('pa-eff-msg').textContent = '';
+  $('pa-mail').value = DB.email || '';
+  $('pa-niv-arbre').innerHTML = Object.keys(ARBRE_NIV).map(function(k){ return '<button data-v="'+k+'" aria-pressed="'+(+k===D().arbre.niveau)+'">'+k+'</button>'; }).join('');
+  $('pa-niv-fractions').innerHTML = Object.keys(FRAC_NIV).map(function(k){ return '<button data-v="'+k+'" aria-pressed="'+(+k===D().fractions.niveau)+'">'+k+'</button>'; }).join('');
+  majSegments('pa-verrou', D().verrouArbre === false ? 'non' : 'oui');
+  document.querySelectorAll('[data-seuil]').forEach(function(z){ z.querySelectorAll('button').forEach(function(b){ b.setAttribute('aria-pressed', +b.dataset.v === seuil(z.dataset.seuil)); }); });
+  $('pa-niv-flash').innerHTML = Object.keys(FLASH).map(function(k){ return '<button data-v="'+k+'" aria-pressed="'+(+k===D().flash.niveau)+'">'+k+'</button>'; }).join('');
+  montrer('s-parents');
+}
+document.querySelectorAll('[data-seuil]').forEach(function(z){
+  z.addEventListener('click', function(e){ var b = e.target.closest('button'); if (!b) return;
+    D().seuils = D().seuils || {}; D().seuils[z.dataset.seuil] = +b.dataset.v; sauver();
+    z.querySelectorAll('button').forEach(function(x){ x.setAttribute('aria-pressed', x === b); }); });
+});
+$('pa-verrou').addEventListener('click', function(e){ var b = e.target.closest('button'); if (!b) return; D().verrouArbre = b.dataset.v === 'oui'; sauver(); majSegments('pa-verrou', b.dataset.v); });
+$('pa-niv-flash').addEventListener('click', function(e){ var b = e.target.closest('button'); if (!b) return; D().flash.niveau = +b.dataset.v; D().flash.ms = 1200; sauver(); majSegments('pa-niv-flash', b.dataset.v); });
+$('pa-niv-arbre').addEventListener('click', function(e){ var b = e.target.closest('button'); if (!b) return; D().arbre.niveau = +b.dataset.v; sauver(); majSegments('pa-niv-arbre', b.dataset.v); });
+$('pa-niv-fractions').addEventListener('click', function(e){ var b = e.target.closest('button'); if (!b) return; D().fractions.niveau = +b.dataset.v; sauver(); majSegments('pa-niv-fractions', b.dataset.v); });
+$('pa-mail').addEventListener('change', function(){ DB.email = $('pa-mail').value.trim(); sauver(); });
+function texteBilan(){
+  var p = prof(), L = [], d = D();
+  L.push('Bilan de ' + p.nom + ' (' + p.classe + ') au ' + new Date().toLocaleDateString('fr-FR'));
+  L.push('');
+  L.push('TABLES DE MULTIPLICATION');
+  var st = d.tables.seances;
+  if (!st.length) L.push('Aucune séance.');
+  else {
+    var s = st[st.length-1];
+    L.push('Dernière séance (' + dateCourte(s.date) + ') : tables ' + s.tables.join(', ') + ', ' + s.points + '/' + s.maxi + ' points, ' + s.fautes + ' erreur(s), ' + s.lents + ' réponse(s) lente(s).');
+    var agg = agregerTables();
+    L.push('Réussite par table : ' + Object.keys(agg.parTable).sort(function(a,b){return a-b;}).map(function(t){ var o = agg.parTable[t]; return t + ' → ' + pct(o.points, o.n*10) + '%'; }).join(', '));
+    var frag = Object.keys(agg.parFait).map(function(c){ var f = agg.parFait[c]; return [c, f.fautes*3+f.lents]; }).filter(function(x){ return x[1]>0; }).sort(function(a,b){ return b[1]-a[1]; }).slice(0,8);
+    if (frag.length) L.push('Calculs fragiles : ' + frag.map(function(x){ return x[0].replace('×',' × '); }).join(', '));
+  }
+  L.push('');
+  L.push('ARBRE À CALCULS');
+  L.push('Niveau actuel : ' + d.arbre.niveau + ' (' + ARBRE_NIV[d.arbre.niveau].nom + ')');
+  var sa = d.arbre.seances;
+  if (sa.length){
+    var s2 = sa[sa.length-1];
+    L.push('Dernière séance (' + dateCourte(s2.date) + ') : ' + s2.items.filter(function(x){ return x.ok; }).length + '/' + s2.items.length + ' justes.');
+    var ia = []; sa.forEach(function(s){ ia = ia.concat(s.items); });
+    var ce = {}; ia.forEach(function(x){ if (!x.ok) ce[x.err] = (ce[x.err]||0)+1; });
+    var ke = Object.keys(ce).sort(function(a,b){ return ce[b]-ce[a]; });
+    if (ke.length) L.push('Types d\u2019erreurs : ' + ke.map(function(k){ return ERR_ARBRE[k] + ' (' + ce[k] + ')'; }).join(', '));
+  }
+  L.push('');
+  L.push('FRACTIONS');
+  L.push('Niveau actuel : ' + d.fractions.niveau + ' (' + FRAC_NIV[d.fractions.niveau].nom + ')');
+  var sf = d.fractions.seances;
+  if (sf.length){
+    var s3 = sf[sf.length-1];
+    L.push('Dernière séance (' + dateCourte(s3.date) + ') : ' + s3.items.filter(function(x){ return x.ok; }).length + '/' + s3.items.length + ' justes du premier coup.');
+    var fi = []; sf.forEach(function(s){ fi = fi.concat(s.items); });
+    var cf = {}; fi.forEach(function(x){ (x.errs && x.errs.length ? x.errs : (!x.ok && x.err ? [x.err] : [])).forEach(function(e){ cf[e] = (cf[e]||0)+1; }); });
+    var kf = Object.keys(cf).sort(function(a,b){ return cf[b]-cf[a]; });
+    if (kf.length) L.push('Types d\u2019erreurs : ' + kf.map(function(k){ return ERR_FRAC[k] + ' (' + cf[k] + ')'; }).join(', '));
+  }
+  L.push('');
+  L.push('LECTURE À VOIX HAUTE');
+  var sl = d.lecture.seances;
+  if (!sl.length) L.push('Aucune séance.');
+  else {
+    sl.slice(-5).forEach(function(s){ L.push(dateCourte(s.date) + ' : « ' + s.titre + ' », ' + s.mclm + ' mots/min (' + s.mots + ' mots lus en ' + s.temps + ' s, ' + s.erreurs + ' erreur(s))' + (s.prosodie ? ', lecture ' + PROSO[s.prosodie-1].nom.toLowerCase() : '')); });
+    var mr = motsRates(sl).slice(0,15);
+    if (mr.length) L.push('Mots souvent mal lus : ' + mr.map(function(x){ return x[0]; }).join(', '));
+  }
+  if (d.lecture.guidees.length){
+    var gl = d.lecture.guidees[d.lecture.guidees.length-1];
+    L.push('Lecture guidée : ' + d.lecture.guidees.length + ' séance(s), dernière à ' + gl.vitesse + ' mots/min (avis : ' + gl.avis.toLowerCase() + '). Prochaine à ' + (d.lecture.vitesseGuidee || gl.vitesse) + ' mots/min.');
+  }
+  L.push('');
+  L.push('LECTURE FLASH');
+  L.push('Niveau actuel : ' + d.flash.niveau + ' (' + FLASH[d.flash.niveau].nom + '), temps d’affichage ' + secondes(d.flash.ms));
+  if (d.flash.seances.length){
+    var sfl = d.flash.seances[d.flash.seances.length-1];
+    L.push('Dernière séance (' + dateCourte(sfl.date) + ') : ' + sfl.items.filter(function(x){ return x.ok; }).length + '/' + sfl.items.length + ' mots lus, de ' + secondes(sfl.msDebut) + ' à ' + secondes(sfl.msFin) + '.');
+  }
+  return L.join('\n');
+}
+$('pa-envoyer').addEventListener('click', function(){
+  DB.email = $('pa-mail').value.trim(); sauver();
+  window.location.href = 'mailto:' + encodeURIComponent(DB.email) + '?subject=' + encodeURIComponent('Bilan de ' + prof().nom + ' du ' + new Date().toLocaleDateString('fr-FR')) + '&body=' + encodeURIComponent(texteBilan());
+});
+$('pa-csv').addEventListener('click', function(){
+  var d = D(), L = [];
+  L.push('TABLES'); L.push('date;tables;seuil_s;calculs;justes;lents;erreurs;points;points_max');
+  d.tables.seances.forEach(function(s){ L.push([new Date(s.date).toLocaleString('fr-FR'), '"'+s.tables.join(', ')+'"', s.limite, s.poses, s.justes, s.lents, s.fautes, s.points, s.maxi].join(';')); });
+  L.push(''); L.push('ARBRE'); L.push('date;niveau;calcul;resultat;reponse;juste;erreur;temps_s');
+  d.arbre.seances.forEach(function(s){ s.items.forEach(function(x){ L.push([new Date(s.date).toLocaleString('fr-FR'), x.niv==null?'erreurs':x.niv, x.n.join(' + '), somme(x.n), x.rep, x.ok?'oui':'non', x.err?ERR_ARBRE[x.err]:'', String(x.t).replace('.',',')].join(';')); }); });
+  L.push(''); L.push('FRACTIONS'); L.push('date;niveau;exercice;fraction;dessin;juste;erreur');
+  d.fractions.seances.forEach(function(s){ s.items.forEach(function(x){ L.push([new Date(s.date).toLocaleString('fr-FR'), x.niv, x.type, x.n ? x.n+'/'+x.d : '', x.forme||'', x.ok?'oui':'non', (x.errs&&x.errs.length?x.errs:(x.err?[x.err]:[])).map(function(e){ return ERR_FRAC[e]; }).join(' / ')].join(';')); }); });
+  L.push(''); L.push('LECTURE'); L.push('date;texte;classe;temps_s;mots_lus;erreurs;mots_par_minute;lecture;mots_mal_lus');
+  d.lecture.seances.forEach(function(s){ L.push([new Date(s.date).toLocaleString('fr-FR'), '"'+s.titre+'"', s.classe, String(s.temps).replace('.',','), s.mots, s.erreurs, s.mclm, s.prosodie ? PROSO[s.prosodie-1].nom : '', '"'+s.rates.join(', ')+'"'].join(';')); });
+  L.push(''); L.push('LECTURE GUIDEE'); L.push('date;texte;vitesse_mots_min;groupes;avis');
+  d.lecture.guidees.forEach(function(s){ L.push([new Date(s.date).toLocaleString('fr-FR'), '"'+s.titre+'"', s.vitesse, s.groupes?'oui':'non', s.avis].join(';')); });
+  L.push(''); L.push('LECTURE FLASH'); L.push('date;niveau;mot;affichage_ms;lu');
+  d.flash.seances.forEach(function(s){ s.items.forEach(function(x){ L.push([new Date(s.date).toLocaleString('fr-FR'), s.niveauDepart, '"'+x.mot+'"', x.ms, x.ok?'oui':'non'].join(';')); }); });
+  var blob = new Blob(['\ufeff' + L.join('\n')], { type:'text/csv;charset=utf-8' });
+  var a = document.createElement('a'); a.href = URL.createObjectURL(blob);
+  a.download = 'ecole-' + P + '-' + new Date().toISOString().slice(0,10) + '.csv';
+  document.body.appendChild(a); a.click(); document.body.removeChild(a);
+  setTimeout(function(){ URL.revokeObjectURL(a.href); }, 2000);
+});
+var NOMS_EFF = { lecture:'de lecture à voix haute', flash:'de lecture flash', tables:'des tables', arbre:'de l\u2019arbre à calculs', fractions:'des fractions' };
+$('pa-eff-modules').addEventListener('click', function(e){
+  var b = e.target.closest('[data-eff]'); if (!b) return;
+  var k = b.dataset.eff, d = D();
+  confirmer(b, 'Touche encore pour tout effacer ' + NOMS_EFF[k].replace(/^de |^des /, function(x){ return x === 'des ' ? 'les ' : ''; }), function(){
+  if (k === 'lecture'){ d.lecture.seances = []; d.lecture.guidees = []; d.lecture.enigmes = []; d.lecture.vitesseGuidee = null; }
+  else d[k].seances = [];
+  var m = mission();
+  if (m.faits[k]){ var avant = missionFaite(); delete m.faits[k]; if (avant && m.total) m.total--; }
+  sauver();
+  $('pa-eff-msg').textContent = 'Historique ' + NOMS_EFF[k] + ' de ' + prof().nom + ' effacé.';
+  });
+});
+$('pa-seances').addEventListener('click', function(){ gestion = true; ouvrirProgres('tables'); });
+/* sauvegarde complète JSON */
+$('pa-json').addEventListener('click', function(){
+  var blob = new Blob([JSON.stringify({ app:'ecole-maison', version:1, date:new Date().toISOString(), donnees:DB }, null, 1)], { type:'application/json' });
+  var nom = 'ecole-maison-sauvegarde-' + aujourdhui() + '.json';
+  try {
+    var f = new File([blob], nom, { type:'application/json' });
+    if (navigator.canShare && navigator.canShare({ files:[f] })){ navigator.share({ files:[f], title:nom }).catch(function(){}); return; }
+  } catch(e){}
+  var a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = nom;
+  document.body.appendChild(a); a.click(); document.body.removeChild(a);
+  setTimeout(function(){ URL.revokeObjectURL(a.href); }, 3000);
+});
+var importEnAttente = null;
+$('pa-import').addEventListener('change', function(){
+  var fichier = $('pa-import').files[0]; if (!fichier) return;
+  var r = new FileReader();
+  r.onload = function(){
+    try {
+      var o = JSON.parse(r.result), d = o && o.app === 'ecole-maison' ? o.donnees : o;
+      if (!d || !d.profils || !d.donnees) throw new Error('format');
+      importEnAttente = d;
+      var n = 0; Object.keys(d.donnees).forEach(function(k){ var x = d.donnees[k];
+        n += (x.tables ? x.tables.seances.length : 0) + (x.arbre ? x.arbre.seances.length : 0) + (x.fractions ? x.fractions.seances.length : 0) + (x.lecture ? x.lecture.seances.length : 0); });
+      $('pa-import-msg').className = 'retour ok';
+      $('pa-import-msg').textContent = 'Sauvegarde lue : ' + d.profils.map(function(p){ return p.nom; }).join(' et ') + ', ' + n + ' séance' + (n>1?'s':'') + (o.date ? ' (sauvegarde du ' + dateCourte(o.date) + ')' : '') + '. Les données actuelles de cet appareil seront remplacées.';
+      $('pa-import-ok').hidden = false;
+    } catch(e){
+      importEnAttente = null; $('pa-import-ok').hidden = true;
+      $('pa-import-msg').className = 'retour ko'; $('pa-import-msg').textContent = 'Ce fichier n\u2019est pas une sauvegarde de l\u2019école à la maison.';
+    }
+    $('pa-import').value = '';
+  };
+  r.readAsText(fichier);
+});
+$('pa-import-ok').addEventListener('click', function(){
+  confirmer($('pa-import-ok'), 'Touche encore pour confirmer', function(){
+    if (!importEnAttente) return;
+    DB = importEnAttente; importEnAttente = null;
+    DB.profils.forEach(function(p){ if (!DB.donnees[p.id]) DB.donnees[p.id] = vide(1,1); completer(DB.donnees[p.id], p.classe); });
+    sauver();
+    $('pa-import-ok').hidden = true;
+    $('pa-import-msg').className = 'retour ok'; $('pa-import-msg').textContent = 'Données importées.';
+    if (!DB.profils.some(function(p){ return p.id === P; })) P = DB.profils[0].id;
+    codeOk = true; setTimeout(ouvrirVueParents, 900);
+  });
+});
+$('pa-effacer').addEventListener('click', function(){
+  confirmer($('pa-effacer'), 'Touche encore pour tout effacer', function(){
+    var p = prof(), fn = D().flash.niveau; DB.donnees[P] = vide(D().arbre.niveau, D().fractions.niveau); completer(DB.donnees[P], p.classe); D().flash.niveau = fn; sauver(); ouvrirParents();
+    $('pa-eff-msg').textContent = 'Tout l\u2019historique de ' + p.nom + ' est effacé.';
+  });
+});
+
+/* ================= LECTURE À VOIX HAUTE ================= */
+var TEXTES = [
+ { id:'ce2-boulangere', classe:'CE2', titre:'Le chat de la boulangère', texte:"Tous les matins, avant le lever du soleil, Madame Rosa ouvre sa boulangerie. Elle allume le grand four, prépare la pâte et fait cuire les premières baguettes. Pendant ce temps, son chat Pistache dort sur un sac de farine. Un matin, Madame Rosa ne trouve pas Pistache. Elle regarde sous le comptoir, derrière les paniers et même dans la vitrine. « Pistache ! Où es-tu ? » appelle-t-elle. Mais le chat ne répond pas. Les premiers clients arrivent. Le facteur achète un pain aux céréales, puis une maman et ses deux enfants choisissent des croissants. Soudain, la petite fille pousse un cri : « Regardez ! Quelque chose bouge dans le panier des brioches ! » Madame Rosa s'approche doucement. Sous le torchon, deux oreilles pointues apparaissent, puis deux grands yeux verts. C'est Pistache ! Il a le museau tout blanc de sucre. Tout le monde éclate de rire. Depuis ce jour, Madame Rosa ferme toujours le panier des brioches avec un couvercle." },
+ { id:'ce2-cabane', classe:'CE2', titre:'La cabane au fond du jardin', texte:"Cet été, Tom et sa cousine Inès ont décidé de construire une cabane au fond du jardin de leur grand-père. Le premier jour, ils ont ramassé des branches dans le petit bois. Le deuxième jour, grand-père leur a prêté des planches, des clous et un vieux marteau. « Faites attention à vos doigts ! » leur a-t-il dit en souriant. Ils ont travaillé toute la semaine. Inès mesurait les planches, Tom les clouait. Pour le toit, ils ont utilisé une grande bâche verte. Pour la porte, un vieux rideau à fleurs trouvé au grenier. Le samedi, la cabane était enfin prête. Elle n'était pas très droite, mais elle était solide. Les deux enfants y ont installé des coussins, une lampe de poche et une boîte de biscuits. Le soir, ils ont demandé la permission d'y dormir. Grand-père a accepté. Au milieu de la nuit, un bruit étrange les a réveillés. Quelque chose grattait sur le toit ! Tom a allumé sa lampe, tout tremblant. Ce n'était qu'un écureuil, venu chercher les miettes de biscuits." },
+ { id:'ce2-herisson', classe:'CE2', titre:'Le hérisson (documentaire)', texte:"Le hérisson est un petit animal que l'on rencontre souvent dans les jardins. Son dos est couvert de milliers de piquants. Quand il a peur, il se roule en boule et ses piquants se dressent. Les autres animaux ne peuvent alors pas l'attraper. Le hérisson vit surtout la nuit. Le jour, il dort caché sous un tas de feuilles ou dans une haie. Dès que le soleil se couche, il part chercher sa nourriture. Il mange des limaces, des vers de terre, des insectes et parfois des fruits tombés au sol. C'est pour cela que les jardiniers l'aiment bien : il protège les salades ! En hiver, quand il fait froid et que la nourriture devient rare, le hérisson hiberne. Il se prépare un nid bien chaud et dort pendant plusieurs mois. Son cœur bat alors très lentement. Au printemps, il se réveille, très maigre et très affamé. Si tu veux aider les hérissons, tu peux laisser un coin sauvage dans ton jardin et un petit passage sous la clôture." },
+ { id:'ce2-orage', classe:'CE2', titre:'L\u2019orage du pique-nique', texte:"Ce dimanche-là, toute la famille était partie pique-niquer au bord du lac. Le ciel était bleu et il faisait très chaud. Papa avait préparé des sandwichs, maman avait apporté une tarte aux pommes. Léa et son petit frère Hugo jouaient au ballon près de l'eau. Vers trois heures, le vent s'est levé. De gros nuages gris sont arrivés derrière la colline. « Vite, il faut ranger ! » a crié maman. Tout le monde s'est dépêché de remettre les assiettes et les verres dans le panier. Hugo courait après les serviettes qui s'envolaient. Tout à coup, un éclair a traversé le ciel, suivi d'un énorme coup de tonnerre. Hugo s'est bouché les oreilles. Les premières gouttes sont tombées, grosses comme des billes. La famille a couru jusqu'à la voiture en riant. Ils étaient trempés de la tête aux pieds ! À l'intérieur, la pluie tambourinait sur le toit. Maman a sorti la tarte du panier. « Finalement, a dit papa, c'est le meilleur pique-nique de l'année ! »" },
+ { id:'ce2-marche', classe:'CE2', titre:'Le marché du samedi', texte:"Le samedi matin, Nina accompagne son papa au marché. Elle adore cet endroit plein de couleurs, de bruits et d'odeurs. Elle porte le grand panier en osier, et son papa tient la liste des courses. D'abord, ils s'arrêtent chez le marchand de fruits. Il y a des pommes rouges, des poires jaunes et des raisins noirs. Nina choisit six pêches bien mûres. Ensuite, ils vont chez la fromagère, qui lui fait toujours goûter un petit morceau de comté. Plus loin, un monsieur vend des poulets rôtis. Ça sent si bon que Nina a déjà faim ! Au bout de l'allée, il y a le stand des fleurs. Nina aimerait offrir un bouquet à sa maman, mais elle n'a que deux euros dans sa poche. La fleuriste lui sourit et lui tend trois tulipes orange. « Pour deux euros, c'est d'accord, mademoiselle. » Sur le chemin du retour, le panier est si lourd que papa doit l'aider à le porter. Nina, elle, tient fièrement ses tulipes." },
+ { id:'cm1-phare', classe:'CM1', titre:'Le phare abandonné', texte:"Au bout de la presqu'île se dressait un vieux phare que plus personne n'utilisait. Sa peinture blanche s'écaillait et ses fenêtres étaient couvertes de sel. Les habitants du village racontaient qu'une lumière s'y allumait parfois, les nuits de tempête, alors que le phare était fermé depuis vingt ans. Maël n'y croyait pas. Pourtant, un soir d'octobre, depuis la fenêtre de sa chambre, il aperçut une lueur au sommet de la tour. Le lendemain, avec son amie Capucine, il décida d'aller voir de plus près. Ils suivirent le sentier des douaniers, entre les rochers et les touffes de bruyère. La porte du phare n'était pas verrouillée. Elle s'ouvrit en grinçant. À l'intérieur, un escalier en colimaçon montait dans l'obscurité. Les deux enfants gravirent les marches une à une, le cœur battant. En haut, ils découvrirent une pièce ronde, étonnamment propre. Sur une table, il y avait une lampe à pétrole, un carnet et une paire de jumelles. Le carnet était rempli de dessins d'oiseaux : des goélands, des cormorans, des macareux. Soudain, des pas résonnèrent dans l'escalier. Un vieil homme apparut, surpris de les voir. « Je suis l'ancien gardien, expliqua-t-il. Je viens observer les oiseaux migrateurs. Les nuits de tempête, certains se réfugient ici. » Maël et Capucine venaient de résoudre le mystère du phare." },
+ { id:'cm1-abeilles', classe:'CM1', titre:'Les abeilles (documentaire)', texte:"Les abeilles vivent en colonies qui peuvent compter jusqu'à cinquante mille individus. Chaque colonie possède une seule reine, dont le rôle est de pondre des œufs, parfois plus de deux mille par jour au printemps. Les autres abeilles sont presque toutes des ouvrières. Au cours de leur courte vie, qui dure environ six semaines en été, elles changent plusieurs fois de métier. Les plus jeunes nettoient les cellules de la ruche et nourrissent les larves. Ensuite, elles construisent les rayons de cire ou montent la garde à l'entrée. Enfin, elles deviennent butineuses et partent récolter le nectar et le pollen des fleurs. Pour indiquer à leurs sœurs où se trouvent les meilleures fleurs, les butineuses exécutent une danse étonnante. Selon la direction et la vitesse de leurs mouvements, les autres abeilles comprennent la distance et le chemin à suivre. De retour à la ruche, le nectar est transformé en miel, qui servira de réserve pendant l'hiver. Mais les abeilles ne fabriquent pas seulement du miel. En passant de fleur en fleur, elles transportent le pollen et permettent aux plantes de produire des fruits et des graines. Sans elles, il y aurait beaucoup moins de pommes, de cerises ou de courgettes. Aujourd'hui, les abeilles sont menacées par certains produits chimiques et par la disparition des fleurs sauvages. Les protéger, c'est aussi protéger notre alimentation." },
+ { id:'cm1-lettre', classe:'CM1', titre:'La lettre mystérieuse', texte:"En rentrant de l'école, Samia trouva une enveloppe glissée sous la porte. Elle ne portait ni timbre ni adresse, seulement son prénom écrit à l'encre violette. À l'intérieur, une feuille pliée en quatre contenait un étrange message : « Cherche là où dorment les livres qu'on ne lit plus. » Samia réfléchit longuement. Les livres qu'on ne lit plus… Elle pensa d'abord à la bibliothèque de l'école, puis au carton de vieux romans que sa mère avait monté au grenier. Elle grimpa l'échelle, souleva la trappe et se faufila entre les valises poussiéreuses. Le carton était bien là. Entre deux bandes dessinées abîmées, elle découvrit une seconde enveloppe violette. Le nouveau message disait : « Bravo ! Maintenant, va voir celui qui garde la maison sans jamais dormir. » Samia descendit en courant. Qui pouvait bien garder la maison sans dormir ? Pas le chat, qui passait ses journées à ronfler sur le canapé. Soudain, elle eut une idée : le vieux nain de jardin, près du portail ! Sous sa brouette en plâtre, un petit paquet l'attendait. Elle l'ouvrit avec précaution. Il contenait un carnet neuf, un stylo à encre violette et un mot : « Joyeux anniversaire, ma grande. Une détective comme toi mérite son propre carnet d'enquête. Papi. » Samia sourit. Elle avait complètement oublié que c'était son anniversaire." },
+ { id:'cm1-train', classe:'CM1', titre:'Le train de nuit', texte:"Pour les vacances de février, Arthur et sa sœur Jeanne prenaient pour la première fois le train de nuit. Ils devaient rejoindre leurs grands-parents, qui habitaient au pied des montagnes. Sur le quai de la gare, l'horloge indiquait vingt et une heures. Le train, long et bleu, attendait en ronronnant. Leur compartiment contenait quatre couchettes superposées, de petites échelles et une minuscule fenêtre. Arthur choisit aussitôt la couchette du haut. Jeanne, qui avait un peu peur, préféra rester en bas, à côté de leur mère. Quand le train démarra, les lumières de la ville défilèrent de plus en plus vite, puis ce fut l'obscurité. On n'entendait plus que le bruit régulier des roues sur les rails. Arthur essayait de rester éveillé pour ne rien manquer, mais le balancement du wagon finit par l'endormir. Au milieu de la nuit, un arrêt brutal le réveilla. Il écarta le rideau et découvrit un paysage incroyable : tout était blanc. La neige recouvrait les champs, les toits et les sapins, et de gros flocons tourbillonnaient sous la lumière d'un réverbère. « Jeanne, réveille-toi ! chuchota-t-il. Il neige ! » Sa sœur grimpa l'échelle et colla son nez contre la vitre. Ils restèrent là un long moment, émerveillés, jusqu'à ce que le train reparte lentement vers les montagnes." },
+ { id:'ce2-billes', classe:'CE2', titre:'Énigme : le sac de billes', enigme:{ q:'Combien de billes reste-t-il dans le sac de Léon ?', r:20, sol:'24 + 8 = 32, puis 32 − 5 = 27, puis 27 − 7 = 20. Il reste 20 billes.' },
+   texte:"Lundi matin, Léon arrive à l'école avec un sac de 24 billes. Il en est très fier, car elles sont toutes neuves et brillent comme des bonbons. À la récréation, il joue avec son copain Malik. La partie est longue et difficile, mais Léon gagne 8 billes. Il saute de joie ! Après la cantine, il fait une deuxième partie contre Zoé. Cette fois, il a moins de chance : il perd 5 billes. Zoé les range aussitôt dans sa trousse en souriant. Le soir, en rentrant à la maison, Léon trouve sa petite sœur Rose en train de pleurer, car elle n'a pas de billes du tout. Léon est un grand frère gentil. Il décide de lui donner 7 billes, les plus colorées. Rose sèche ses larmes et court les montrer à maman. Léon, lui, s'assoit sur son lit et compte ce qui reste au fond de son sac." },
+ { id:'ce2-gouter', classe:'CE2', titre:'Énigme : le goûter d\u2019anniversaire', enigme:{ q:'Combien de gâteaux restent dans l\u2019assiette ?', r:6, sol:'Il y a 8 enfants (Chloé, Paul et 6 invités) et 3 × 10 = 30 gâteaux. Chaque enfant en reçoit 3, car 8 × 3 = 24. Il en reste 30 − 24 = 6.' },
+   texte:"Pour son anniversaire, Chloé a invité ses amis à goûter. Avec son papa, elle prépare la table dans le jardin. Il y aura Chloé, son frère Paul et 6 invités. Papa a acheté 3 paquets de gâteaux. Dans chaque paquet, il y a 10 gâteaux. Chloé veut que tout le monde en ait autant. « Est-ce qu'il y en aura assez ? » demande-t-elle, un peu inquiète. Papa sourit : « Compte bien, tu verras. » Les enfants arrivent vers quatre heures. Ils jouent au ballon, à cache-cache, puis tout le monde s'assoit autour de la table. Chloé distribue les gâteaux un par un, en faisant plusieurs fois le tour de la table. Quand elle a fini, chaque enfant a le même nombre de gâteaux, le plus possible, et il en reste quelques-uns dans l'assiette. Paul demande s'il peut les manger. Papa répond qu'on les gardera pour demain." },
+ { id:'ce2-escargots', classe:'CE2', titre:'Énigme : la course d\u2019escargots', enigme:{ q:'Au bout de combien de minutes le gagnant touche-t-il la salade ?', r:11, sol:'Éclair fait 5 × 6 = 30 cm en 5 minutes, dort 3 minutes, puis fait les 18 cm restants en 3 minutes : 5 + 3 + 3 = 11 minutes. Turbo met 12 minutes, car 12 × 4 = 48. Éclair gagne en 11 minutes.' },
+   texte:"Dans le potager de mamie, Lucas et Emma organisent une course d'escargots. Ils tracent une ligne de départ avec un bâton et posent une feuille de salade tout au bout, à 48 centimètres. Lucas choisit Turbo, un escargot au gros coquillage brun. Emma choisit Éclair, plus petit mais très vif. « Un, deux, trois, partez ! » crie mamie. Turbo avance de 4 centimètres chaque minute, sans jamais s'arrêter. Éclair, lui, file à 6 centimètres par minute. Mais au bout de 5 minutes, il s'arrête pour faire une sieste sur un caillou. Il dort pendant 3 minutes, puis repart à la même vitesse. Les deux enfants sont allongés dans l'herbe et encouragent leurs champions. Emma est inquiète, Lucas croise les doigts. Enfin, un des escargots touche la feuille de salade et commence à la grignoter." },
+ { id:'cm1-tresor', classe:'CM1', titre:'Énigme : le trésor du grenier', enigme:{ q:'Combien de pièces chaque enfant reçoit-il ?', r:290, sol:'Première bourse : 125. Deuxième : 125 × 2 = 250. Troisième : 250 − 45 = 205. En tout : 125 + 250 + 205 = 580 pièces, et 580 : 2 = 290.' },
+   texte:"Pendant les vacances, Hugo et sa cousine Léna fouillent le grenier de leur arrière-grand-mère. Sous une pile de vieux rideaux, ils découvrent un coffre en bois cabossé, fermé par une ficelle. Le cœur battant, ils l'ouvrent. À l'intérieur, trois bourses en cuir sont remplies de pièces anciennes. Léna compte soigneusement celles de la première bourse : il y en a 125. Hugo ouvre la deuxième, beaucoup plus lourde. Après un long moment, il annonce qu'elle contient exactement deux fois plus de pièces que la première. La troisième bourse est un peu plus petite : elle contient 45 pièces de moins que la deuxième. Les deux enfants descendent l'escalier en courant pour montrer leur trouvaille. Leur arrière-grand-mère éclate de rire : « Ce sont les pièces de ma collection, je les cherchais depuis des années ! Pour vous remercier, vous pouvez les garder. Mais attention, partagez-les équitablement. » Hugo et Léna étalent alors toutes les pièces sur la table de la cuisine et font deux tas parfaitement égaux." },
+ { id:'cm1-velo', classe:'CM1', titre:'Énigme : la balade à vélo', enigme:{ q:'Combien de kilomètres la famille a-t-elle parcourus en tout ?', r:38, sol:'Première étape : 14 km. Deuxième : 14 + 2 = 16 km. Troisième : la moitié de 16, soit 8 km. En tout : 14 + 16 + 8 = 38 km.' },
+   texte:"Dimanche, la famille Martin part en balade à vélo. Maman a préparé l'itinéraire sur une carte, et chacun a rempli sa gourde. La première étape les mène du village jusqu'au lac : 14 kilomètres de petites routes entre les vignes. Après une pause pour pique-niquer au bord de l'eau, ils repartent vers la forêt. Cette deuxième étape est plus longue : elle mesure 2 kilomètres de plus que la première. Dans la forêt, le chemin monte beaucoup et le petit Noé pousse son vélo en soupirant. Heureusement, une longue descente l'attend juste après ! Pour la troisième étape, ils rentrent à la maison par la piste cyclable. Papa regarde son compteur et annonce qu'elle mesure exactement la moitié de la deuxième étape. En arrivant devant le portail, tout le monde est fatigué mais content. Noé réclame un grand verre de sirop et demande combien de kilomètres ils ont faits dans la journée." },
+ { id:'cm1-tirelire', classe:'CM1', titre:'Énigme : la tirelire d\u2019Inès', enigme:{ q:'Combien d\u2019euros manque-t-il encore à Inès pour acheter son jeu ?', r:16, sol:'Elle a 36 € au départ et gagne 8 × 5 = 40 €, soit 76 €. Après la bande dessinée : 76 − 27 = 49 €. Il lui manque 65 − 49 = 16 €.' },
+   texte:"Depuis longtemps, Inès rêve d'un jeu de construction qui coûte 65 euros. Au début du mois de septembre, elle ouvre sa tirelire et compte son argent : elle possède 36 euros. Ce n'est pas assez. Ses parents lui proposent alors un marché : si elle aide à mettre la table et à ranger sa chambre, elle recevra 5 euros chaque semaine. Inès accepte avec enthousiasme. Pendant 8 semaines, elle ne rate pas un seul jour. Elle range, elle met la table, elle arrose même les plantes sans qu'on le lui demande ! Mais un samedi, en passant devant la librairie, elle aperçoit la nouvelle bande dessinée de sa série préférée. Elle hésite longtemps, puis elle craque et l'achète pour 27 euros. Le soir, elle compte de nouveau ses économies et fait la grimace. « Il me manque encore de l'argent pour mon jeu », soupire-t-elle. Son grand frère lui propose de l'aider à faire le calcul." },
+ { id:'cm1-volcans', classe:'CM1', titre:'Les volcans (documentaire)', texte:"Un volcan est une ouverture dans la croûte terrestre par laquelle s'échappent de la lave, des gaz et des cendres. Sous nos pieds, à des dizaines de kilomètres de profondeur, la température est si élevée que certaines roches fondent. Elles forment alors le magma, une matière brûlante et pâteuse. Plus léger que les roches qui l'entourent, le magma remonte lentement et s'accumule dans une poche appelée chambre magmatique. Lorsque la pression devient trop forte, il jaillit à la surface : c'est l'éruption. Il existe deux grands types d'éruptions. Certaines sont plutôt calmes : une lave très liquide s'écoule en longues coulées, comme sur le piton de la Fournaise, à l'île de la Réunion. D'autres sont explosives : une lave épaisse bouche la cheminée, la pression augmente, puis tout explose en projetant des nuages de cendres à des kilomètres de hauteur. En France métropolitaine, la chaîne des Puys, en Auvergne, compte environ quatre-vingts volcans. Ils sont endormis depuis plusieurs milliers d'années, mais les scientifiques continuent de les surveiller. Partout dans le monde, les volcanologues étudient les tremblements de terre, la température du sol et les gaz qui s'échappent pour prévoir les éruptions et protéger les habitants. Malgré le danger, beaucoup de gens vivent près des volcans, car les cendres rendent la terre très fertile." }
+];
+var PROSO = [
+  { nom:'Mot à mot', det:'Lit mot par mot, avec beaucoup d\u2019hésitations.' },
+  { nom:'Par petits morceaux', det:'Groupes de 2 ou 3 mots, pauses pas toujours aux bons endroits.' },
+  { nom:'Fluide', det:'Lit par groupes de sens et respecte la plupart des points et des virgules.' },
+  { nom:'Fluide et expressive', det:'Intonation, ponctuation respectée, voix des personnages.' }
+];
+var REPERES = { CE2:'environ 70 en début d\u2019année et 90 en fin d\u2019année', CM1:'environ 90 en début d\u2019année et 110 en fin d\u2019année' };
+var LETTRE = /[0-9A-Za-zÀ-ÖØ-öø-ÿœŒ]/;
+function jetons(t){ return t.split(/\s+/).filter(Boolean); }
+function estMot(j){ return LETTRE.test(j); }
+function nbMots(t){ return jetons(t).filter(estMot).length; }
+function nettoyer(j){ return j.replace(/^[^0-9A-Za-zÀ-ÖØ-öø-ÿœŒ]+/, '').replace(/[^0-9A-Za-zÀ-ÖØ-öø-ÿœŒ'’\-]+$/, '').toLowerCase(); }
+function texteParId(id){ return TEXTES.filter(function(t){ return t.id===id; })[0]; }
+function seancesTexte(id){ return D().lecture.seances.filter(function(s){ return s.texte===id; }); }
+
+var classeTextes = 'CE2';
+function ouvrirTextes(c){
+  classeTextes = c || (prof().classe === 'CM1' ? 'CM1' : 'CE2');
+  $('l-classes').querySelectorAll('button').forEach(function(b){ b.setAttribute('aria-pressed', b.dataset.c === classeTextes); });
+  var L = D().lecture;
+  majSegments('l-mode', L.mode); majSegments('l-groupes', L.groupes ? 'oui' : 'non');
+  $('l-vitesse-zone').hidden = L.mode !== 'guidee';
+  majVitesse();
+  $('l-liste').innerHTML = TEXTES.filter(function(t){ return t.classe === classeTextes; }).map(function(t){
+    var s = seancesTexte(t.id), info = nbMots(t.texte) + ' mots';
+    if (s.length) info += ' · lu ' + s.length + ' fois · meilleur : ' + Math.max.apply(null, s.map(function(x){ return x.mclm; })) + ' mots/min';
+    return '<button data-t="'+t.id+'"><b>'+(t.enigme ? '🧩 ' : '')+esc(t.titre)+'</b><small>'+info+'</small></button>';
+  }).join('');
+  montrer('s-lecture-choix');
+}
+$('l-classes').addEventListener('click', function(e){ var b = e.target.closest('[data-c]'); if (b) ouvrirTextes(b.dataset.c); });
+$('l-liste').addEventListener('click', function(e){ var b = e.target.closest('[data-t]'); if (!b) return;
+  if (D().lecture.mode === 'guidee') guideeLancer(b.dataset.t); else lectureLancer(b.dataset.t); });
+$('l-mode').addEventListener('click', function(e){ var b = e.target.closest('button'); if (!b) return; D().lecture.mode = b.dataset.v; sauver(); ouvrirTextes(classeTextes); });
+$('l-groupes').addEventListener('click', function(e){ var b = e.target.closest('button'); if (!b) return; D().lecture.groupes = b.dataset.v === 'oui'; sauver(); majSegments('l-groupes', b.dataset.v); });
+function borneV(v){ return Math.max(30, Math.min(200, Math.round(v/5)*5)); }
+function vitesseGuidee(){
+  var L = D().lecture;
+  if (L.vitesseGuidee) return L.vitesseGuidee;
+  if (L.seances.length) return borneV(L.seances[L.seances.length-1].mclm * 1.1);
+  return prof().classe === 'CM1' ? 80 : 60;
+}
+function majVitesse(){
+  var L = D().lecture, v = vitesseGuidee();
+  $('l-vitesse').textContent = v + ' mots/min';
+  $('l-vitesse-leg').textContent = L.vitesseGuidee ? 'La vitesse s’ajuste après chaque lecture guidée, selon ton avis.'
+    : L.seances.length ? 'Calée sur sa dernière lecture chronométrée, un peu plus vite (+10 %).' : 'Vitesse de départ pour sa classe. Elle s’ajustera ensuite.';
+}
+$('l-moins').addEventListener('click', function(){ D().lecture.vitesseGuidee = borneV(vitesseGuidee() - 5); sauver(); majVitesse(); });
+$('l-plus').addEventListener('click', function(){ D().lecture.vitesseGuidee = borneV(vitesseGuidee() + 5); sauver(); majVitesse(); });
+
+/* découpage en groupes de sens */
+var COUPE = ['et','mais','ou','puis','donc','car','dans','sur','sous','avec','pour','par','chez','entre','derrière','devant','depuis','pendant',
+  'quand','qui','que','qu','où','comme','alors','parce','vers','jusqu','avant','après','près','contre','sans','si','lorsque','pourtant','ensuite','enfin','soudain','selon','malgré'];
+var DOUX = ['de','du','des','à','au','aux','en'];
+function decouper(toks){
+  // rest[i] = nombre de mots jusqu'à la prochaine ponctuation (ce mot compris)
+  var rest = new Array(toks.length), r = 0, i;
+  for (i = toks.length-1; i >= 0; i--){
+    var t = toks[i];
+    if (!estMot(t)){ if (/[,;:.!?…»—]/.test(t)) r = 0; rest[i] = r; continue; }
+    if (/[,;:.!?…]$/.test(t)) r = 0;
+    r++; rest[i] = r;
+  }
+  var g = 0, n = 0, attente = false, res = [];
+  toks.forEach(function(t, k){
+    if (!estMot(t)){
+      if (t === '«' || t === '“'){ if (n > 0){ g++; n = 0; } attente = false; }
+      else if (/[,;:.!?…»—]/.test(t)) attente = true;
+      res.push(g); return;
+    }
+    var premier = nettoyer(t).split(/['’]/)[0], reste = rest[k];
+    var coupe = attente
+      || (n >= 2 && reste >= 2 && COUPE.indexOf(premier) >= 0)
+      || (n >= 6 && reste >= 3 && DOUX.indexOf(premier) >= 0)
+      || (n >= 7 && reste >= 3);
+    if (coupe){ if (n > 0){ g++; n = 0; } attente = false; }
+    res.push(g); n++;
+    if (/[,;:.!?…]$/.test(t)) attente = true;
+  });
+  return res;
+}
+function rendreTexte(el, toks, avecGroupes){
+  var gs = decouper(toks), out = [];
+  toks.forEach(function(j,i){
+    if (avecGroupes && i > 0 && gs[i] !== gs[i-1] && estMot(j)) out.push('<span class="sep" aria-hidden="true"></span>');
+    out.push(estMot(j) ? '<span class="m" data-i="'+i+'" data-g="'+gs[i]+'">'+esc(j)+'</span>' : '<span>'+esc(j)+'</span>');
+  });
+  el.innerHTML = out.join(' ');
+  return gs;
+}
+
+var lec = null;
+function lectureLancer(id){
+  var t = texteParId(id);
+  clearInterval(lec && lec.intervalle);
+  lec = { t:t, jetons:jetons(t.texte), etat:'pret', debut:0, temps:0, err:{}, dernier:null, intervalle:null };
+  $('l-titre').textContent = t.titre;
+  rendreTexte($('l-texte'), lec.jetons, D().lecture.groupes);
+  $('l-texte').classList.add('cache');
+  var prec = seancesTexte(id);
+  lec.objectif = prec.length ? prec[prec.length-1].mclm + Math.max(3, Math.round(prec[prec.length-1].mclm * 0.06)) : null;
+  $('l-chrono').style.width = '100%'; $('l-chrono').style.background = 'var(--citron)'; $('l-sec').textContent = '60 s';
+  $('l-consigne').textContent = 'Pour l\u2019adulte : touche Démarrer, le texte apparaît et le chrono d\u2019une minute se lance. Pendant la lecture, touche chaque mot mal lu, oublié ou ajouté. Touche-le une deuxième fois pour annuler.' +
+    (lec.objectif ? ' Dernière fois : ' + prec[prec.length-1].mclm + ' mots/min. Objectif du jour : ' + lec.objectif + '.' : '');
+  $('l-demarrer').hidden = false; $('l-compte').hidden = true; $('l-fini').hidden = true; $('l-alerte').hidden = true; $('l-voile').hidden = true;
+  document.querySelector('.chrono-lec').classList.remove('fin');
+  montrer('s-lecture');
+}
+var audio = null;
+function initAudio(){
+  try { var C = window.AudioContext || window.webkitAudioContext; if (C && !audio) audio = new C(); if (audio && audio.state === 'suspended') audio.resume(); } catch(e){}
+}
+function bip(){
+  if (!audio) return;
+  try {
+    [0, 0.28, 0.56].forEach(function(dt, i){
+      var o = audio.createOscillator(), g = audio.createGain(), t = audio.currentTime + dt;
+      o.type = 'sine'; o.frequency.value = i === 2 ? 1175 : 880;
+      g.gain.setValueAtTime(0.0001, t); g.gain.exponentialRampToValueAtTime(0.5, t + 0.02); g.gain.exponentialRampToValueAtTime(0.0001, t + 0.24);
+      o.connect(g); g.connect(audio.destination); o.start(t); o.stop(t + 0.26);
+    });
+  } catch(e){}
+}
+$('l-demarrer').addEventListener('click', function(){
+  initAudio();
+  var l = lec, n = 3;
+  $('l-demarrer').hidden = true;
+  $('l-consigne').textContent = 'Prête ? Le texte apparaît dans…';
+  $('l-compte').hidden = false; $('l-compte').textContent = n;
+  var y = $('l-compte').getBoundingClientRect().top + window.scrollY - 12;
+  window.scrollTo(0, Math.max(0, y));
+  l.compte = setInterval(function(){
+    if (lec !== l){ clearInterval(l.compte); return; }
+    n--;
+    if (n > 0){ $('l-compte').textContent = n; return; }
+    clearInterval(l.compte);
+    $('l-compte').hidden = true;
+    demarrerLecture();
+  }, 1000);
+});
+function demarrerLecture(){
+  lec.etat = 'lecture'; lec.debut = performance.now();
+  $('l-texte').classList.remove('cache');
+  $('l-consigne').textContent = 'Touche les mots mal lus.';
+  $('l-demarrer').hidden = true; $('l-fini').hidden = false;
+  lec.intervalle = setInterval(function(){
+    var s = (performance.now() - lec.debut) / 1000;
+    $('l-chrono').style.width = Math.max(0, 100 - s/60*100) + '%';
+    $('l-sec').textContent = Math.max(0, Math.ceil(60 - s)) + ' s';
+    if (s >= 50){ document.querySelector('.chrono-lec').classList.add('fin'); $('l-chrono').style.background = 'var(--framboise)'; }
+    if (s >= 60) finChrono(60);
+  }, 200);
+}
+function finChrono(s){
+  clearInterval(lec.intervalle);
+  lec.temps = Math.round(s*10)/10; lec.etat = 'dernier';
+  $('l-fini').hidden = true;
+  $('l-consigne').textContent = 'Temps écoulé ! Touche le dernier mot lu, puis Valider. Tu peux encore corriger une erreur en touchant le mot deux fois.';
+  if (s >= 60){ $('l-texte').classList.add('cache'); $('l-voile').hidden = false; bip(); if (navigator.vibrate) try { navigator.vibrate([200,100,200]); } catch(e) {} }
+}
+$('l-fini').addEventListener('click', function(){
+  var s = Math.min(60, (performance.now() - lec.debut) / 1000);
+  var mots = $('l-texte').querySelectorAll('.m');
+  finChrono(s);
+  lec.dernier = +mots[mots.length-1].dataset.i;
+  terminerLecture();
+});
+var dernierClic = { i:-1, t:0 };
+$('l-texte').addEventListener('click', function(e){
+  var m = e.target.closest('.m'); if (!m || !lec) return;
+  var i = +m.dataset.i;
+  if (lec.etat === 'lecture'){ lec.err[i] = !lec.err[i]; m.classList.toggle('err', !!lec.err[i]); }
+  else if (lec.etat === 'dernier'){
+    var now = Date.now();
+    if (dernierClic.i === i && now - dernierClic.t < 450){ lec.err[i] = !lec.err[i]; m.classList.toggle('err', !!lec.err[i]); dernierClic = { i:-1, t:0 }; return; }
+    dernierClic = { i:i, t:now };
+    lec.dernier = i;
+    $('l-texte').querySelectorAll('.m').forEach(function(x){ var j = +x.dataset.i; x.classList.toggle('apres', j > i); x.classList.toggle('dernier', j === i); });
+  }
+});
+$('l-valider').addEventListener('click', function(){
+  if (lec.dernier === null){ $('l-consigne').textContent = 'Touche d\u2019abord le dernier mot lu.'; return; }
+  terminerLecture();
+});
+$('l-stop').addEventListener('click', function(){ $('l-alerte').hidden = true; $('l-voile').hidden = true; if (lec){ clearInterval(lec.intervalle); clearInterval(lec.compte); } lec = null; ouvrirTextes(classeTextes); });
+$('l-voile').addEventListener('click', function(e){
+  e.preventDefault(); e.stopPropagation();
+  $('l-voile').hidden = true;
+  $('l-texte').classList.remove('cache');
+  $('l-alerte').hidden = false;
+});
+function terminerLecture(){
+  $('l-alerte').hidden = true; $('l-voile').hidden = true;
+  var mots = 0, erreurs = 0, rates = [];
+  lec.jetons.forEach(function(j,i){
+    if (!estMot(j) || i > lec.dernier) return;
+    mots++;
+    if (lec.err[i]){ erreurs++; rates.push(nettoyer(j)); }
+  });
+  var temps = lec.temps || 60, mclm = Math.round((mots - erreurs) * 60 / temps);
+  var prec = seancesTexte(lec.t.id), objectif = lec.objectif;
+  var moy = moyenneLecture(), mini = moy ? Math.round(moy * seuil('lecture') / 100) : 0;
+  var valLe = tenterEtape('lecture', !moy || mclm >= mini,
+    'Étape « Lecture » pas encore validée : ' + mclm + ' mots par minute, il en faut au moins ' + mini + ' (' + seuil('lecture') + ' % de sa moyenne récente, ' + Math.round(moy) + ').');
+  var echecLecture = messageEtape; messageEtape = null;
+  var s = { date:new Date().toISOString(), texte:lec.t.id, titre:lec.t.titre, classe:lec.t.classe, temps:temps, mots:mots, erreurs:erreurs, mclm:mclm, prosodie:null, rates:rates, valideMission:valLe };
+  D().lecture.seances.push(s); sauver();
+  var lu = lec.t;
+  $('lf-gros').textContent = mclm;
+  var mot = mots + ' mots lus en ' + String(temps).replace('.',',') + ' s, ' + erreurs + ' erreur' + (erreurs>1?'s':'') + '.';
+  if (prec.length){
+    var dif = mclm - prec[prec.length-1].mclm;
+    mot += dif > 0 ? ' C\u2019est ' + dif + ' de plus que la dernière fois sur ce texte, bravo !' : dif === 0 ? ' Pareil que la dernière fois sur ce texte.' : ' Un peu moins que la dernière fois sur ce texte, ça arrive.';
+    if (objectif) mot += mclm >= objectif ? ' Objectif de ' + objectif + ' atteint !' : ' L\u2019objectif était ' + objectif + ', ce sera pour la prochaine fois.';
+  }
+  $('lf-mot').textContent = mot;
+  $('lf-proso').innerHTML = PROSO.map(function(p,i){ return '<button data-v="'+(i+1)+'" aria-pressed="false">'+p.nom+'<small>'+p.det+'</small></button>'; }).join('');
+  $('lf-proso').onclick = function(e){ var b = e.target.closest('[data-v]'); if (!b) return; s.prosodie = +b.dataset.v; sauver();
+    $('lf-proso').querySelectorAll('button').forEach(function(x){ x.setAttribute('aria-pressed', x === b); }); };
+  $('lf-carte').hidden = !rates.length;
+  $('lf-mots').innerHTML = rates.map(function(r){ return '<span class="fait r" style="font-size:1.05rem">'+esc(r)+'</span>'; }).join('');
+  $('lf-relire').onclick = function(){ lectureLancer(lu.id); };
+  enigmeMontrer('lf', lu);
+  var tm = (echecLecture ? echecLecture + ' ' : '') + texteMission(); if (tm) $('lf-mot').textContent += ' ' + tm;
+  lec = null;
+  montrer('s-lecture-fin');
+}
+$('lf-autre').addEventListener('click', function(){ ouvrirTextes(classeTextes); });
+$('lf-progres').addEventListener('click', function(){ ouvrirProgres('lecture'); });
+$('lf-accueil').addEventListener('click', ouvrirAccueil);
+function motsRates(S){
+  var c = {}; S.forEach(function(s){ s.rates.forEach(function(r){ if (r) c[r] = (c[r]||0) + 1; }); });
+  return Object.keys(c).map(function(k){ return [k, c[k]]; }).sort(function(a,b){ return b[1]-a[1]; });
+}
+function progresLecture(){
+  var h = progresChrono() + progresGuidee() + progresFlash();
+  return h || carte('Pas encore de lecture', '<p class="legende">Fais une lecture à voix haute ou une lecture flash avec un adulte pour voir tes progrès ici.</p>');
+}
+function progresGuidee(){
+  var G = D().lecture.guidees; if (!G.length) return '';
+  var vals = G.slice(-20).map(function(s){ return s.vitesse; });
+  return carte('Lecture guidée : vitesse du guide', (vals.length >= 2 ? courbe(vals, Math.max(120, Math.ceil((Math.max.apply(null, vals)+10)/20)*20), function(v){ return Math.round(v); }) : '<p class="legende">Première lecture guidée à ' + vals[0] + ' mots par minute.</p>') +
+    '<ul>' + G.slice(-5).reverse().map(function(s){ return '<li>' + dateCourte(s.date) + ' : ' + esc(s.titre) + '<small>' + s.vitesse + ' mots/min' + (s.groupes ? ', en groupes de sens' : '') + ', avis : ' + esc(s.avis.toLowerCase()) + '</small></li>'; }).join('') + '</ul>',
+    'Vitesse (en mots par minute) à laquelle elle a suivi le guide à chaque séance.');
+}
+function progresFlash(){
+  var F = D().flash, S = F.seances; if (!S.length) return '';
+  var h = '';
+  var vals = S.filter(function(s){ return !s.rejeu; }).slice(-20).map(function(s){ return s.msFin / 1000; });
+  h += carte('Lecture flash : niveau ' + F.niveau, (vals.length >= 2 ? courbe(vals, Math.max(1.5, Math.ceil(Math.max.apply(null, vals)*2)/2), function(v){ return v.toFixed(1).replace('.',',') + ' s'; }) : '') +
+    '<p class="legende">' + FLASH[F.niveau].nom + ', temps d’affichage actuel : ' + secondes(F.ms) + '.</p>',
+    'Temps d’affichage d’un mot à la fin de chaque séance : plus la courbe descend, plus elle reconnaît les mots vite. Le temps repart à 1,2 s à chaque nouveau niveau.');
+  var c = {}; S.forEach(function(s){ s.items.forEach(function(x){ if (!x.ok) c[x.mot] = (c[x.mot]||0) + 1; }); });
+  var k = Object.keys(c).sort(function(a,b){ return c[b]-c[a]; }).slice(0,15);
+  if (k.length) h += carte('Lecture flash : mots à revoir', '<div class="puces">' + k.map(function(m){ return '<span class="fait r" style="font-size:1.05rem">'+esc(m)+(c[m]>1?' ×'+c[m]:'')+'</span>'; }).join('') + '</div>');
+  return h;
+}
+function progresChrono(){
+  var S = D().lecture.seances, h = '';
+  if (!S.length) return '';
+  var vals = S.slice(-20).map(function(s){ return s.mclm; });
+  var ymax = Math.max(120, Math.ceil((Math.max.apply(null, vals) + 10) / 20) * 20);
+  var rep = REPERES[prof().classe] ? 'Repères indicatifs en ' + prof().classe + ' : ' + REPERES[prof().classe] + '. Ce sont des ordres de grandeur qui varient selon les textes et les études.' : '';
+  h += carte('Mots correctement lus par minute', (vals.length >= 2 ? courbe(vals, ymax, function(v){ return Math.round(v); }) : '<p class="score"><span class="gros">'+vals[0]+'</span></p>'), rep);
+  var parTexte = {};
+  S.forEach(function(s){ (parTexte[s.texte] = parTexte[s.texte] || []).push(s); });
+  h += carte('Texte par texte', '<ul>'+Object.keys(parTexte).map(function(id){ var l = parTexte[id];
+    return '<li>'+esc(l[0].titre)+'<small>lu '+l.length+' fois : '+l.map(function(x){ return x.mclm; }).join(' → ')+' mots/min</small></li>'; }).join('')+'</ul>',
+    'Relire le même texte plusieurs fois montre bien les progrès en fluidité.');
+  var mr = motsRates(S).slice(0,15);
+  if (mr.length) h += carte('Mots souvent mal lus', '<div class="puces">'+mr.map(function(x){ return '<span class="fait r" style="font-size:1.05rem">'+esc(x[0])+(x[1]>1?' ×'+x[1]:'')+'</span>'; }).join('')+'</div>',
+    'Ce sont de bons mots à relire à part, ou à décomposer en syllabes.');
+  var pr = S.filter(function(s){ return s.prosodie; }).slice(-6);
+  if (pr.length) h += carte('Qualité de la lecture', '<ul>'+pr.reverse().map(function(s){ return '<li>'+dateCourte(s.date)+' : '+PROSO[s.prosodie-1].nom+'<small>'+esc(s.titre)+'</small></li>'; }).join('')+'</ul>');
+  return h;
+}
+
+/* ================= LECTURE GUIDÉE ================= */
+var gd = null;
+function lettres(j){ return j.replace(/[^0-9A-Za-zÀ-ÖØ-öø-ÿœŒ]/g, '').length; }
+function guideeLancer(id){
+  guideeArret();
+  var t = texteParId(id), toks = jetons(t.texte), avecG = D().lecture.groupes, v = vitesseGuidee();
+  var gs = rendreTexte($('g-texte'), toks, avecG);
+  var unites = [], cle = null, nb = 0;
+  toks.forEach(function(j,i){
+    if (estMot(j)){
+      var k = avecG ? 'g' + gs[i] : 'w' + i;
+      if (k !== cle){ unites.push({ mots:[], poids:0 }); cle = k; }
+      var u = unites[unites.length-1];
+      u.mots.push(i); u.poids += 0.55 + 0.075 * lettres(j); nb++;
+    }
+    if (unites.length){
+      var u2 = unites[unites.length-1];
+      if (/[.!?…]$/.test(j)) u2.poids += 0.9; else if (/[,;:]$/.test(j)) u2.poids += 0.4;
+    }
+  });
+  var total = nb * 60000 / v, somme = unites.reduce(function(s,u){ return s + u.poids; }, 0), acc = 0;
+  var fins = unites.map(function(u){ acc += u.poids / somme * total; return acc; });
+  gd = { t:t, unites:unites, fins:fins, total:total, vitesse:v, groupes:avecG, debut:0, pause:null, pauseTotal:0, courant:-1, intervalle:null, compte:null };
+  $('g-titre').textContent = t.titre;
+  $('g-prog').style.width = '0%';
+  $('g-consigne').textContent = 'Le texte va s\u2019éclairer ' + (avecG ? 'groupe par groupe' : 'mot à mot') + ' à ' + v + ' mots par minute. Lis en suivant la lumière, sans t\u2019arrêter. Si tu te perds, reprends là où elle est.';
+  $('g-demarrer').hidden = false; $('g-compte').hidden = true; $('g-pause').hidden = true; $('g-avis').hidden = true; $('g-fin-btns').hidden = true;
+  $('g-avis-btns').querySelectorAll('button').forEach(function(b){ b.disabled = false; b.setAttribute('aria-pressed','false'); });
+  montrer('s-guidee');
+}
+function guideeArret(){ if (gd){ clearInterval(gd.intervalle); clearInterval(gd.compte); } $('g-pause').hidden = true; }
+$('g-demarrer').addEventListener('click', function(){
+  var g = gd, n = 3;
+  $('g-demarrer').hidden = true;
+  $('g-compte').hidden = false; $('g-compte').textContent = n;
+  window.scrollTo(0, Math.max(0, $('g-compte').getBoundingClientRect().top + window.scrollY - 12));
+  g.compte = setInterval(function(){
+    if (gd !== g){ clearInterval(g.compte); return; }
+    n--; if (n > 0){ $('g-compte').textContent = n; return; }
+    clearInterval(g.compte); $('g-compte').hidden = true;
+    g.debut = performance.now(); $('g-pause').hidden = false; $('g-pause').textContent = 'Pause';
+    g.intervalle = setInterval(guideeTic, 40); guideeTic();
+  }, 1000);
+});
+function guideeTic(){
+  var g = gd; if (!g || g.pause !== null) return;
+  var el = performance.now() - g.debut - g.pauseTotal, idx = -1;
+  for (var i=0;i<g.fins.length;i++){ if (g.fins[i] > el){ idx = i; break; } }
+  $('g-prog').style.width = Math.min(100, el / g.total * 100) + '%';
+  if (idx === -1){ guideeFin(); return; }
+  if (idx === g.courant) return;
+  var zone = $('g-texte');
+  if (g.courant >= 0) g.unites[g.courant].mots.forEach(function(i){ var m = zone.querySelector('[data-i="'+i+'"]'); if (m) m.classList.remove('guide'); });
+  g.courant = idx;
+  var premier = null;
+  g.unites[idx].mots.forEach(function(i){ var m = zone.querySelector('[data-i="'+i+'"]'); if (m){ m.classList.add('guide'); if (!premier) premier = m; } });
+  if (premier && premier.getBoundingClientRect){
+    var r = premier.getBoundingClientRect(), H = window.innerHeight || 800;
+    if (r.top > H * 0.62 || r.top < H * 0.12) window.scrollBy({ top: r.top - H * 0.3, behavior:'smooth' });
+  }
+}
+$('g-pause').addEventListener('click', function(){
+  var g = gd; if (!g) return;
+  if (g.pause === null){ g.pause = performance.now(); $('g-pause').textContent = 'Reprendre'; }
+  else { g.pauseTotal += performance.now() - g.pause; g.pause = null; $('g-pause').textContent = 'Pause'; }
+});
+function guideeFin(){
+  var g = gd; clearInterval(g.intervalle); $('g-pause').hidden = true;
+  $('g-texte').querySelectorAll('.guide').forEach(function(m){ m.classList.remove('guide'); });
+  $('g-prog').style.width = '100%';
+  $('g-consigne').textContent = 'Bravo, tu as lu tout le texte avec le guide !';
+  $('g-avis').hidden = false;
+  enigmeMontrer('g', g.t);
+  window.scrollTo(0, Math.max(0, $('g-avis').getBoundingClientRect().top + window.scrollY - 20));
+}
+$('g-avis-btns').addEventListener('click', function(e){
+  var b = e.target.closest('[data-f]'); if (!b || !gd) return;
+  var L = D().lecture, f = +b.dataset.f, nv = borneV(gd.vitesse * f);
+  if (nv === gd.vitesse && f !== 1) nv = borneV(gd.vitesse + (f > 1 ? 5 : -5));
+  L.vitesseGuidee = nv;
+  var valG = tenterEtape('lecture', f >= 1, 'Le guide allait trop vite pour elle cette fois : l\u2019étape « Lecture » n\u2019est pas validée.');
+  var echecG = messageEtape; messageEtape = null;
+  L.guidees.push({ date:new Date().toISOString(), texte:gd.t.id, titre:gd.t.titre, vitesse:gd.vitesse, avis:b.textContent.split(/\n/)[0].replace(b.querySelector('small').textContent,'').trim(), groupes:gd.groupes, valideMission:valG });
+  sauver();
+  $('g-avis-btns').querySelectorAll('button').forEach(function(x){ x.disabled = true; x.setAttribute('aria-pressed', x === b); });
+  $('g-consigne').textContent = 'Noté. Prochaine lecture guidée à ' + nv + ' mots par minute.' + (echecG ? ' ' + echecG : '') + (texteMission() ? ' ' + texteMission() : '');
+  $('g-fin-btns').hidden = false;
+});
+function enigmeMontrer(pre, t){
+  var zone = $(pre + '-enigme');
+  if (!t.enigme){ zone.hidden = true; return; }
+  zone.hidden = false;
+  $(pre + '-eq').textContent = t.enigme.q;
+  if ($(pre + '-etexte')) $(pre + '-etexte').textContent = t.texte;
+  $(pre + '-er').value = ''; $(pre + '-er').disabled = false;
+  $(pre + '-eres').textContent = ''; $(pre + '-eres').className = 'retour';
+  $(pre + '-esol').hidden = true; $(pre + '-esol-txt').hidden = true; $(pre + '-esol-txt').textContent = t.enigme.sol;
+  var essais = 0, fini = false;
+  function noter(ok){
+    fini = true; $(pre + '-er').disabled = true;
+    D().lecture.enigmes = D().lecture.enigmes || [];
+    D().lecture.enigmes.push({ date:new Date().toISOString(), texte:t.id, titre:t.titre, ok:ok, essais:essais }); sauver();
+  }
+  $(pre + '-ev').onclick = function(){
+    if (fini) return;
+    var v = parseInt($(pre + '-er').value.replace(/[\s.]/g, ''), 10); if (isNaN(v)) return;
+    essais++;
+    if (v === t.enigme.r){
+      $(pre + '-eres').className = 'retour ok'; $(pre + '-eres').textContent = essais === 1 ? 'Bravo, énigme résolue du premier coup !' : 'Bravo, énigme résolue !';
+      $(pre + '-esol-txt').hidden = false; noter(true);
+    } else {
+      $(pre + '-eres').className = 'retour ko'; $(pre + '-eres').textContent = 'Pas encore. Relis bien le texte et réessaie.';
+      if (essais >= 2) $(pre + '-esol').hidden = false;
+    }
+  };
+  $(pre + '-er').onkeydown = function(e){ if (e.key === 'Enter'){ e.preventDefault(); $(pre + '-ev').click(); } };
+  $(pre + '-esol').onclick = function(){ $(pre + '-esol-txt').hidden = false; $(pre + '-esol').hidden = true; if (!fini) noter(false); };
+}
+$('g-relire').addEventListener('click', function(){ guideeLancer(gd.t.id); });
+$('g-autre').addEventListener('click', function(){ guideeArret(); ouvrirTextes(classeTextes); });
+$('g-stop').addEventListener('click', function(){ guideeArret(); gd = null; ouvrirTextes(classeTextes); });
+
+/* ================= LECTURE FLASH ================= */
+var FLASH = {
+  1:{ nom:'petits mots outils', l:['le','la','les','un','une','des','et','est','il','elle','ils','on','je','nous','vous','dans','sur','sous','avec','pour','par','sans','chez','mais','ou','qui','que','pas','plus','très','tout','tous','bien','aussi','alors','puis','encore','déjà','avant','après','jamais','rien','comme','quand','avoir','être','fait','dit','sont','ont','était','avait','leur','cette','ces','mon','son','aux','du'] },
+  2:{ nom:'mots fréquents', l:['beaucoup','toujours','aujourd\u2019hui','maintenant','quelquefois','longtemps','souvent','ensemble','pendant','derrière','devant','dehors','dedans','parce que','peut-être','pourquoi','comment','combien','autour','ensuite','enfin','soudain','femme','monsieur','second','oignon','fille','famille','gentil','oiseau','yeux','cœur','sœur','loin','près','plusieurs','chaque','quelque chose','presque','vraiment','d\u2019abord','tellement','pourtant','depuis','bientôt','hier','demain','matin','soir','maison','enfant'] },
+  3:{ nom:'mots de 2 ou 3 syllabes', l:['jardin','fenêtre','voiture','chocolat','papillon','montagne','bicyclette','boulangerie','cuisine','escalier','grenouille','parapluie','tortue','dauphin','éléphant','citrouille','cartable','crayon','histoire','musique','animal','lumière','printemps','automne','journée','soleil','nuage','orage','tempête','château','chemin','rivière','forêt','poisson','champignon','écureuil','hérisson','ordinateur','téléphone','mercredi','dimanche','anniversaire','récréation','maîtresse','camarade','pantalon','chaussure','bibliothèque','dinosaure','hélicoptère'] },
+  4:{ nom:'petits groupes de mots', l:['dans le jardin','tout à coup','il y avait','un petit chat','sur la table','avec son ami','il était une fois','à la maison','le grand arbre','sous le lit','près de l\u2019école','tout le monde','de temps en temps','un beau matin','il fait beau','elle court vite','le chien noir','à côté de','au bord de l\u2019eau','ce soir-là','les deux amis','un peu plus loin','très content','pas du tout','en haut','le lendemain','sans rien dire','au fond du bois','une grosse pomme','dans la cour'] },
+  5:{ nom:'groupes de mots plus longs', l:['au bord de la mer','pendant les grandes vacances','sous la grande table ronde','le lendemain matin très tôt','il ouvre doucement la porte','les enfants jouent dans la cour','au milieu de la nuit','elle regarde par la fenêtre','un gros chien marron aboie','le soleil se couche derrière la colline','tout le monde éclate de rire','nous partons à la montagne','il pleut depuis ce matin','la maîtresse lit une histoire','mon petit frère dort encore','les feuilles tombent en automne','il cherche ses clés partout','elle range ses crayons de couleur','le train arrive à la gare','nous mangeons une tarte aux pommes'] }
+};
+var FLASH_MAX = 5, fl = null;
+function dureeFlash(mot){
+  var n = mot.split(/\s+/).length, L = lettres(mot);
+  var f = n > 1 ? 1 + 0.35*(n-1) : 1 + Math.max(0, L-6)*0.05;
+  return Math.max(250, Math.round(D().flash.ms * f));
+}
+function flashLancer(liste){
+  flashArret();
+  var F = D().flash, items;
+  if (liste) items = melanger(liste);
+  else {
+    var rates = motsRates(D().lecture.seances).map(function(x){ return x[0]; }).slice(0,3);
+    items = melanger(rates.concat(melanger(FLASH[F.niveau].l).filter(function(m){ return rates.indexOf(m) < 0; }).slice(0, 20 - rates.length)));
+  }
+  fl = { items:items, pos:0, res:[], niveauDepart:F.niveau, msDebut:F.ms, rejeu:!!liste, minuteur:null, etat:'pret', date:new Date().toISOString() };
+  $('fl-titre').innerHTML = 'Lecture flash <span class="badge">niveau ' + F.niveau + '</span>';
+  $('fl-prog').style.width = '0%';
+  $('fl-consigne').textContent = 'Un mot va apparaître très vite puis disparaître : lis-le à voix haute. Pour l\u2019adulte : touche « Lu » s\u2019il est bien lu, « Pas lu » sinon. Le temps d\u2019affichage raccourcit quand ça marche.';
+  $('fl-zone').className = 'flash'; $('fl-zone').textContent = 'Prête ?';
+  $('fl-go').hidden = false; $('fl-duo').hidden = true; $('fl-monte').hidden = true;
+  montrer('s-flash');
+}
+function flashArret(){ if (fl) clearTimeout(fl.minuteur); }
+$('fl-go').addEventListener('click', function(){ $('fl-go').hidden = true; flashItem(); });
+function flashItem(){
+  var f = fl, mot = f.items[f.pos];
+  $('fl-prog').style.width = pct(f.pos, f.items.length) + '%';
+  $('fl-duo').hidden = true;
+  $('fl-zone').className = 'flash fix'; $('fl-zone').textContent = '+';
+  f.etat = 'fix';
+  f.minuteur = setTimeout(function(){
+    if (fl !== f) return;
+    var ms = dureeFlash(mot);
+    $('fl-zone').className = 'flash'; $('fl-zone').textContent = mot;
+    f.ms = ms;
+    f.minuteur = setTimeout(function(){
+      if (fl !== f) return;
+      $('fl-zone').className = 'flash masque'; $('fl-zone').textContent = '• • •';
+      f.etat = 'attente'; $('fl-duo').hidden = false;
+    }, ms);
+  }, 700);
+}
+function flashNote(ok){
+  var f = fl; if (!f || f.etat !== 'attente') return;
+  f.etat = 'note'; $('fl-duo').hidden = true;
+  var F = D().flash, mot = f.items[f.pos];
+  f.res.push({ mot:mot, ms:f.ms, ok:ok });
+  F.ms = Math.max(300, Math.min(2500, Math.round(F.ms * (ok ? 0.92 : 1.12))));
+  if (ok && F.ms <= 600 && F.niveau < FLASH_MAX && !f.rejeu){
+    F.niveau++; F.ms = 1200;
+    $('fl-monte').hidden = false; $('fl-monte').textContent = 'Tu passes au niveau ' + F.niveau + ' : ' + FLASH[F.niveau].nom + ' !';
+    $('fl-titre').innerHTML = 'Lecture flash <span class="badge">niveau ' + F.niveau + '</span>';
+  }
+  sauver();
+  var suite = function(){ if (fl !== f) return; f.pos++; if (f.pos < f.items.length) flashItem(); else { f.complet = true; flashFin(); } };
+  if (ok) f.minuteur = setTimeout(suite, 350);
+  else { $('fl-zone').className = 'flash revele'; $('fl-zone').textContent = mot; f.minuteur = setTimeout(suite, 1800); }
+}
+$('fl-ok').addEventListener('click', function(){ flashNote(true); });
+$('fl-ko').addEventListener('click', function(){ flashNote(false); });
+$('fl-stop').addEventListener('click', function(){ flashArret(); flashFin(); });
+function secondes(ms){ return (ms/1000).toFixed(1).replace('.', ',') + ' s'; }
+function flashFin(){
+  var f = fl, F = D().flash; flashArret();
+  var pctL = pct(f.res.filter(function(x){ return x.ok; }).length, f.res.length), valFl = false;
+  if (f.complet){
+    if (f.rejeu) valFl = tenterEtape('flash', false, 'Refaire ses mots ratés, c\u2019est très bien, mais pour la mission il faut une série complète.');
+    else valFl = tenterEtape('flash', pctL >= seuil('flash'), 'Étape « Lecture flash » pas encore validée : ' + pctL + ' % de mots lus, il en faut ' + seuil('flash') + ' %.');
+  }
+  if (f.res.length){ F.seances.push({ date:f.date, rejeu:f.rejeu, niveauDepart:f.niveauDepart, niveauFin:F.niveau, msDebut:f.msDebut, msFin:F.ms, items:f.res, valideMission:valFl }); sauver(); }
+  var lus = f.res.filter(function(x){ return x.ok; }).length, rat = f.res.filter(function(x){ return !x.ok; }).map(function(x){ return x.mot; });
+  var mot = !f.res.length ? 'Aucun mot lu cette fois.' : 'Temps d\u2019affichage : ' + secondes(f.msDebut) + ' au début, ' + secondes(F.ms) + ' à la fin.';
+  if (F.niveau > f.niveauDepart) mot += ' Tu es montée au niveau ' + F.niveau + ' !';
+  fl = null;
+  bilan({ titre:'Bilan de lecture flash', gros:lus, sur:'lu' + (lus>1?'s':'') + ' sur ' + f.res.length, mot:mot, carteTitre:'À relire',
+    liste: rat.map(function(m){ return '<li class="faute">'+esc(m)+'</li>'; }).join(''), legende:'',
+    erreurs: rat.length ? function(){ flashLancer(rat); } : null, rejouer:function(){ flashLancer(null); }, onglet:'lecture' });
+}
+
+/* ================= démarrage ================= */
+dessinerProfils();
+/* PWA : copie hors ligne et stockage persistant */
+if ('serviceWorker' in navigator && /^https?:$/.test(location.protocol)){
+  window.addEventListener('load', function(){ navigator.serviceWorker.register('sw.js').catch(function(){}); });
+}
+try { if (navigator.storage && navigator.storage.persist) navigator.storage.persist(); } catch(e){}
+window.__test = { diagnostiquer:diagnostiquer, ARBRE_NIV:ARBRE_NIV, nbRetenues:nbRetenues, somme:somme, colonnes:colonnes };
+})();
+</script>
+</body>
+</html>

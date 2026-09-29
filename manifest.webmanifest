@@ -1,0 +1,17 @@
+{
+  "name": "L'école à la maison",
+  "short_name": "École",
+  "description": "Révisions de Julia et Louise : tables, arbre à calculs, fractions et lecture.",
+  "lang": "fr",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#221E4E",
+  "theme_color": "#221E4E",
+  "icons": [
+    { "src": "icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "icon-maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ]
+}
