@@ -233,6 +233,7 @@ input.champ{font-family:var(--police);font-size:1.1rem;font-weight:700;padding:1
   <h1>Qui travaille aujourd'hui ?</h1>
   <div class="profils" id="liste-profils"></div>
   <button class="bouton second" id="pr-parents">Suivi des parents</button>
+  <p class="legende etat-sync" hidden style="text-align:center"></p>
   <p class="alerte" id="alerte-stock" hidden>Ce navigateur bloque l'enregistrement : les séances ne seront pas gardées après fermeture.</p>
 </section>
 
@@ -261,6 +262,7 @@ input.champ{font-family:var(--police);font-size:1.1rem;font-weight:700;padding:1
 <!-- ===== Vue parents ===== -->
 <section class="ecran" id="s-vue-parents" hidden>
   <div class="barre-haut"><button class="bouton second petit" id="vp-retour">Retour</button><span class="titre">Suivi des parents</span></div>
+  <p class="legende etat-sync" hidden></p>
   <div class="pile" id="vp-contenu"></div>
 </section>
 
@@ -471,6 +473,29 @@ input.champ{font-family:var(--police);font-size:1.1rem;font-weight:700;padding:1
     <button class="bouton second" id="pa-csv">Exporter l'historique (CSV)</button>
     <button class="bouton second" id="pa-seances">Voir et gérer les séances</button>
   </div>
+  <div class="carte" id="sy-carte">
+    <h2>Synchronisation entre appareils</h2>
+    <p class="legende etat-sync" hidden></p>
+    <div class="pile" id="sy-off">
+      <p class="legende">Pour retrouver le même historique sur tous vos appareils. Il faut d'abord installer une fois le petit serveur Google (voir le mode d'emploi).</p>
+      <span class="etiq">Premier appareil</span>
+      <input class="champ" id="sy-url" type="url" autocomplete="off" placeholder="https://script.google.com/macros/s/…/exec">
+      <button class="bouton" id="sy-creer">Activer sur ce premier appareil</button>
+      <span class="etiq">Autres appareils</span>
+      <input class="champ" id="sy-code" autocomplete="off" placeholder="Code d'appairage (EM1…)">
+      <button class="bouton second" id="sy-rejoindre">Rejoindre la famille</button>
+      <p class="legende">En rejoignant, les données de cet appareil sont remplacées par celles de la famille.</p>
+    </div>
+    <div class="pile" id="sy-on" hidden>
+      <button class="bouton" id="sy-maintenant">Synchroniser maintenant</button>
+      <span class="etiq">Code d'appairage, pour ajouter un autre appareil</span>
+      <textarea class="champ" id="sy-appairage" readonly rows="3" style="font-size:.85rem;word-break:break-all"></textarea>
+      <button class="bouton second" id="sy-copier">Copier ou partager le code</button>
+      <p class="legende">Ce code donne accès aux données de la famille : ne l'utilisez que sur vos propres appareils.</p>
+      <button class="lien" id="sy-arreter">Arrêter la synchronisation sur cet appareil</button>
+    </div>
+    <p class="retour" id="sy-msg" aria-live="polite"></p>
+  </div>
   <div class="carte">
     <h2>Sauvegarde complète</h2>
     <p class="legende">Toutes les données de la famille (les deux profils, les codes, les réglages et tout l'historique) dans un seul fichier. Sert à passer d'un appareil à l'autre ou à garder une sauvegarde.</p>
@@ -559,17 +584,26 @@ catch(e){ stockOK = false; DB = base(); }
 function aujourdhui(){ var d = new Date(); return d.getFullYear() + '-' + String(d.getMonth()+1).padStart(2,'0') + '-' + String(d.getDate()).padStart(2,'0'); }
 var ACTIVITES = [ {k:'tables', nom:'Tables'}, {k:'fractions', nom:'Fractions'}, {k:'lecture', nom:'Lecture à voix haute'}, {k:'flash', nom:'Lecture flash'} ];
 function missionDe(d){
-  if (!d.mission) d.mission = { jour:null, faits:{}, total:0 };
-  if (d.mission.jour !== aujourdhui()){ d.mission.jour = aujourdhui(); d.mission.faits = {}; d.mission.aFeter = false; }
-  return d.mission;
+  if (!d.mission) d.mission = { jour:null, faits:{}, jours:[], totalAncien:0 };
+  var m = d.mission;
+  if (!m.faits) m.faits = {};
+  if (!m.jours){
+    m.jours = []; m.totalAncien = m.total || 0; delete m.total;
+    if (m.jour === aujourdhui() && m.totalAncien > 0 && ACTIVITES.every(function(a){ return m.faits[a.k]; })){ m.totalAncien--; m.jours.push(m.jour); }
+  }
+  if (m.totalAncien == null) m.totalAncien = 0;
+  if (m.jour !== aujourdhui()){ m.jour = aujourdhui(); m.faits = {}; m.aFeter = false; }
+  return m;
 }
+function totalMissions(m){ return (m.totalAncien || 0) + (m.jours || []).length; }
+function retirerJour(m){ var i = m.jours.indexOf(aujourdhui()); if (i >= 0) m.jours.splice(i, 1); }
 function mission(){ return missionDe(D()); }
 function nbFaits(m){ return ACTIVITES.filter(function(a){ return m.faits[a.k]; }).length; }
 function missionFaite(){ return nbFaits(mission()) === ACTIVITES.length; }
 function marquer(k){
   var m = mission(); if (m.faits[k]) return;
   m.faits[k] = true;
-  if (missionFaite()){ m.total = (m.total || 0) + 1; m.aFeter = true; }
+  if (missionFaite()){ if (m.jours.indexOf(aujourdhui()) < 0) m.jours.push(aujourdhui()); m.aFeter = true; }
   sauver();
 }
 var SEUILS_DEF = { tables:70, fractions:60, flash:70, lecture:85 };
@@ -600,7 +634,7 @@ function completer(d, classe){
   if (!d.flash) d.flash = { niveau: classe === 'CM1' ? 2 : 1, ms:1300, seances:[] };
 }
 DB.profils.forEach(function(p){ if (!DB.donnees[p.id]) DB.donnees[p.id] = vide(1,1); completer(DB.donnees[p.id], p.classe); });
-function sauver(){ try { localStorage.setItem(CLE, JSON.stringify(DB)); } catch(e){ stockOK = false; $('alerte-stock').hidden = false; } }
+function sauver(){ try { localStorage.setItem(CLE, JSON.stringify(DB)); } catch(e){ stockOK = false; $('alerte-stock').hidden = false; } planifierSynchro(); }
 if (!stockOK) $('alerte-stock').hidden = false;
 
 var P = null;
@@ -636,7 +670,8 @@ function ouvrirAccueil(){
   var m = mission(), verrou = D().verrouArbre !== false;
   $('a-mission').hidden = !verrou;
   $('a-etapes').innerHTML = ACTIVITES.map(function(a){ return '<span class="etape' + (m.faits[a.k] ? ' fait' : '') + '">' + (m.faits[a.k] ? '✓ ' : '○ ') + a.nom + '</span>'; }).join('');
-  $('a-etoiles').textContent = '🌟 ' + (m.total || 0) + ' mission' + ((m.total||0) > 1 ? 's' : '') + ' réussie' + ((m.total||0) > 1 ? 's' : '');
+  var tm = totalMissions(m);
+  $('a-etoiles').textContent = '🌟 ' + tm + ' mission' + (tm > 1 ? 's' : '') + ' réussie' + (tm > 1 ? 's' : '');
   $('a-mission-leg').textContent = missionFaite() ? 'Bravo, tout est fait ! L\u2019arbre à calculs est à toi.' : 'Fais un exercice de chaque pour débloquer l\u2019arbre à calculs.';
   var lock = arbreVerrouille();
   $('a-mod-arbre').classList.toggle('verrou', lock);
@@ -743,7 +778,7 @@ function ouvrirVueParents(){
     var d = DB.donnees[p.id], m = missionDe(d), L = [];
     var n = nbFaits(m);
     L.push('<li>Mission du jour : ' + n + ' / ' + ACTIVITES.length + (d.verrouArbre === false ? ' (désactivée)' : '') + '<small>' +
-      ACTIVITES.map(function(a){ return (m.faits[a.k] ? '✓ ' : '○ ') + a.nom; }).join(' · ') + ' · 🌟 ' + (m.total||0) + ' au total</small></li>');
+      ACTIVITES.map(function(a){ return (m.faits[a.k] ? '✓ ' : '○ ') + a.nom; }).join(' · ') + ' · 🌟 ' + totalMissions(m) + ' au total</small></li>');
     var t = derniere(d.tables.seances);
     L.push('<li>Tables<small>' + (t ? dateCourte(t.date) + ' : tables ' + t.tables.join(', ') + ', ' + pct(t.points, t.maxi) + '% des points, ' + t.fautes + ' erreur' + (t.fautes>1?'s':'') : 'aucune séance') + '</small></li>');
     var a = derniere(d.arbre.seances);
@@ -1417,15 +1452,18 @@ $('p-contenu').addEventListener('click', function(e){
   var b = e.target.closest('[data-del]'); if (!b) return;
   confirmer(b, 'Supprimer ?', function(){ supprimerSeance(b.dataset.del); });
 });
+var CHEMIN_HIST = { tables:'tables.seances', arbre:'arbre.seances', fractions:'fractions.seances', lecture:'lecture.seances', guidees:'lecture.guidees', enigmes:'lecture.enigmes', flash:'flash.seances' };
+function enterrer(d, chemin, liste){ d.supprimes = d.supprimes || {}; (liste || []).forEach(function(s){ d.supprimes[fusIdSeance(chemin, s)] = Date.now(); }); }
 function supprimerSeance(ref){
   var parts = ref.split(':'), k = parts[0], i = +parts[1], H = HIST[k], L = H.liste(), s = L[i];
   if (!s) return;
+  enterrer(D(), CHEMIN_HIST[k], [s]);
   L.splice(i, 1);
   if (H.mission && jourDe(s.date) === aujourdhui()){
     var m = mission(), reste = Object.keys(HIST).some(function(k2){
       return HIST[k2].mission === H.mission && HIST[k2].liste().some(function(x){ return jourDe(x.date) === aujourdhui() && x.valideMission !== false && (!HIST[k2].valide || HIST[k2].valide(x)); });
     });
-    if (m.faits[H.mission] && !reste){ var avant = missionFaite(); delete m.faits[H.mission]; if (avant && m.total) m.total--; }
+    if (m.faits[H.mission] && !reste){ var avant = missionFaite(); delete m.faits[H.mission]; if (avant) retirerJour(m); }
   }
   if (k === 'guidees' && !L.length) D().lecture.vitesseGuidee = null;
   sauver();
@@ -1539,6 +1577,7 @@ function progresFractions(){
 /* ================= PARENTS ================= */
 function ouvrirParents(){
   $('pa-titre').textContent = 'Bilans de ' + prof().nom;
+  $('sy-msg').textContent = ''; majCarteSync();
   $('pa-eff-msg').textContent = '';
   $('pa-mail').value = DB.email || '';
   $('pa-niv-arbre').innerHTML = Object.keys(ARBRE_NIV).map(function(k){ return '<button data-v="'+k+'" aria-pressed="'+(+k===D().arbre.niveau)+'">'+k+'</button>'; }).join('');
@@ -1648,10 +1687,12 @@ $('pa-eff-modules').addEventListener('click', function(e){
   var b = e.target.closest('[data-eff]'); if (!b) return;
   var k = b.dataset.eff, d = D();
   confirmer(b, 'Touche encore pour tout effacer ' + NOMS_EFF[k].replace(/^de |^des /, function(x){ return x === 'des ' ? 'les ' : ''; }), function(){
-  if (k === 'lecture'){ d.lecture.seances = []; d.lecture.guidees = []; d.lecture.enigmes = []; d.lecture.vitesseGuidee = null; }
-  else d[k].seances = [];
+  if (k === 'lecture'){
+    enterrer(d, 'lecture.seances', d.lecture.seances); enterrer(d, 'lecture.guidees', d.lecture.guidees); enterrer(d, 'lecture.enigmes', d.lecture.enigmes || []);
+    d.lecture.seances = []; d.lecture.guidees = []; d.lecture.enigmes = []; d.lecture.vitesseGuidee = null;
+  } else { enterrer(d, k + '.seances', d[k].seances); d[k].seances = []; }
   var m = mission();
-  if (m.faits[k]){ var avant = missionFaite(); delete m.faits[k]; if (avant && m.total) m.total--; }
+  if (m.faits[k]){ var avant = missionFaite(); delete m.faits[k]; if (avant) retirerJour(m); }
   sauver();
   $('pa-eff-msg').textContent = 'Historique ' + NOMS_EFF[k] + ' de ' + prof().nom + ' effacé.';
   });
@@ -1705,7 +1746,10 @@ $('pa-import-ok').addEventListener('click', function(){
 });
 $('pa-effacer').addEventListener('click', function(){
   confirmer($('pa-effacer'), 'Touche encore pour tout effacer', function(){
-    var p = prof(), fn = D().flash.niveau; DB.donnees[P] = vide(D().arbre.niveau, D().fractions.niveau); completer(DB.donnees[P], p.classe); D().flash.niveau = fn; sauver(); ouvrirParents();
+    var p = prof(), ancien = D(), fn = ancien.flash.niveau;
+    FUS_LISTES.forEach(function(ch){ var q = ch.split('.'); enterrer(ancien, ch, (ancien[q[0]] || {})[q[1]] || []); });
+    DB.donnees[P] = vide(ancien.arbre.niveau, ancien.fractions.niveau); completer(DB.donnees[P], p.classe);
+    D().flash.niveau = fn; D().supprimes = ancien.supprimes; D().mission = ancien.mission; sauver(); ouvrirParents();
     $('pa-eff-msg').textContent = 'Tout l\u2019historique de ' + p.nom + ' est effacé.';
   });
 });
@@ -1953,7 +1997,8 @@ function terminerLecture(){
   }
   $('lf-mot').textContent = mot;
   $('lf-proso').innerHTML = PROSO.map(function(p,i){ return '<button data-v="'+(i+1)+'" aria-pressed="false">'+p.nom+'<small>'+p.det+'</small></button>'; }).join('');
-  $('lf-proso').onclick = function(e){ var b = e.target.closest('[data-v]'); if (!b) return; s.prosodie = +b.dataset.v; sauver();
+  $('lf-proso').onclick = function(e){ var b = e.target.closest('[data-v]'); if (!b) return;
+    var cible = D().lecture.seances.filter(function(x){ return x.date === s.date; })[0] || s; cible.prosodie = +b.dataset.v; sauver();
     $('lf-proso').querySelectorAll('button').forEach(function(x){ x.setAttribute('aria-pressed', x === b); }); };
   $('lf-carte').hidden = !rates.length;
   $('lf-mots').innerHTML = rates.map(function(r){ return '<span class="fait r" style="font-size:1.05rem">'+esc(r)+'</span>'; }).join('');
@@ -2222,14 +2267,240 @@ function flashFin(){
     erreurs: rat.length ? function(){ flashLancer(rat); } : null, rejouer:function(){ flashLancer(null); }, onglet:'lecture' });
 }
 
+/* ===== FUSION DES DONNÉES (code identique dans l'appli et sur le serveur) ===== */
+var FUS_LISTES = ['tables.seances','arbre.seances','fractions.seances','lecture.seances','lecture.guidees','lecture.enigmes','flash.seances'];
+var FUS_EXCLUS = { seances:1, guidees:1, enigmes:1, mission:1, supprimes:1 };
+var FUS_CHAMPS_PROFIL = ['nom','classe','avatar','couleur','code'];
+function fusCopie(x){ return x === undefined ? undefined : JSON.parse(JSON.stringify(x)); }
+function fusIdSeance(chemin, s){ return s.id || (chemin + '|' + s.date); }
+function fusScalaires(db){
+  var r = {};
+  if (!db) return r;
+  ['email','codeHash'].forEach(function(k){ if (db[k] !== undefined && db[k] !== null) r[k] = db[k]; });
+  (db.profils || []).forEach(function(p){ FUS_CHAMPS_PROFIL.forEach(function(f){ if (p[f] !== undefined && p[f] !== null) r['profils.' + p.id + '.' + f] = p[f]; }); });
+  function marcher(o, chemin){
+    Object.keys(o).forEach(function(k){
+      if (FUS_EXCLUS[k]) return;
+      var v = o[k], c = chemin + '.' + k;
+      if (v && typeof v === 'object' && !Array.isArray(v)) marcher(v, c);
+      else if (v !== undefined && v !== null) r[c] = v;
+    });
+  }
+  Object.keys(db.donnees || {}).forEach(function(id){ marcher(db.donnees[id], 'donnees.' + id); });
+  return r;
+}
+function fusPoser(db, chemin, v){
+  var parts = chemin.split('.');
+  if (parts[0] === 'profils'){
+    db.profils = db.profils || [];
+    var p = db.profils.filter(function(x){ return x.id === parts[1]; })[0];
+    if (!p){ p = { id:parts[1] }; db.profils.push(p); }
+    if (v === null || v === undefined) delete p[parts[2]]; else p[parts[2]] = fusCopie(v);
+    return;
+  }
+  var o = db;
+  for (var i = 0; i < parts.length - 1; i++){ if (!o[parts[i]] || typeof o[parts[i]] !== 'object') o[parts[i]] = {}; o = o[parts[i]]; }
+  var der = parts[parts.length - 1];
+  if (v === null || v === undefined) delete o[der]; else o[der] = fusCopie(v);
+}
+function fusionner(a, b){
+  if (!b) return fusCopie(a);
+  if (!a) return fusCopie(b);
+  var r = fusCopie(b);
+  var ma = a.maj || {}, mb = b.maj || {}, sa = fusScalaires(a), sb = fusScalaires(b), chemins = {}, maj = {};
+  [sa, sb, ma, mb].forEach(function(o){ Object.keys(o).forEach(function(k){ chemins[k] = 1; }); });
+  Object.keys(chemins).forEach(function(c){
+    var ta = ma[c] || 0, tb = mb[c] || 0, t = Math.max(ta, tb);
+    if (t) maj[c] = t;
+    if (ta > tb || (ta === tb && !(c in sb) && (c in sa))) fusPoser(r, c, c in sa ? sa[c] : null);
+  });
+  r.maj = maj;
+  var ids = {};
+  Object.keys(a.donnees || {}).concat(Object.keys(b.donnees || {})).forEach(function(id){ ids[id] = 1; });
+  r.donnees = r.donnees || {};
+  Object.keys(ids).forEach(function(id){
+    var da = (a.donnees || {})[id] || {}, dbb = (b.donnees || {})[id] || {};
+    var dr = r.donnees[id] || (r.donnees[id] = fusCopie(da));
+    var supp = {};
+    [da.supprimes || {}, dbb.supprimes || {}].forEach(function(s){ Object.keys(s).forEach(function(k){ supp[k] = Math.max(supp[k] || 0, s[k]); }); });
+    dr.supprimes = supp;
+    FUS_LISTES.forEach(function(ch){
+      var p = ch.split('.'), la = (da[p[0]] || {})[p[1]] || [], lb = (dbb[p[0]] || {})[p[1]] || [], parId = {};
+      la.concat(lb).forEach(function(s){
+        var k = fusIdSeance(ch, s); if (supp[k]) return;
+        if (!parId[k]) parId[k] = fusCopie(s);
+        else Object.keys(s).forEach(function(f){ if (s[f] !== null && s[f] !== undefined) parId[k][f] = fusCopie(s[f]); });
+      });
+      dr[p[0]] = dr[p[0]] || {};
+      dr[p[0]][p[1]] = Object.keys(parId).map(function(k){ return parId[k]; })
+        .sort(function(x, y){ return x.date < y.date ? -1 : x.date > y.date ? 1 : 0; });
+    });
+    var mA = da.mission || {}, mB = dbb.mission || {}, m = {}, jours = {};
+    (mA.jours || []).concat(mB.jours || []).forEach(function(j){ jours[j] = 1; });
+    m.jours = Object.keys(jours).sort();
+    m.totalAncien = Math.max(mA.totalAncien != null ? mA.totalAncien : (mA.total || 0), mB.totalAncien != null ? mB.totalAncien : (mB.total || 0));
+    if (mA.jour && mA.jour === mB.jour){
+      m.jour = mA.jour; m.faits = {};
+      [mA.faits || {}, mB.faits || {}].forEach(function(f){ Object.keys(f).forEach(function(k){ if (f[k]) m.faits[k] = true; }); });
+    } else if ((mA.jour || '') > (mB.jour || '')){ m.jour = mA.jour; m.faits = fusCopie(mA.faits || {}); }
+    else { m.jour = mB.jour || null; m.faits = fusCopie(mB.faits || {}); }
+    m.aFeter = !!mA.aFeter;
+    dr.mission = m;
+  });
+  return r;
+}
+
+/* ================= SYNCHRONISATION ================= */
+var SYNC_CLE = 'ecole-maison-sync', sync = {};
+try { sync = JSON.parse(localStorage.getItem(SYNC_CLE) || '{}') || {}; } catch(e){ sync = {}; }
+function sauverSync(){ try { localStorage.setItem(SYNC_CLE, JSON.stringify(sync)); } catch(e){} }
+var syncMinuteur = null, syncEnCours = false, syncRelancer = false, syncEtat = null;
+function planifierSynchro(delai){ if (!sync.cle) return; clearTimeout(syncMinuteur); syncMinuteur = setTimeout(synchroniser, delai == null ? 4000 : delai); }
+function tamponner(){
+  if (!sync.cle || !sync.ombre) return;
+  var s = fusScalaires(DB), o = sync.ombre, now = Date.now(), vus = {};
+  DB.maj = DB.maj || {};
+  Object.keys(s).concat(Object.keys(o)).forEach(function(c){ if (vus[c]) return; vus[c] = 1; if (JSON.stringify(s[c]) !== JSON.stringify(o[c])) DB.maj[c] = now; });
+}
+function appelServeur(url, corps){
+  return fetch(url, { method:'POST', headers:{ 'Content-Type':'text/plain;charset=utf-8' }, body:JSON.stringify(corps), redirect:'follow' })
+    .then(function(r){ return r.json(); });
+}
+function recalculerMissions(){
+  var SOURCES = { tables:['tables.seances'], fractions:['fractions.seances'], flash:['flash.seances'], lecture:['lecture.seances','lecture.guidees'] }, auj = aujourdhui();
+  DB.profils.forEach(function(p){
+    var d = DB.donnees[p.id]; if (!d) return;
+    var m = missionDe(d);
+    Object.keys(SOURCES).forEach(function(k){
+      if (m.faits[k]) return;
+      if (SOURCES[k].some(function(ch){ var q = ch.split('.'); return ((d[q[0]] || {})[q[1]] || []).some(function(s){ return s.valideMission === true && jourDe(s.date) === auj; }); })) m.faits[k] = true;
+    });
+    if (ACTIVITES.every(function(a){ return m.faits[a.k]; }) && m.jours.indexOf(auj) < 0) m.jours.push(auj);
+  });
+}
+function normaliserDB(){
+  DB.profils.forEach(function(p){ if (!DB.donnees[p.id]) DB.donnees[p.id] = vide(1,1); completer(DB.donnees[p.id], p.classe); });
+  recalculerMissions();
+  if (P && !DB.profils.some(function(p){ return p.id === P; })) P = null;
+}
+function synchroniser(){
+  if (!sync.cle || !sync.url) return Promise.resolve(false);
+  if (syncEnCours){ syncRelancer = true; return Promise.resolve(false); }
+  syncEnCours = true; majEtatSync('encours');
+  tamponner();
+  return appelServeur(sync.url, { action:'sync', cle:sync.cle, etat:JSON.parse(JSON.stringify(DB)) }).then(function(j){
+    if (!j || !j.ok) throw new Error(j && j.erreur || 'erreur');
+    tamponner();
+    DB = fusionner(DB, j.etat);
+    normaliserDB();
+    try { localStorage.setItem(CLE, JSON.stringify(DB)); } catch(e){}
+    sync.ombre = fusScalaires(DB); sync.derniere = Date.now(); sync.erreur = null; sauverSync();
+    majEtatSync('ok'); rafraichirApresSync();
+    return true;
+  }).catch(function(e){ sync.erreur = String(e && e.message || e); sauverSync(); majEtatSync('ko'); return false; })
+  .then(function(r){ syncEnCours = false; if (syncRelancer){ syncRelancer = false; planifierSynchro(1000); } return r; });
+}
+function majEtatSync(etat){
+  if (etat) syncEtat = etat;
+  var txt = '';
+  if (sync.cle){
+    var der = sync.derniere ? new Date(sync.derniere) : null;
+    var quand = der ? (jourDe(der.toISOString()) === aujourdhui() ? 'à ' + heure(der.toISOString()) : 'le ' + dateCourte(der.toISOString())) : '';
+    txt = syncEtat === 'encours' ? '☁️ Synchronisation…'
+      : syncEtat === 'ko' ? '☁️ Serveur injoignable pour l\u2019instant' + (quand ? ' (dernière synchro ' + quand + ')' : '') + ', nouvel essai plus tard.'
+      : quand ? '☁️ Synchronisé ' + quand : '☁️ Synchronisation activée';
+  }
+  document.querySelectorAll('.etat-sync').forEach(function(el){ el.hidden = !txt; el.textContent = txt; });
+}
+function rafraichirApresSync(){
+  if (ecranCourant === 's-vue-parents') ouvrirVueParents();
+  else if (ecranCourant === 's-profils') dessinerProfils();
+  else if (ecranCourant === 's-progres' && P){ garderScroll = true; ouvrirProgres(ongletProgres); }
+  else if (ecranCourant === 's-accueil' && P) ouvrirAccueil();
+  else if (ecranCourant === 's-parents') majCarteSync();
+}
+function codeAppairage(){ return 'EM1.' + btoa(JSON.stringify({ u:sync.url, k:sync.cle })).replace(/\+/g,'-').replace(/\//g,'_').replace(/=+$/,''); }
+function lireAppairage(txt){
+  txt = String(txt || '').replace(/\s/g, '');
+  if (txt.indexOf('EM1.') !== 0) return null;
+  try { var b = txt.slice(4).replace(/-/g,'+').replace(/_/g,'/'); while (b.length % 4) b += '='; var o = JSON.parse(atob(b)); return o.u && o.k ? o : null; } catch(e){ return null; }
+}
+function nouvelleCle(){
+  var a = 'abcdefghijkmnpqrstuvwxyz23456789', t = new Uint8Array(32), s = '';
+  (window.crypto || window.msCrypto).getRandomValues(t);
+  for (var i = 0; i < t.length; i++) s += a[t[i] % a.length];
+  return s;
+}
+function majCarteSync(msg, ok){
+  var on = !!sync.cle;
+  $('sy-off').hidden = on; $('sy-on').hidden = !on;
+  if (on) $('sy-appairage').value = codeAppairage();
+  if (msg !== undefined){ $('sy-msg').className = 'retour ' + (ok ? 'ok' : 'ko'); $('sy-msg').textContent = msg; }
+  majEtatSync();
+}
+$('sy-creer').addEventListener('click', function(){
+  var url = $('sy-url').value.trim();
+  if (!/^https:\/\/script\.google\.com\/.+\/exec$/.test(url)){ majCarteSync('L\u2019adresse doit commencer par https://script.google.com/ et se terminer par /exec.', false); return; }
+  var cle = nouvelleCle();
+  majCarteSync('Connexion au serveur…', true);
+  appelServeur(url, { action:'test', cle:cle }).then(function(j){
+    if (!j || !j.ok) throw new Error('reponse');
+    sync = { url:url, cle:cle, ombre:null, derniere:null }; sauverSync();
+    return synchroniser();
+  }).then(function(ok){
+    if (ok === false && !sync.derniere) throw new Error('sync');
+    majCarteSync('Synchronisation activée ! Utilise le code d\u2019appairage ci-dessous sur les autres appareils.', true);
+  }).catch(function(){
+    if (!sync.derniere){ sync = {}; sauverSync(); }
+    majCarteSync('Impossible de joindre le serveur. Vérifie l\u2019adresse et que le déploiement est accessible à « Tout le monde ».', false);
+  });
+});
+$('sy-rejoindre').addEventListener('click', function(){
+  var b = $('sy-rejoindre'), o = lireAppairage($('sy-code').value);
+  if (!o){ majCarteSync('Ce code d\u2019appairage n\u2019est pas valide. Il commence par EM1.', false); return; }
+  confirmer(b, 'Touche encore : les données de cet appareil seront remplacées', function(){
+    majCarteSync('Connexion au serveur…', true);
+    appelServeur(o.u, { action:'lire', cle:o.k }).then(function(j){
+      if (!j || !j.ok) throw new Error('reponse');
+      if (!j.etat){ majCarteSync('Aucune donnée trouvée pour ce code. Vérifie que la synchronisation a bien été activée sur le premier appareil.', false); return; }
+      DB = j.etat; normaliserDB();
+      try { localStorage.setItem(CLE, JSON.stringify(DB)); } catch(e){}
+      sync = { url:o.u, cle:o.k, ombre:fusScalaires(DB), derniere:Date.now() }; sauverSync();
+      syncEtat = 'ok'; codeOk = true;
+      majCarteSync('Appareil relié à la famille, les données sont à jour.', true);
+      setTimeout(ouvrirVueParents, 1200);
+    }).catch(function(){ majCarteSync('Impossible de joindre le serveur. Vérifie la connexion internet et réessaie.', false); });
+  });
+});
+$('sy-maintenant').addEventListener('click', function(){
+  synchroniser().then(function(ok){ majCarteSync(ok ? 'Tout est à jour.' : 'Le serveur ne répond pas pour l\u2019instant.', ok); });
+});
+$('sy-copier').addEventListener('click', function(){
+  var code = codeAppairage();
+  if (navigator.share){ navigator.share({ title:'Code d\u2019appairage', text:code }).catch(function(){}); return; }
+  if (navigator.clipboard && navigator.clipboard.writeText){ navigator.clipboard.writeText(code).then(function(){ majCarteSync('Code copié.', true); }, function(){ $('sy-appairage').select(); }); return; }
+  $('sy-appairage').select();
+});
+$('sy-arreter').addEventListener('click', function(){
+  confirmer($('sy-arreter'), 'Touche encore pour arrêter', function(){
+    sync = {}; sauverSync(); syncEtat = null; clearTimeout(syncMinuteur);
+    majCarteSync('Synchronisation arrêtée sur cet appareil. Ses données restent en place.', true);
+  });
+});
+document.addEventListener('visibilitychange', function(){ if (document.visibilityState === 'visible') planifierSynchro(500); });
+window.addEventListener('online', function(){ planifierSynchro(500); });
+setInterval(function(){ if (sync.cle && document.visibilityState !== 'hidden') synchroniser(); }, 5 * 60 * 1000);
+
 /* ================= démarrage ================= */
 dessinerProfils();
+majEtatSync();
+if (sync.cle) synchroniser();
 /* PWA : copie hors ligne et stockage persistant */
 if ('serviceWorker' in navigator && /^https?:$/.test(location.protocol)){
   window.addEventListener('load', function(){ navigator.serviceWorker.register('sw.js').catch(function(){}); });
 }
 try { if (navigator.storage && navigator.storage.persist) navigator.storage.persist(); } catch(e){}
-window.__test = { diagnostiquer:diagnostiquer, ARBRE_NIV:ARBRE_NIV, nbRetenues:nbRetenues, somme:somme, colonnes:colonnes };
+window.__test = { fusionner:fusionner, get DB(){ return DB; }, sync:function(){ return sync; }, diagnostiquer:diagnostiquer, ARBRE_NIV:ARBRE_NIV, nbRetenues:nbRetenues, somme:somme, colonnes:colonnes };
 })();
 </script>
 </body>
