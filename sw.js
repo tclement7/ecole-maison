@@ -1,6 +1,6 @@
 /* L'école à la maison : copie hors ligne.
    À CHAQUE MISE À JOUR de index.html, change le numéro de VERSION ci-dessous. */
-const VERSION = 'v3.2.1';
+const VERSION = 'v3.2.7';
 const CACHE = 'ecole-maison-' + VERSION;
 const FICHIERS = ['./', './index.html', './manifest.webmanifest', './icon-192.png', './icon-512.png', './apple-touch-icon.png'];
 
@@ -28,6 +28,10 @@ self.addEventListener('fetch', e => {
   if (url.origin !== location.origin) return;
   // Page de l'appli : réseau d'abord (pour avoir la dernière version), copie si hors ligne
   if (req.mode === 'navigate') {
+    // On ne garde en copie que la page de l'appli elle-même (pas une page d'un sous-dossier, comme une version de test)
+    const base = new URL(self.registration.scope).pathname;
+    const pageAppli = url.pathname === base || url.pathname === base + 'index.html';
+    if (!pageAppli) return;
     e.respondWith(fetch(req).then(r => { const k = r.clone(); caches.open(CACHE).then(c => c.put('./index.html', k)); return r; })
       .catch(() => caches.match('./index.html')));
     return;
