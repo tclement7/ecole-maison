@@ -309,6 +309,8 @@ svg.perso{width:auto;height:96px}
 .fete-texte{position:absolute;left:50%;top:38%;transform:translate(-50%,-50%);background:var(--citron);color:var(--encre);font-weight:800;font-size:clamp(1.6rem,7vw,2.4rem);
   padding:14px 26px;border-radius:24px;box-shadow:0 10px 30px rgba(0,0,0,.4);text-align:center;animation:fete-pop 2.8s ease forwards;max-width:92vw;white-space:nowrap}
 @keyframes fete-pop{0%{transform:translate(-50%,-50%) scale(.3);opacity:0}12%{transform:translate(-50%,-50%) scale(1.12);opacity:1}20%{transform:translate(-50%,-50%) scale(1)}80%{opacity:1}100%{opacity:0}}
+.bouton.danger{background:transparent;color:var(--framboise);border:2.5px solid var(--framboise);box-shadow:none}
+.bouton.danger.arme{background:var(--framboise) !important;color:#fff !important}
 .enq{font-weight:800;font-size:1.2rem;line-height:1.35}
 .compte{text-align:center;font-size:3rem;font-weight:800;color:var(--citron);line-height:1}
 .proso{display:grid;gap:8px}
@@ -372,7 +374,7 @@ svg.perso{width:auto;height:96px}
     <p class="retour ko" id="en-msg" aria-live="polite"></p>
     <button class="bouton" id="en-ok">Enregistrer</button>
   </div>
-  <button class="lien" id="en-suppr" hidden>Supprimer ce profil et tout son historique</button>
+  <button class="bouton danger" id="en-suppr" hidden>🗑 Supprimer ce profil et tout son historique</button>
 </section>
 
 <!-- ===== Maternelle ===== -->
@@ -456,11 +458,59 @@ svg.perso{width:auto;height:96px}
   <p class="legende" id="co-oubli-enfant" hidden style="text-align:center">Code oublié ? Demande à un parent, il peut le retrouver dans le suivi des parents.</p>
 </section>
 
+<!-- ===== Réglages de la famille ===== -->
+<section class="ecran" id="s-famille" hidden>
+  <div class="barre-haut"><button class="bouton second petit" id="fa-retour">Retour</button><span class="titre">Réglages de la famille</span></div>
+  <div class="carte">
+    <h2>Adresse mail</h2>
+    <label class="etiq" for="pa-mail">Adresse mail pour recevoir les bilans (elle sert aussi à récupérer le code parents oublié)</label>
+    <input class="champ" id="pa-mail" type="email" autocomplete="email" placeholder="prenom@exemple.fr">
+  </div>
+  <div class="carte" id="sy-carte">
+    <h2>Synchronisation entre appareils</h2>
+    <p class="legende etat-sync" hidden></p>
+    <div class="pile" id="sy-off">
+      <p class="legende">Pour retrouver le même historique sur tous vos appareils. Il faut d'abord installer une fois le petit serveur Google (voir le mode d'emploi).</p>
+      <span class="etiq">Premier appareil</span>
+      <input class="champ" id="sy-url" type="url" autocomplete="off" placeholder="https://script.google.com/macros/s/…/exec">
+      <button class="bouton" id="sy-creer">Activer sur ce premier appareil</button>
+      <span class="etiq">Autres appareils</span>
+      <input class="champ" id="sy-code" autocomplete="off" placeholder="Code d'appairage (EM1…)">
+      <button class="bouton second" id="sy-rejoindre">Rejoindre la famille</button>
+      <p class="legende">En rejoignant, les données de cet appareil sont remplacées par celles de la famille.</p>
+    </div>
+    <div class="pile" id="sy-on" hidden>
+      <button class="bouton" id="sy-maintenant">Synchroniser maintenant</button>
+      <span class="etiq">Code d'appairage, pour ajouter un autre appareil</span>
+      <textarea class="champ" id="sy-appairage" readonly rows="3" style="font-size:.85rem;word-break:break-all"></textarea>
+      <button class="bouton second" id="sy-copier">Copier ou partager le code</button>
+      <p class="legende">Ce code donne accès aux données de la famille : ne l'utilisez que sur vos propres appareils.</p>
+      <button class="lien" id="sy-arreter">Arrêter la synchronisation sur cet appareil</button>
+    </div>
+    <p class="retour" id="sy-msg" aria-live="polite"></p>
+  </div>
+  <div class="carte">
+    <h2>Sauvegarde complète</h2>
+    <p class="legende">Toutes les données de la famille (tous les enfants, les codes, les réglages et tout l'historique) dans un seul fichier. Sert à passer d'un appareil à l'autre ou à garder une sauvegarde.</p>
+    <button class="bouton second" id="pa-json">Exporter la sauvegarde</button>
+    <label class="bouton second" for="pa-import" style="text-align:center;cursor:pointer">Importer une sauvegarde</label>
+    <input type="file" id="pa-import" accept=".json,application/json" hidden>
+    <p class="retour" id="pa-import-msg" aria-live="polite"></p>
+    <button class="bouton" id="pa-import-ok" hidden>Remplacer les données de cet appareil</button>
+  </div>
+  <div class="carte">
+    <h2>Code parents</h2>
+    <p class="legende">Le code à 4 chiffres qui protège le suivi des parents.</p>
+  <button class="bouton second" id="pa-code">Changer le code parents</button>
+  </div>
+  <p class="version" id="pa-version"></p>
+</section>
+
 <!-- ===== Vue parents ===== -->
 <section class="ecran" id="s-vue-parents" hidden>
   <div class="barre-haut"><button class="bouton second petit" id="vp-retour">Retour</button><span class="titre">Suivi des parents</span></div>
   <p class="legende etat-sync" hidden></p>
-  <button class="bouton" id="vp-ajouter">Ajouter un enfant</button>
+  <div class="ligne"><button class="bouton" id="vp-ajouter">Ajouter un enfant</button><button class="bouton second" id="vp-famille">⚙️ Réglages de la famille</button></div>
   <div class="pile" id="vp-contenu"></div>
 </section>
 
@@ -494,7 +544,7 @@ svg.perso{width:auto;height:96px}
       <span><b>Anglais</b><small id="a-sub-anglais"></small></span></button>
   </div>
   <button class="bouton" id="a-progres">Mes progrès</button>
-  <button class="lien" id="a-parents">Espace parents</button>
+  <button class="lien" id="a-parents" hidden>Espace parents</button>
 </section>
 
 <!-- ===== Choix des tables ===== -->
@@ -667,46 +717,13 @@ svg.perso{width:auto;height:96px}
 
 <!-- ===== Parents ===== -->
 <section class="ecran" id="s-parents" hidden>
-  <div class="barre-haut"><button class="bouton second petit" data-retour>Retour</button><span class="titre">Espace parents</span></div>
+  <div class="barre-haut"><button class="bouton second petit" data-retour>Retour</button><span class="titre" id="pa-entete">Réglages</span></div>
   <div class="carte">
     <h2 id="pa-titre"></h2>
-    <label class="etiq" for="pa-mail">Adresse mail pour recevoir les bilans (elle sert aussi à récupérer le code parents oublié)</label>
-    <input class="champ" id="pa-mail" type="email" autocomplete="email" placeholder="prenom@exemple.fr">
+    <p class="legende" id="pa-mail-info"></p>
     <button class="bouton" id="pa-envoyer">Envoyer le bilan par mail</button>
     <button class="bouton second" id="pa-csv">Exporter l'historique (CSV)</button>
     <button class="bouton second" id="pa-seances">Voir et gérer les séances</button>
-  </div>
-  <div class="carte" id="sy-carte">
-    <h2>Synchronisation entre appareils</h2>
-    <p class="legende etat-sync" hidden></p>
-    <div class="pile" id="sy-off">
-      <p class="legende">Pour retrouver le même historique sur tous vos appareils. Il faut d'abord installer une fois le petit serveur Google (voir le mode d'emploi).</p>
-      <span class="etiq">Premier appareil</span>
-      <input class="champ" id="sy-url" type="url" autocomplete="off" placeholder="https://script.google.com/macros/s/…/exec">
-      <button class="bouton" id="sy-creer">Activer sur ce premier appareil</button>
-      <span class="etiq">Autres appareils</span>
-      <input class="champ" id="sy-code" autocomplete="off" placeholder="Code d'appairage (EM1…)">
-      <button class="bouton second" id="sy-rejoindre">Rejoindre la famille</button>
-      <p class="legende">En rejoignant, les données de cet appareil sont remplacées par celles de la famille.</p>
-    </div>
-    <div class="pile" id="sy-on" hidden>
-      <button class="bouton" id="sy-maintenant">Synchroniser maintenant</button>
-      <span class="etiq">Code d'appairage, pour ajouter un autre appareil</span>
-      <textarea class="champ" id="sy-appairage" readonly rows="3" style="font-size:.85rem;word-break:break-all"></textarea>
-      <button class="bouton second" id="sy-copier">Copier ou partager le code</button>
-      <p class="legende">Ce code donne accès aux données de la famille : ne l'utilisez que sur vos propres appareils.</p>
-      <button class="lien" id="sy-arreter">Arrêter la synchronisation sur cet appareil</button>
-    </div>
-    <p class="retour" id="sy-msg" aria-live="polite"></p>
-  </div>
-  <div class="carte">
-    <h2>Sauvegarde complète</h2>
-    <p class="legende">Toutes les données de la famille (les deux profils, les codes, les réglages et tout l'historique) dans un seul fichier. Sert à passer d'un appareil à l'autre ou à garder une sauvegarde.</p>
-    <button class="bouton second" id="pa-json">Exporter la sauvegarde</button>
-    <label class="bouton second" for="pa-import" style="text-align:center;cursor:pointer">Importer une sauvegarde</label>
-    <input type="file" id="pa-import" accept=".json,application/json" hidden>
-    <p class="retour" id="pa-import-msg" aria-live="polite"></p>
-    <button class="bouton" id="pa-import-ok" hidden>Remplacer les données de cet appareil</button>
   </div>
   <div class="carte">
     <h2>Mission du jour</h2>
@@ -747,9 +764,8 @@ svg.perso{width:auto;height:96px}
     </div>
     <p class="retour ok" id="pa-eff-msg" aria-live="polite"></p>
   </div>
-  <button class="bouton second" id="pa-code">Changer le code parents</button>
   <button class="lien" id="pa-effacer">Effacer tout l'historique de ce profil</button>
-  <p class="version" id="pa-version"></p>
+  <button class="bouton danger" id="pa-suppr">🗑 Supprimer ce profil</button>
 </section>
 
 </div>
@@ -796,7 +812,7 @@ function modulesClasse(c){ return MODULES_CLASSE[c] || MODULES_CLASSE.CE2; }
 var NIV_DEF = { arbre:{ CE1:1, CE2:1, CM1:3, CM2:4 }, fractions:{ CE1:1, CE2:1, CM1:2, CM2:3 }, flash:{ CP:1, CE1:1, CE2:1, CM1:2, CM2:3 }, anglais:{ GS:1, CP:1, CE1:2, CE2:3, CM1:4, CM2:4 }, maternelle:{ GS:1, CP:3 } };
 function nivDef(m, c){ return NIV_DEF[m][c] || 1; }
 var ANIMAUX = ['🦛','🐶','🐱','🐰','🐼','🦊','🐨','🐯','🦁','🐵','🐘','🪿','🐬','🐢','🦄','🐸','🦉'];
-var APP_VERSION = '3.2.7';
+var APP_VERSION = '3.2.9';
 var AVATARS_DESSINES = {
   '🦛': '<svg class="ava-svg" viewBox="-66 -66 132 132" aria-hidden="true"><circle cx="-38" cy="-43" r="13" fill="#9C8FC9"/><circle cx="-38" cy="-43" r="6" fill="#F2A7C3"/><circle cx="38" cy="-43" r="13" fill="#9C8FC9"/><circle cx="38" cy="-43" r="6" fill="#F2A7C3"/><ellipse cx="0" cy="-15" rx="48" ry="40" fill="#9C8FC9"/><ellipse cx="0" cy="23" rx="58" ry="36" fill="#BCB2E3"/><circle cx="-20" cy="-25" r="11" fill="#FFFFFF"/><circle cx="-18" cy="-23" r="5.5" fill="#2E2650"/><circle cx="20" cy="-25" r="11" fill="#FFFFFF"/><circle cx="18" cy="-23" r="5.5" fill="#2E2650"/><ellipse cx="-20" cy="11" rx="6" ry="8" fill="#5A4E8C"/><ellipse cx="20" cy="11" rx="6" ry="8" fill="#5A4E8C"/><path d="M-26 33 Q0 51 26 33" fill="#5A4E8C" stroke="#5A4E8C" stroke-width="3" stroke-linejoin="round"/><rect x="-12" y="34" width="9" height="9" rx="2" fill="#FFFFFF"/><rect x="3" y="34" width="9" height="9" rx="2" fill="#FFFFFF"/><circle cx="-48" cy="25" r="7" fill="#F2A7C3" opacity="0.7"/><circle cx="48" cy="25" r="7" fill="#F2A7C3" opacity="0.7"/></svg>',
   '🐘': '<svg class="ava-svg" viewBox="-86 -78 172 172" aria-hidden="true"><ellipse cx="-50" cy="-8" rx="34" ry="40" fill="#A7B1BF"/><ellipse cx="-52" cy="-6" rx="20" ry="26" fill="#F2B8CB"/><ellipse cx="50" cy="-8" rx="34" ry="40" fill="#A7B1BF"/><ellipse cx="52" cy="-6" rx="20" ry="26" fill="#F2B8CB"/><ellipse cx="0" cy="-12" rx="40" ry="42" fill="#A7B1BF"/><path d="M0 10 Q-2 44 14 54" fill="none" stroke="#A7B1BF" stroke-width="20" stroke-linecap="round"/><path d="M-7 26 L7 26 M-6 38 L8 38" fill="none" stroke="#7D8796" stroke-width="2.5" stroke-linecap="round"/><circle cx="-15" cy="-20" r="9" fill="#FFFFFF"/><circle cx="-13" cy="-18" r="4.5" fill="#2A2F3A"/><circle cx="15" cy="-20" r="9" fill="#FFFFFF"/><circle cx="13" cy="-18" r="4.5" fill="#2A2F3A"/><circle cx="-28" cy="8" r="6" fill="#F2A7C3" opacity="0.6"/><circle cx="28" cy="8" r="6" fill="#F2A7C3" opacity="0.6"/></svg>',
@@ -1039,7 +1055,7 @@ $('co-mail-ok').addEventListener('click', function(){
   else afficherCode('Cette adresse ne correspond pas.');
 });
 $('pa-code').addEventListener('click', function(){
-  co = { etape:'creer1', saisie:'', premier:'', suite:ouvrirParents, annuler:ouvrirParents, fautes:0, bloque:0 };
+  co = { etape:'creer1', saisie:'', premier:'', suite:ouvrirFamille, annuler:ouvrirFamille, fautes:0, bloque:0 };
   afficherCode(); montrer('s-code');
 });
 function derniere(t){ return t && t.length ? t[t.length-1] : null; }
@@ -1864,11 +1880,21 @@ function progresFractions(){
 }
 
 /* ================= PARENTS ================= */
-function ouvrirParents(){
-  $('pa-titre').textContent = 'Bilans de ' + prof().nom;
-  $('sy-msg').textContent = ''; majCarteSync();
-  $('pa-eff-msg').textContent = '';
+function ouvrirFamille(){
+  origine = 'parents';
   $('pa-mail').value = DB.email || '';
+  $('sy-msg').textContent = ''; majCarteSync();
+  $('pa-import-msg').textContent = ''; $('pa-import-ok').hidden = true;
+  $('pa-version').textContent = 'Version ' + APP_VERSION;
+  montrer('s-famille');
+}
+$('vp-famille').addEventListener('click', ouvrirFamille);
+$('fa-retour').addEventListener('click', ouvrirVueParents);
+function ouvrirParents(){
+  $('pa-entete').textContent = 'Réglages de ' + prof().nom;
+  $('pa-titre').textContent = 'Bilans de ' + prof().nom;
+  $('pa-mail-info').textContent = DB.email ? 'Les bilans partent vers ' + DB.email + '.' : 'Aucune adresse mail enregistrée : tu peux l\u2019ajouter dans les réglages de la famille.';
+  $('pa-eff-msg').textContent = '';
   $('pa-niv-arbre').innerHTML = Object.keys(ARBRE_NIV).map(function(k){ return '<button data-v="'+k+'" aria-pressed="'+(+k===D().arbre.niveau)+'">'+k+'</button>'; }).join('');
   $('pa-niv-fractions').innerHTML = Object.keys(FRAC_NIV).map(function(k){ return '<button data-v="'+k+'" aria-pressed="'+(+k===D().fractions.niveau)+'">'+k+'</button>'; }).join('');
   majSegments('pa-verrou', D().verrouArbre === false ? 'non' : 'oui');
@@ -1981,7 +2007,6 @@ function texteBilan(){
   return L.join('\n');
 }
 $('pa-envoyer').addEventListener('click', function(){
-  DB.email = $('pa-mail').value.trim(); sauver();
   window.location.href = 'mailto:' + encodeURIComponent(DB.email) + '?subject=' + encodeURIComponent('Bilan de ' + prof().nom + ' du ' + new Date().toLocaleDateString('fr-FR')) + '&body=' + encodeURIComponent(texteBilan());
 });
 $('pa-csv').addEventListener('click', function(){
@@ -2753,7 +2778,7 @@ function rafraichirApresSync(){
   else if (ecranCourant === 's-profils') dessinerProfils();
   else if (ecranCourant === 's-progres' && P){ garderScroll = true; ouvrirProgres(ongletProgres); }
   else if (ecranCourant === 's-accueil' && P) ouvrirAccueil();
-  else if (ecranCourant === 's-parents') majCarteSync();
+  else if (ecranCourant === 's-famille') majCarteSync();
 }
 function codeAppairage(){ return 'EM1.' + btoa(JSON.stringify({ u:sync.url, k:sync.cle })).replace(/\+/g,'-').replace(/\//g,'_').replace(/=+$/,''); }
 function lireAppairage(txt){
@@ -2940,15 +2965,22 @@ $('en-ok').addEventListener('click', function(){
   }
   sauver(); fiche.retour();
 });
+function supprimerProfil(id, apres){
+  DB.profilsSupprimes = DB.profilsSupprimes || {}; DB.profilsSupprimes[id] = Date.now();
+  DB.profils = DB.profils.filter(function(x){ return x.id !== id; }); delete DB.donnees[id];
+  if (P === id) P = null;
+  sauver();
+  if (!DB.profils.length){ ouvrirBienvenue(); return; }
+  apres();
+}
 $('en-suppr').addEventListener('click', function(){
   var p = DB.profils.filter(function(x){ return x.id === fiche.id; })[0];
-  confirmer($('en-suppr'), 'Touche encore pour supprimer ' + esc(p.nom) + ' définitivement', function(){
-    DB.profilsSupprimes = DB.profilsSupprimes || {}; DB.profilsSupprimes[p.id] = Date.now();
-    DB.profils = DB.profils.filter(function(x){ return x.id !== p.id; }); delete DB.donnees[p.id];
-    if (P === p.id) P = null;
-    sauver();
-    if (!DB.profils.length){ ouvrirBienvenue(); return; }
-    fiche.retour();
+  confirmer($('en-suppr'), 'Touche encore pour supprimer ' + esc(p.nom) + ' définitivement', function(){ supprimerProfil(p.id, fiche.retour); });
+});
+$('pa-suppr').addEventListener('click', function(){
+  var p = prof();
+  confirmer($('pa-suppr'), 'Touche encore pour supprimer ' + esc(p.nom) + ' définitivement', function(){
+    supprimerProfil(p.id, function(){ codeOk = true; ouvrirVueParents(); });
   });
 });
 $('vp-ajouter').addEventListener('click', function(){ ouvrirFicheEnfant(null, ouvrirVueParents); });
@@ -3923,7 +3955,7 @@ function progresMaternelle(){
 
 /* ================= démarrage ================= */
 dessinerProfils();
-$('pr-version').textContent = 'Version ' + APP_VERSION; $('pa-version').textContent = 'Version ' + APP_VERSION;
+$('pr-version').textContent = 'Version ' + APP_VERSION;
 if (!DB.profils.length) ouvrirBienvenue();
 majEtatSync();
 if (sync.cle) synchroniser();
