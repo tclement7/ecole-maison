@@ -211,6 +211,8 @@ input.champ{font-family:var(--police);font-size:1.1rem;font-weight:700;padding:1
 .points-code{display:flex;justify-content:center;gap:18px;margin:6px 0}
 .points-code i{width:22px;height:22px;border-radius:50%;border:3px solid var(--craie)}
 .points-code i.plein{background:var(--craie)}
+svg.ava-svg{width:1.2em;height:1.2em;vertical-align:-0.22em;display:inline-block}
+.version{text-align:center;color:var(--pale);font-weight:600;font-size:.85rem;opacity:.8}
 .animaux{display:grid;grid-template-columns:repeat(auto-fill,minmax(58px,1fr));gap:8px}
 .animaux button{font-size:2.1rem;aspect-ratio:1;border:3px solid var(--encre-clair);background:var(--encre-fonce);border-radius:16px;padding:0}
 .animaux button[aria-pressed="true"]{border-color:var(--citron);background:var(--encre-clair)}
@@ -254,6 +256,7 @@ input.champ{font-family:var(--police);font-size:1.1rem;font-weight:700;padding:1
   <div class="profils" id="liste-profils"></div>
   <button class="bouton second" id="pr-parents">Suivi des parents</button>
   <p class="legende etat-sync" hidden style="text-align:center"></p>
+  <p class="version" id="pr-version"></p>
   <p class="legende" id="pr-vide" hidden style="text-align:center">Aucun enfant pour l'instant : ajoute-les depuis le suivi des parents.</p>
   <p class="alerte" id="alerte-stock" hidden>Ce navigateur bloque l'enregistrement : les séances ne seront pas gardées après fermeture.</p>
 </section>
@@ -635,6 +638,7 @@ input.champ{font-family:var(--police);font-size:1.1rem;font-weight:700;padding:1
   </div>
   <button class="bouton second" id="pa-code">Changer le code parents</button>
   <button class="lien" id="pa-effacer">Effacer tout l'historique de ce profil</button>
+  <p class="version" id="pa-version"></p>
 </section>
 
 </div>
@@ -680,7 +684,14 @@ var MODULES_CLASSE = {
 function modulesClasse(c){ return MODULES_CLASSE[c] || MODULES_CLASSE.CE2; }
 var NIV_DEF = { arbre:{ CE1:1, CE2:1, CM1:3, CM2:4 }, fractions:{ CE1:1, CE2:1, CM1:2, CM2:3 }, flash:{ CP:1, CE1:1, CE2:1, CM1:2, CM2:3 }, anglais:{ GS:1, CP:1, CE1:2, CE2:3, CM1:4, CM2:4 } };
 function nivDef(m, c){ return NIV_DEF[m][c] || 1; }
-var ANIMAUX = ['🦛','🐶','🐱','🐰','🐼','🦊','🐨','🐯','🦁','🐵','🐘','🐬','🐢','🦄','🐸','🦉'];
+var ANIMAUX = ['🦛','🐶','🐱','🐰','🐼','🦊','🐨','🐯','🦁','🐵','🐘','🪿','🐬','🐢','🦄','🐸','🦉'];
+var APP_VERSION = '3.1';
+var AVATARS_DESSINES = {
+  '🦛': '<svg class="ava-svg" viewBox="-66 -66 132 132" aria-hidden="true"><circle cx="-38" cy="-43" r="13" fill="#9C8FC9"/><circle cx="-38" cy="-43" r="6" fill="#F2A7C3"/><circle cx="38" cy="-43" r="13" fill="#9C8FC9"/><circle cx="38" cy="-43" r="6" fill="#F2A7C3"/><ellipse cx="0" cy="-15" rx="48" ry="40" fill="#9C8FC9"/><ellipse cx="0" cy="23" rx="58" ry="36" fill="#BCB2E3"/><circle cx="-20" cy="-25" r="11" fill="#FFFFFF"/><circle cx="-18" cy="-23" r="5.5" fill="#2E2650"/><circle cx="20" cy="-25" r="11" fill="#FFFFFF"/><circle cx="18" cy="-23" r="5.5" fill="#2E2650"/><ellipse cx="-20" cy="11" rx="6" ry="8" fill="#5A4E8C"/><ellipse cx="20" cy="11" rx="6" ry="8" fill="#5A4E8C"/><path d="M-26 33 Q0 51 26 33" fill="#5A4E8C" stroke="#5A4E8C" stroke-width="3" stroke-linejoin="round"/><rect x="-12" y="34" width="9" height="9" rx="2" fill="#FFFFFF"/><rect x="3" y="34" width="9" height="9" rx="2" fill="#FFFFFF"/><circle cx="-48" cy="25" r="7" fill="#F2A7C3" opacity="0.7"/><circle cx="48" cy="25" r="7" fill="#F2A7C3" opacity="0.7"/></svg>',
+  '🐘': '<svg class="ava-svg" viewBox="-86 -78 172 172" aria-hidden="true"><ellipse cx="-50" cy="-8" rx="34" ry="40" fill="#A7B1BF"/><ellipse cx="-52" cy="-6" rx="20" ry="26" fill="#F2B8CB"/><ellipse cx="50" cy="-8" rx="34" ry="40" fill="#A7B1BF"/><ellipse cx="52" cy="-6" rx="20" ry="26" fill="#F2B8CB"/><ellipse cx="0" cy="-12" rx="40" ry="42" fill="#A7B1BF"/><path d="M0 10 Q-2 44 14 54" fill="none" stroke="#A7B1BF" stroke-width="20" stroke-linecap="round"/><path d="M-7 26 L7 26 M-6 38 L8 38" fill="none" stroke="#7D8796" stroke-width="2.5" stroke-linecap="round"/><circle cx="-15" cy="-20" r="9" fill="#FFFFFF"/><circle cx="-13" cy="-18" r="4.5" fill="#2A2F3A"/><circle cx="15" cy="-20" r="9" fill="#FFFFFF"/><circle cx="13" cy="-18" r="4.5" fill="#2A2F3A"/><circle cx="-28" cy="8" r="6" fill="#F2A7C3" opacity="0.6"/><circle cx="28" cy="8" r="6" fill="#F2A7C3" opacity="0.6"/></svg>',
+  '🪿': '<svg class="ava-svg" viewBox="-62 -60 124 128" aria-hidden="true"><rect x="-17" y="20" width="34" height="44" rx="12" fill="#F4F4F8"/><ellipse cx="0" cy="-8" rx="38" ry="40" fill="#F4F4F8"/><path d="M-6 -46 Q0 -60 6 -46" fill="#F4F4F8"/><rect x="-24" y="38" width="48" height="12" rx="6" fill="#E5484D"/><path d="M10 46 L18 64 L26 60 L16 44 Z" fill="#E5484D"/><path d="M-18 40 L-18 48 M-8 40 L-8 48 M2 40 L2 48" fill="none" stroke="#B83238" stroke-width="2" stroke-linecap="round"/><ellipse cx="0" cy="17" rx="22" ry="14" fill="#FF9F43"/><path d="M-19 18 Q0 25 19 18" fill="none" stroke="#D9792A" stroke-width="2.5" stroke-linecap="round"/><circle cx="-6" cy="10" r="2" fill="#D9792A"/><circle cx="6" cy="10" r="2" fill="#D9792A"/><circle cx="-15" cy="-12" r="6" fill="#26223F"/><circle cx="-13" cy="-14" r="2" fill="#FFFFFF"/><circle cx="15" cy="-12" r="6" fill="#26223F"/><circle cx="17" cy="-14" r="2" fill="#FFFFFF"/><circle cx="-28" cy="4" r="6" fill="#F2A7C3" opacity="0.6"/><circle cx="28" cy="4" r="6" fill="#F2A7C3" opacity="0.6"/></svg>'
+};
+function avatarHTML(a){ return AVATARS_DESSINES[a] || esc(a || ''); }
 var COULEURS_PROFIL = ['#3FC1A0','#F0567F','#6CA8FF','#FFC94A','#B38CFF','#FF9F43'];
 var DB;
 try { var brut = localStorage.getItem(CLE); DB = brut ? JSON.parse(brut) : base(); }
@@ -761,7 +772,7 @@ function D(){ return DB.donnees[P]; }
 function dessinerProfils(){
   $('pr-vide').hidden = DB.profils.length > 0;
   $('liste-profils').innerHTML = DB.profils.map(function(p){
-    return '<button class="profil" data-p="'+p.id+'" style="border-color:'+p.couleur+'"><span class="ava">'+p.avatar+
+    return '<button class="profil" data-p="'+p.id+'" style="border-color:'+p.couleur+'"><span class="ava">'+avatarHTML(p.avatar)+
       '</span><b>'+esc(p.nom)+'</b><small>'+p.classe+(p.code ? ' · 🔒' : '')+'</small></button>';
   }).join('');
 }
@@ -777,7 +788,7 @@ function ouvrirAccueil(){
   gestion = false; codeOk = false;
   var p = prof();
   document.documentElement.style.setProperty('--accent', p.couleur);
-  $('a-ava').textContent = p.avatar;
+  $('a-ava').innerHTML = avatarHTML(p.avatar);
   $('a-nom').textContent = p.nom;
   $('a-classe').textContent = p.classe;
   $('a-sub-arbre').textContent = 'Niveau ' + D().arbre.niveau + ' : ' + ARBRE_NIV[D().arbre.niveau].nom;
@@ -801,12 +812,12 @@ function ouvrirAccueil(){
 }
 $('a-changer').addEventListener('click', function(){ dessinerProfils(); montrer('s-profils'); });
 function grilleAnimaux(el, actuel){
-  el.innerHTML = ANIMAUX.map(function(a){ return '<button data-a="' + a + '" aria-pressed="' + (a === actuel) + '">' + a + '</button>'; }).join('');
+  el.innerHTML = ANIMAUX.map(function(a){ return '<button data-a="' + a + '" aria-pressed="' + (a === actuel) + '">' + avatarHTML(a) + '</button>'; }).join('');
 }
 $('a-ava').addEventListener('click', function(){ grilleAnimaux($('ca-grille'), prof().avatar); $('choix-animal').hidden = false; });
 $('ca-grille').addEventListener('click', function(e){
   var b = e.target.closest('[data-a]'); if (!b) return;
-  prof().avatar = b.dataset.a; sauver(); $('a-ava').textContent = b.dataset.a; $('choix-animal').hidden = true;
+  prof().avatar = b.dataset.a; sauver(); $('a-ava').innerHTML = avatarHTML(b.dataset.a); $('choix-animal').hidden = true;
 });
 $('ca-fermer').addEventListener('click', function(){ $('choix-animal').hidden = true; });
 $('choix-animal').addEventListener('click', function(e){ if (e.target === $('choix-animal')) $('choix-animal').hidden = true; });
@@ -846,7 +857,7 @@ function exigerCode(suite, annuler){
 }
 function afficherCode(msg){
   var enf = co.mode === 'enfant', cible = co.cible;
-  $('co-entete').textContent = enf ? co.profil.avatar + ' ' + co.profil.nom : cible ? 'Code de ' + cible.nom : 'Espace parents';
+  $('co-entete').innerHTML = enf ? avatarHTML(co.profil.avatar) + ' ' + esc(co.profil.nom) : cible ? 'Code de ' + esc(cible.nom) : 'Espace parents';
   $('co-oubli-enfant').hidden = !enf;
   var t = enf ? ['Code de ' + co.profil.nom, 'Tape ton code secret à 4 chiffres.']
     : cible && co.etape === 'creer1' ? ['Nouveau code de ' + cible.nom, 'Choisis un code à 4 chiffres facile à retenir pour ' + cible.nom + '. Tu pourras le retrouver dans le suivi des parents.']
@@ -923,7 +934,7 @@ function ouvrirVueParents(){
     if (E.length) L.push('<li>Énigmes<small>' + E.filter(function(x){ return x.ok; }).length + ' résolue(s) sur ' + E.length + '</small></li>');
     L = L.filter(function(li){ return !/^<li>(Tables|Arbre|Fractions|Lecture chrono|Lecture guidée|Énigmes)/.test(li) || dispo.indexOf(/^<li>Tables/.test(li) ? 'tables' : /^<li>Arbre/.test(li) ? 'arbre' : /^<li>Fractions/.test(li) ? 'fractions' : 'lecture') >= 0; })
       .filter(function(li){ return !/^<li>Lecture flash/.test(li) || dispo.indexOf('flash') >= 0; });
-    return '<div class="carte p-profil" style="border-color:' + p.couleur + '"><h2 style="color:' + p.couleur + '">' + p.avatar + ' ' + esc(p.nom) + ' <small style="color:var(--pale)">' + p.classe + '</small> <button class="bouton second petit" data-modif="' + p.id + '" style="margin-left:auto">Modifier</button></h2><ul>' + L.join('') + '</ul>' +
+    return '<div class="carte p-profil" style="border-color:' + p.couleur + '"><h2 style="color:' + p.couleur + '">' + avatarHTML(p.avatar) + ' ' + esc(p.nom) + ' <small style="color:var(--pale)">' + p.classe + '</small> <button class="bouton second petit" data-modif="' + p.id + '" style="margin-left:auto">Modifier</button></h2><ul>' + L.join('') + '</ul>' +
       '<div class="ligne" style="justify-content:space-between"><span>Code de connexion : <b data-code="' + p.id + '">' + (p.code ? '••••' : 'aucun') + '</b></span>' +
         (p.code ? '<button class="bouton second petit" data-voir="' + p.id + '">Afficher</button>' : '') +
         '<button class="bouton second petit" data-chg="' + p.id + '">' + (p.code ? 'Changer' : 'Créer un code') + '</button>' +
@@ -2759,7 +2770,7 @@ $('vp-ajouter').addEventListener('click', function(){ ouvrirFicheEnfant(null, ou
 
 /* ================= BIENVENUE ================= */
 function ouvrirBienvenue(){
-  $('bv-liste').innerHTML = DB.profils.map(function(p){ return '<li>' + p.avatar + ' ' + esc(p.nom) + ' <small>' + p.classe + '</small></li>'; }).join('') || '<li><small>Aucun enfant pour l\u2019instant.</small></li>';
+  $('bv-liste').innerHTML = DB.profils.map(function(p){ return '<li>' + avatarHTML(p.avatar) + ' ' + esc(p.nom) + ' <small>' + p.classe + '</small></li>'; }).join('') || '<li><small>Aucun enfant pour l\u2019instant.</small></li>';
   $('bv-go').disabled = !DB.profils.length; $('bv-go').style.opacity = DB.profils.length ? 1 : .5;
   $('bv-go').textContent = DB.codeHash ? 'Commencer' : 'Choisir le code et commencer';
   montrer('s-bienvenue');
@@ -2974,6 +2985,7 @@ function progresAnglais(){
 
 /* ================= démarrage ================= */
 dessinerProfils();
+$('pr-version').textContent = 'Version ' + APP_VERSION; $('pa-version').textContent = 'Version ' + APP_VERSION;
 if (!DB.profils.length) ouvrirBienvenue();
 majEtatSync();
 if (sync.cle) synchroniser();
