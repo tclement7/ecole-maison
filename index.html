@@ -233,6 +233,60 @@ svg.ava-svg{width:1.2em;height:1.2em;vertical-align:-0.22em;display:inline-block
 .sons{display:flex;justify-content:center;gap:12px}
 .sons .bouton{font-size:1.6rem;padding:10px 22px}
 .enq-en{text-align:center;font-size:2.4rem;font-weight:800}
+.portes{display:grid;gap:14px}
+.porte{display:flex;align-items:center;gap:16px;border:3px solid var(--encre-clair);background:var(--encre-fonce);border-radius:24px;padding:18px 16px;text-align:left}
+.porte .ico{font-size:3.2rem;line-height:1}
+.porte b{display:block;font-size:1.6rem;font-weight:800}
+.porte small{color:var(--pale);font-weight:600}
+.mat-zone{position:relative;display:flex;flex-direction:column;gap:14px}
+.mat-zone .barre-haut .bouton.petit{padding:6px 10px}
+.mt-etoiles{display:flex;justify-content:center;gap:6px;font-size:1.6rem}
+.mt-etoiles i{font-style:normal;opacity:.2;filter:grayscale(1)}
+.mt-etoiles i.on{opacity:1;filter:none}
+.mt-etoiles i.mi{opacity:.45;filter:grayscale(1)}
+.mt-modele{display:flex;justify-content:center;align-items:center;min-height:90px}
+.mt-chiffre{width:120px;height:120px;border-radius:26px;background:var(--citron);color:var(--encre);display:grid;place-items:center;font-size:5rem;font-weight:800;line-height:1}
+.mt-assiette{background:var(--craie);border-radius:22px;padding:10px;display:flex;flex-wrap:wrap;justify-content:center;gap:2px;max-width:260px}
+.mt-emo{font-size:3.6rem;line-height:1}
+.mt-modele .mt-emo{font-size:5rem}
+.mt-num{font-size:3.4rem;font-weight:800}
+.mt-lettre{font-size:3.6rem;font-weight:800}
+.mt-nom{font-size:1.9rem;font-weight:800;letter-spacing:.08em}
+.mt-choix{display:grid;gap:12px}
+.mt-choix.c1{grid-template-columns:1fr}
+.mt-choix.c2{grid-template-columns:1fr 1fr}
+.mt-choix.c3{grid-template-columns:repeat(3,1fr)}
+.mt-choix.c4{grid-template-columns:1fr 1fr}
+.mt-choix button{position:relative;background:var(--craie);color:var(--encre);border:4px solid var(--craie);border-radius:20px;min-height:110px;display:flex;flex-wrap:wrap;align-items:center;align-content:center;justify-content:center;gap:2px;padding:8px}
+.mt-choix.c1 button{min-height:76px}
+.mt-choix button.ok{border-color:var(--menthe);background:#D8F5EC}
+.mt-choix button.ko{border-color:var(--framboise);background:#FFDDE6}
+.mt-choix .ordre{position:absolute;top:4px;left:8px;font-style:normal;font-weight:800;color:var(--menthe);font-size:1.3rem}
+.mt-choix.scene button{padding:4px}
+.mt-choix.scene svg{width:100%;height:auto}
+.bb{display:inline-block;transition:transform .2s}
+.bb.hop{transform:translateY(-8px) scale(1.25)}
+.mt-suite{display:flex;align-items:center;gap:8px;background:var(--craie);border-radius:18px;padding:12px 14px}
+.mt-suite i{width:30px;height:30px;border-radius:50%;display:inline-block}
+.mt-suite b{color:var(--encre);font-size:1.8rem;font-weight:800;width:30px;text-align:center}
+.pastille{width:56px;height:56px;border-radius:50%;display:inline-block}
+.boite{display:grid;gap:5px;background:var(--craie);padding:8px;border-radius:14px;grid-template-columns:repeat(5,46px)}
+.boite span{height:46px;border:2px dashed #9E99D6;border-radius:9px;display:grid;place-items:center}
+.boite span.plein{border:2px solid #D7D3F5}
+.mt-special{display:flex;flex-direction:column;gap:14px}
+.mt-pool{display:flex;flex-wrap:wrap;justify-content:center;gap:4px;min-height:56px}
+.mt-pool button{background:transparent;border:0;padding:6px}
+.bocal{margin:0 auto;width:230px;min-height:120px;border:5px solid #C9C5F0;border-top:0;border-radius:0 0 46px 46px;display:flex;flex-wrap:wrap;align-content:flex-end;justify-content:center;gap:2px;padding:10px}
+.mt-actions{display:flex;justify-content:center;gap:16px}
+.mt-actions button{font-size:2rem;font-weight:800;border:0;border-radius:20px;padding:10px 26px;color:var(--encre)}
+.mt-ok{background:var(--menthe)}
+.mt-raz,.mt-ecoute{background:var(--encre-clair);color:var(--craie) !important}
+.tambour{font-size:4.4rem;background:var(--encre-fonce);border:4px solid var(--citron);border-radius:50%;width:140px;height:140px;margin:0 auto;display:grid;place-items:center;transition:transform .12s}
+.tambour.tape{transform:scale(.88)}
+.mt-points{display:flex;justify-content:center;gap:10px;min-height:26px}
+.mt-points i{width:24px;height:24px;border-radius:50%;background:var(--citron)}
+.mt-st{text-align:center;color:var(--gris);font-weight:700;min-height:2.8em;line-height:1.4}
+.mt-main{position:absolute;font-size:2.6rem;opacity:0;transition:left .6s ease,top .6s ease,opacity .3s,transform .15s;pointer-events:none;z-index:5;left:45%;top:40%}
 .enq{font-weight:800;font-size:1.2rem;line-height:1.35}
 .compte{text-align:center;font-size:3rem;font-weight:800;color:var(--citron);line-height:1}
 .proso{display:grid;gap:8px}
@@ -297,6 +351,28 @@ svg.ava-svg{width:1.2em;height:1.2em;vertical-align:-0.22em;display:inline-block
     <button class="bouton" id="en-ok">Enregistrer</button>
   </div>
   <button class="lien" id="en-suppr" hidden>Supprimer ce profil et tout son historique</button>
+</section>
+
+<!-- ===== Maternelle ===== -->
+<section class="ecran" id="s-mat-menu" hidden>
+  <div class="barre-haut"><button class="bouton second petit" data-retour>Retour</button><span class="titre">Maternelle</span></div>
+  <p class="alerte" id="mt-voix" hidden></p>
+  <div class="portes" id="mt-portes"></div>
+</section>
+<section class="ecran" id="s-mat" hidden>
+  <div class="mat-zone" id="mt-zone">
+    <div class="barre-haut"><span class="titre" id="mt-titre"></span>
+      <button class="bouton second petit" id="mt-voix-btn" aria-label="Réécouter la consigne">🔊</button>
+      <button class="bouton second petit" id="mt-montre" aria-label="Montre-moi">👀</button>
+      <button class="bouton second petit" id="mt-stop">Arrêter</button></div>
+    <div class="mt-etoiles" id="mt-etoiles" aria-hidden="true"></div>
+    <div class="mt-modele" id="mt-modele"></div>
+    <div class="mt-choix c3" id="mt-choix"></div>
+    <div class="mt-special" id="mt-special" hidden></div>
+    <p class="mt-st" id="mt-st" aria-live="polite"></p>
+    <button class="lien" id="mt-passer" hidden>Passer la démo</button>
+    <span class="mt-main" id="mt-main" aria-hidden="true">👆</span>
+  </div>
 </section>
 
 <!-- ===== Anglais ===== -->
@@ -385,6 +461,8 @@ svg.ava-svg{width:1.2em;height:1.2em;vertical-align:-0.22em;display:inline-block
       <span><b>Lecture à voix haute</b><small>Chronométrée ou guidée, avec un adulte</small></span></button>
     <button class="module" data-module="flash" style="--c:#FF9F43"><span class="ico">⚡</span>
       <span><b>Lecture flash</b><small id="a-sub-flash"></small></span></button>
+    <button class="module" data-module="maternelle" style="--c:#FFC94A"><span class="ico">🎈</span>
+      <span><b>Maternelle</b><small>Les nombres, les sons, les mots</small></span></button>
     <button class="module" data-module="anglais" style="--c:#B38CFF"><span class="ico">🇬🇧</span>
       <span><b>Anglais</b><small id="a-sub-anglais"></small></span></button>
   </div>
@@ -554,7 +632,7 @@ svg.ava-svg{width:1.2em;height:1.2em;vertical-align:-0.22em;display:inline-block
 <section class="ecran" id="s-progres" hidden>
   <div class="barre-haut"><button class="bouton second petit" data-retour>Retour</button><span class="titre" id="p-titre">Mes progrès</span></div>
   <div class="onglets" id="p-onglets">
-    <button data-o="tables">Tables</button><button data-o="arbre">Arbre</button><button data-o="fractions">Fractions</button><button data-o="lecture">Lecture</button><button data-o="anglais">Anglais</button>
+    <button data-o="tables">Tables</button><button data-o="arbre">Arbre</button><button data-o="fractions">Fractions</button><button data-o="maternelle">Maternelle</button><button data-o="lecture">Lecture</button><button data-o="anglais">Anglais</button>
   </div>
   <div class="pile" id="p-contenu"></div>
 </section>
@@ -622,6 +700,10 @@ svg.ava-svg{width:1.2em;height:1.2em;vertical-align:-0.22em;display:inline-block
     <div><span class="etiq">Fractions</span><div class="segments" id="pa-niv-fractions"></div></div>
     <div><span class="etiq">Lecture flash</span><div class="segments" id="pa-niv-flash"></div></div>
     <div><span class="etiq">Anglais</span><div class="segments" id="pa-niv-anglais"></div></div>
+    <div id="pa-niv-mat-zone"><span class="etiq">Maternelle : les nombres, les sons, les mots</span>
+      <div class="segments" id="pa-niv-mat-nombres" data-porte="nombres"></div>
+      <div class="segments" id="pa-niv-mat-sons" data-porte="sons" style="margin-top:6px"></div>
+      <div class="segments" id="pa-niv-mat-mots" data-porte="mots" style="margin-top:6px"></div></div>
   </div>
   <div class="carte">
     <h2>Effacer un historique</h2>
@@ -633,6 +715,7 @@ svg.ava-svg{width:1.2em;height:1.2em;vertical-align:-0.22em;display:inline-block
       <button class="bouton second petit" data-eff="arbre">Arbre à calculs</button>
       <button class="bouton second petit" data-eff="fractions">Fractions</button>
       <button class="bouton second petit" data-eff="anglais">Anglais</button>
+      <button class="bouton second petit" data-eff="maternelle">Maternelle</button>
     </div>
     <p class="retour ok" id="pa-eff-msg" aria-live="polite"></p>
   </div>
@@ -677,15 +760,15 @@ function vide(na, nf){
 function base(){ return { email:'', profils:[], donnees:{} }; }
 var CLASSES = ['GS','CP','CE1','CE2','CM1','CM2'];
 var MODULES_CLASSE = {
-  GS:['anglais'], CP:['flash','anglais'],
+  GS:['maternelle','anglais'], CP:['maternelle','flash','anglais'],
   CE1:['tables','arbre','fractions','lecture','flash','anglais'],
   CE2:['tables','arbre','fractions','lecture','flash','anglais'], CM1:['tables','arbre','fractions','lecture','flash','anglais'], CM2:['tables','arbre','fractions','lecture','flash','anglais']
 };
 function modulesClasse(c){ return MODULES_CLASSE[c] || MODULES_CLASSE.CE2; }
-var NIV_DEF = { arbre:{ CE1:1, CE2:1, CM1:3, CM2:4 }, fractions:{ CE1:1, CE2:1, CM1:2, CM2:3 }, flash:{ CP:1, CE1:1, CE2:1, CM1:2, CM2:3 }, anglais:{ GS:1, CP:1, CE1:2, CE2:3, CM1:4, CM2:4 } };
+var NIV_DEF = { arbre:{ CE1:1, CE2:1, CM1:3, CM2:4 }, fractions:{ CE1:1, CE2:1, CM1:2, CM2:3 }, flash:{ CP:1, CE1:1, CE2:1, CM1:2, CM2:3 }, anglais:{ GS:1, CP:1, CE1:2, CE2:3, CM1:4, CM2:4 }, maternelle:{ GS:1, CP:3 } };
 function nivDef(m, c){ return NIV_DEF[m][c] || 1; }
 var ANIMAUX = ['🦛','🐶','🐱','🐰','🐼','🦊','🐨','🐯','🦁','🐵','🐘','🪿','🐬','🐢','🦄','🐸','🦉'];
-var APP_VERSION = '3.1';
+var APP_VERSION = '3.2.1';
 var AVATARS_DESSINES = {
   '🦛': '<svg class="ava-svg" viewBox="-66 -66 132 132" aria-hidden="true"><circle cx="-38" cy="-43" r="13" fill="#9C8FC9"/><circle cx="-38" cy="-43" r="6" fill="#F2A7C3"/><circle cx="38" cy="-43" r="13" fill="#9C8FC9"/><circle cx="38" cy="-43" r="6" fill="#F2A7C3"/><ellipse cx="0" cy="-15" rx="48" ry="40" fill="#9C8FC9"/><ellipse cx="0" cy="23" rx="58" ry="36" fill="#BCB2E3"/><circle cx="-20" cy="-25" r="11" fill="#FFFFFF"/><circle cx="-18" cy="-23" r="5.5" fill="#2E2650"/><circle cx="20" cy="-25" r="11" fill="#FFFFFF"/><circle cx="18" cy="-23" r="5.5" fill="#2E2650"/><ellipse cx="-20" cy="11" rx="6" ry="8" fill="#5A4E8C"/><ellipse cx="20" cy="11" rx="6" ry="8" fill="#5A4E8C"/><path d="M-26 33 Q0 51 26 33" fill="#5A4E8C" stroke="#5A4E8C" stroke-width="3" stroke-linejoin="round"/><rect x="-12" y="34" width="9" height="9" rx="2" fill="#FFFFFF"/><rect x="3" y="34" width="9" height="9" rx="2" fill="#FFFFFF"/><circle cx="-48" cy="25" r="7" fill="#F2A7C3" opacity="0.7"/><circle cx="48" cy="25" r="7" fill="#F2A7C3" opacity="0.7"/></svg>',
   '🐘': '<svg class="ava-svg" viewBox="-86 -78 172 172" aria-hidden="true"><ellipse cx="-50" cy="-8" rx="34" ry="40" fill="#A7B1BF"/><ellipse cx="-52" cy="-6" rx="20" ry="26" fill="#F2B8CB"/><ellipse cx="50" cy="-8" rx="34" ry="40" fill="#A7B1BF"/><ellipse cx="52" cy="-6" rx="20" ry="26" fill="#F2B8CB"/><ellipse cx="0" cy="-12" rx="40" ry="42" fill="#A7B1BF"/><path d="M0 10 Q-2 44 14 54" fill="none" stroke="#A7B1BF" stroke-width="20" stroke-linecap="round"/><path d="M-7 26 L7 26 M-6 38 L8 38" fill="none" stroke="#7D8796" stroke-width="2.5" stroke-linecap="round"/><circle cx="-15" cy="-20" r="9" fill="#FFFFFF"/><circle cx="-13" cy="-18" r="4.5" fill="#2A2F3A"/><circle cx="15" cy="-20" r="9" fill="#FFFFFF"/><circle cx="13" cy="-18" r="4.5" fill="#2A2F3A"/><circle cx="-28" cy="8" r="6" fill="#F2A7C3" opacity="0.6"/><circle cx="28" cy="8" r="6" fill="#F2A7C3" opacity="0.6"/></svg>',
@@ -719,7 +802,20 @@ function missionDe(d){
   if (m.jour !== aujourdhui()){ m.jour = aujourdhui(); m.faits = {}; m.aFeter = false; }
   return m;
 }
-function totalMissions(m){ return (m.totalAncien || 0) + (m.jours || []).length; }
+/* Nombre de jours de mission réussie, recalculé depuis l'historique des séances :
+   identique sur tous les appareils, sans double comptage lors des synchronisations. */
+function joursHistorique(d){
+  var acts = activitesDe(d); if (!acts.length) return [];
+  var SRC = { tables:['tables.seances'], fractions:['fractions.seances'], flash:['flash.seances'], lecture:['lecture.seances','lecture.guidees'], anglais:['anglais.seances'] }, parJour = {};
+  acts.forEach(function(a){ (SRC[a.k] || []).forEach(function(ch){ var q = ch.split('.');
+    ((d[q[0]] || {})[q[1]] || []).forEach(function(s){ if (s.valideMission === true){ var j = jourDe(s.date); (parJour[j] = parJour[j] || {})[a.k] = true; } }); }); });
+  return Object.keys(parJour).filter(function(j){ return acts.every(function(a){ return parJour[j][a.k]; }); });
+}
+function totalMissionsDe(d){
+  var m = missionDe(d), vus = {};
+  (m.jours || []).forEach(function(j){ vus[j] = 1; }); joursHistorique(d).forEach(function(j){ vus[j] = 1; });
+  return Object.keys(vus).length;
+}
 function retirerJour(m){ var i = m.jours.indexOf(aujourdhui()); if (i >= 0) m.jours.splice(i, 1); }
 function mission(){ return missionDe(D()); }
 function nbFaitsDe(d){ var m = missionDe(d); return activitesDe(d).filter(function(a){ return m.faits[a.k]; }).length; }
@@ -758,6 +854,7 @@ function completer(d, classe){
   if (!L.guidees) L.guidees = []; if (L.groupes == null) L.groupes = false; if (!L.mode) L.mode = 'chrono'; if (L.vitesseGuidee === undefined) L.vitesseGuidee = null;
   if (!d.flash) d.flash = { niveau: nivDef('flash', classe), ms:1300, seances:[] };
   if (!d.anglais) d.anglais = { niveau: nivDef('anglais', classe), seances:[] };
+  if (!d.maternelle){ var nm = nivDef('maternelle', classe); d.maternelle = { niveaux:{ nombres:nm, sons:nm, mots:nm }, vus:{}, seances:[] }; }
 }
 DB.profils.forEach(function(p){ if (!DB.donnees[p.id]) DB.donnees[p.id] = vide(1,1); completer(DB.donnees[p.id], p.classe); });
 function sauver(){ try { localStorage.setItem(CLE, JSON.stringify(DB)); } catch(e){ stockOK = false; $('alerte-stock').hidden = false; } planifierSynchro(); }
@@ -800,8 +897,8 @@ function ouvrirAccueil(){
   var m = mission(), verrou = missionActive();
   $('a-mission').hidden = !verrou;
   $('a-etapes').innerHTML = activitesDe(D()).map(function(a){ return '<span class="etape' + (m.faits[a.k] ? ' fait' : '') + '">' + (m.faits[a.k] ? '✓ ' : '○ ') + a.nom + '</span>'; }).join('');
-  var tm = totalMissions(m);
-  $('a-etoiles').textContent = '🌟 ' + tm + ' mission' + (tm > 1 ? 's' : '') + ' réussie' + (tm > 1 ? 's' : '');
+  var tm = totalMissionsDe(D()), nf = nbFaits(), na = activitesDe(D()).length;
+  $('a-etoiles').textContent = 'Aujourd\u2019hui ' + nf + '/' + na + ' · 🌟 ' + tm + ' au total';
   $('a-mission-leg').textContent = missionFaite() ? 'Bravo, tout est fait ! L\u2019arbre à calculs est à toi.' : 'Fais un exercice de chaque pour débloquer l\u2019arbre à calculs.';
   var lock = arbreVerrouille();
   $('a-mod-arbre').classList.toggle('verrou', lock);
@@ -835,6 +932,7 @@ document.querySelectorAll('[data-module]').forEach(function(b){
     }
     else if (m==='lecture') ouvrirTextes(null);
     else if (m==='anglais') ouvrirAnglais();
+    else if (m==='maternelle') ouvrirMaternelle();
     else if (m==='flash') flashLancer(null);
     else fractionsLancer();
   });
@@ -915,7 +1013,10 @@ function ouvrirVueParents(){
     var d = DB.donnees[p.id], m = missionDe(d), L = [], acts = activitesDe(d), dispo = modulesClasse(p.classe);
     var n = nbFaitsDe(d);
     if (missionActiveDe(d)) L.push('<li>Mission du jour : ' + n + ' / ' + acts.length + '<small>' +
-      acts.map(function(a){ return (m.faits[a.k] ? '✓ ' : '○ ') + a.nom; }).join(' · ') + ' · 🌟 ' + totalMissions(m) + ' au total</small></li>');
+      acts.map(function(a){ return (m.faits[a.k] ? '✓ ' : '○ ') + a.nom; }).join(' · ') + ' · 🌟 ' + totalMissionsDe(d) + ' jour' + (totalMissionsDe(d) > 1 ? 's' : '') + ' de mission réussie' + (totalMissionsDe(d) > 1 ? 's' : '') + ' au total</small></li>');
+    var mt = derniere(d.maternelle.seances);
+    if (dispo.indexOf('maternelle') >= 0) L.push('<li>Maternelle<small>Nombres niv. ' + d.maternelle.niveaux.nombres + ', sons niv. ' + d.maternelle.niveaux.sons + ', mots niv. ' + d.maternelle.niveaux.mots +
+      (mt ? ' · dernière séance le ' + dateCourte(mt.date) + ' (' + MAT_PORTES[mt.porte].nom.toLowerCase() + ', ' + mt.items.filter(function(x){ return x.ok; }).length + ' ⭐)' : '') + '</small></li>');
     var an = derniere(d.anglais.seances);
     if (dispo.indexOf('anglais') >= 0) L.push('<li>Anglais : niveau ' + d.anglais.niveau + '<small>' + (an ? dateCourte(an.date) + ' : ' + an.items.filter(function(x){ return x.ok; }).length + ' / ' + an.items.length + ' justes' : 'aucune séance') + '</small></li>');
     var t = derniere(d.tables.seances);
@@ -1551,7 +1652,7 @@ function ouvrirProgres(o){
   var y = ecranCourant === 's-progres' && garderScroll ? window.scrollY : 0; garderScroll = false;
   var hist = peutEffacer() ? (ongletProgres === 'lecture' ? histoire('lecture') + histoire('guidees') + histoire('enigmes') + histoire('flash') : histoire(ongletProgres)) : '';
   $('p-contenu').innerHTML = (ongletProgres === 'tables' ? progresTables() : ongletProgres === 'arbre' ? progresArbre()
-    : ongletProgres === 'lecture' ? progresLecture() : ongletProgres === 'anglais' ? progresAnglais() : progresFractions()) + hist;
+    : ongletProgres === 'lecture' ? progresLecture() : ongletProgres === 'anglais' ? progresAnglais() : ongletProgres === 'maternelle' ? progresMaternelle() : progresFractions()) + hist;
   montrer('s-progres');
   if (y) window.scrollTo(0, y);
 }
@@ -1575,6 +1676,8 @@ var HIST = {
               txt:function(s){ return esc(s.titre) + '<small>' + s.vitesse + ' mots/min' + (s.groupes ? ', en groupes' : '') + ', avis : ' + esc(String(s.avis).toLowerCase()) + '</small>'; } },
   enigmes:  { titre:'Énigmes', liste:function(){ return D().lecture.enigmes || []; }, mission:null,
               txt:function(s){ return esc(s.titre) + '<small>' + (s.ok ? 'résolue' : 'non résolue') + ', ' + s.essais + ' essai' + (s.essais>1?'s':'') + '</small>'; } },
+  maternelle:{ titre:'Séances de maternelle', liste:function(){ return D().maternelle.seances; }, mission:null,
+              txt:function(s){ return MAT_PORTES[s.porte].nom + ', niveau ' + s.niveauDepart + (s.niveauFin !== s.niveauDepart ? ' → ' + s.niveauFin : '') + '<small>' + nbJustes(s) + ' étoile' + (nbJustes(s) > 1 ? 's' : '') + ' sur ' + s.items.length + '</small>'; } },
   anglais:  { titre:'Séances d\u2019anglais', liste:function(){ return D().anglais.seances; }, mission:'anglais',
               txt:function(s){ return 'Niveau ' + s.niveauDepart + (s.niveauFin !== s.niveauDepart ? ' → ' + s.niveauFin : '') + '<small>' + nbJustes(s) + ' / ' + s.items.length + ' justes</small>'; } },
   flash:    { titre:'Séances de lecture flash', liste:function(){ return D().flash.seances; }, mission:'flash',
@@ -1600,7 +1703,7 @@ $('p-contenu').addEventListener('click', function(e){
   var b = e.target.closest('[data-del]'); if (!b) return;
   confirmer(b, 'Supprimer ?', function(){ supprimerSeance(b.dataset.del); });
 });
-var CHEMIN_HIST = { anglais:'anglais.seances', tables:'tables.seances', arbre:'arbre.seances', fractions:'fractions.seances', lecture:'lecture.seances', guidees:'lecture.guidees', enigmes:'lecture.enigmes', flash:'flash.seances' };
+var CHEMIN_HIST = { maternelle:'maternelle.seances', anglais:'anglais.seances', tables:'tables.seances', arbre:'arbre.seances', fractions:'fractions.seances', lecture:'lecture.seances', guidees:'lecture.guidees', enigmes:'lecture.enigmes', flash:'flash.seances' };
 function enterrer(d, chemin, liste){ d.supprimes = d.supprimes || {}; (liste || []).forEach(function(s){ d.supprimes[fusIdSeance(chemin, s)] = Date.now(); }); }
 function supprimerSeance(ref){
   var parts = ref.split(':'), k = parts[0], i = +parts[1], H = HIST[k], L = H.liste(), s = L[i];
@@ -1733,6 +1836,9 @@ function ouvrirParents(){
   majSegments('pa-verrou', D().verrouArbre === false ? 'non' : 'oui');
   document.querySelectorAll('[data-seuil]').forEach(function(z){ z.querySelectorAll('button').forEach(function(b){ b.setAttribute('aria-pressed', +b.dataset.v === seuil(z.dataset.seuil)); }); });
   $('pa-niv-anglais').innerHTML = Object.keys(ANGLAIS_NIV).map(function(k){ return '<button data-v="'+k+'" aria-pressed="'+(+k===D().anglais.niveau)+'">'+k+'</button>'; }).join('');
+  $('pa-niv-mat-zone').hidden = modulesClasse(prof().classe).indexOf('maternelle') < 0;
+  ['nombres','sons','mots'].forEach(function(k){ $('pa-niv-mat-' + k).innerHTML = '<button disabled style="flex:1.4;opacity:1;border:0;text-align:left">' + MAT_PORTES[k].ico + ' ' + MAT_PORTES[k].nom.replace('Les ', '') + '</button>' +
+    [1,2,3,4].map(function(n){ return '<button data-v="' + n + '" aria-pressed="' + (n === D().maternelle.niveaux[k]) + '">' + n + '</button>'; }).join(''); });
   var dispoM = modulesClasse(prof().classe), choixM = D().missionActs || ACT_DEFAUT;
   $('pa-etapes').innerHTML = TOUTES_ACT.filter(function(a){ return dispoM.indexOf(a.k) >= 0; }).map(function(a){ return '<button data-k="' + a.k + '" aria-pressed="' + (choixM.indexOf(a.k) >= 0) + '">' + a.nom + '</button>'; }).join('');
   $('pa-niv-flash').innerHTML = Object.keys(FLASH).map(function(k){ return '<button data-v="'+k+'" aria-pressed="'+(+k===D().flash.niveau)+'">'+k+'</button>'; }).join('');
@@ -1744,6 +1850,8 @@ document.querySelectorAll('[data-seuil]').forEach(function(z){
     z.querySelectorAll('button').forEach(function(x){ x.setAttribute('aria-pressed', x === b); }); });
 });
 $('pa-verrou').addEventListener('click', function(e){ var b = e.target.closest('button'); if (!b) return; D().verrouArbre = b.dataset.v === 'oui'; sauver(); majSegments('pa-verrou', b.dataset.v); });
+['nombres','sons','mots'].forEach(function(k){ $('pa-niv-mat-' + k).addEventListener('click', function(e){ var b = e.target.closest('[data-v]'); if (!b) return;
+  D().maternelle.niveaux[k] = +b.dataset.v; sauver(); $('pa-niv-mat-' + k).querySelectorAll('[data-v]').forEach(function(x){ x.setAttribute('aria-pressed', x === b); }); }); });
 $('pa-niv-anglais').addEventListener('click', function(e){ var b = e.target.closest('button'); if (!b) return; D().anglais.niveau = +b.dataset.v; sauver(); majSegments('pa-niv-anglais', b.dataset.v); });
 $('pa-etapes').addEventListener('click', function(e){
   var b = e.target.closest('[data-k]'); if (!b) return;
@@ -1807,6 +1915,13 @@ function texteBilan(){
     var gl = d.lecture.guidees[d.lecture.guidees.length-1];
     L.push('Lecture guidée : ' + d.lecture.guidees.length + ' séance(s), dernière à ' + gl.vitesse + ' mots/min (avis : ' + gl.avis.toLowerCase() + '). Prochaine à ' + (d.lecture.vitesseGuidee || gl.vitesse) + ' mots/min.');
   }
+  if (modulesClasse(p.classe).indexOf('maternelle') >= 0){
+    L.push(''); L.push('MATERNELLE');
+    Object.keys(MAT_PORTES).forEach(function(k){
+      var sm = d.maternelle.seances.filter(function(s){ return s.porte === k; }), lm = sm[sm.length-1];
+      L.push(MAT_PORTES[k].nom + ' : niveau ' + d.maternelle.niveaux[k] + ' (' + MAT_PORTES[k].niv[d.maternelle.niveaux[k]] + ')' + (lm ? ', dernière séance le ' + dateCourte(lm.date) + ' : ' + lm.items.filter(function(x){ return x.ok; }).length + '/' + lm.items.length + ' étoiles' : ''));
+    });
+  }
   L.push('');
   L.push('ANGLAIS');
   L.push('Niveau actuel : ' + d.anglais.niveau + ' (' + ANGLAIS_NIV[d.anglais.niveau].nom + ')');
@@ -1843,6 +1958,8 @@ $('pa-csv').addEventListener('click', function(){
   d.lecture.seances.forEach(function(s){ L.push([new Date(s.date).toLocaleString('fr-FR'), '"'+s.titre+'"', s.classe, String(s.temps).replace('.',','), s.mots, s.erreurs, s.mclm, s.prosodie ? PROSO[s.prosodie-1].nom : '', '"'+s.rates.join(', ')+'"'].join(';')); });
   L.push(''); L.push('LECTURE GUIDEE'); L.push('date;texte;vitesse_mots_min;groupes;avis');
   d.lecture.guidees.forEach(function(s){ L.push([new Date(s.date).toLocaleString('fr-FR'), '"'+s.titre+'"', s.vitesse, s.groupes?'oui':'non', s.avis].join(';')); });
+  L.push(''); L.push('MATERNELLE'); L.push('date;partie;niveau;exercice;element;du_premier_coup');
+  d.maternelle.seances.forEach(function(s){ s.items.forEach(function(x){ L.push([new Date(s.date).toLocaleString('fr-FR'), s.porte, s.niveauDepart, x.type, '"'+x.cle+'"', x.ok?'oui':'non'].join(';')); }); });
   L.push(''); L.push('ANGLAIS'); L.push('date;niveau;exercice;theme;mot;juste;choisi');
   d.anglais.seances.forEach(function(s){ s.items.forEach(function(x){ L.push([new Date(s.date).toLocaleString('fr-FR'), x.niv, x.type, x.t, '"'+x.en+'"', x.ok?'oui':'non', x.choisi ? '"'+x.choisi+'"' : ''].join(';')); }); });
   L.push(''); L.push('LECTURE FLASH'); L.push('date;niveau;mot;affichage_ms;lu');
@@ -1853,7 +1970,7 @@ $('pa-csv').addEventListener('click', function(){
   document.body.appendChild(a); a.click(); document.body.removeChild(a);
   setTimeout(function(){ URL.revokeObjectURL(a.href); }, 2000);
 });
-var NOMS_EFF = { anglais:'des séances d\u2019anglais', lecture:'de lecture à voix haute', flash:'de lecture flash', tables:'des tables', arbre:'de l\u2019arbre à calculs', fractions:'des fractions' };
+var NOMS_EFF = { maternelle:'des séances de maternelle', anglais:'des séances d\u2019anglais', lecture:'de lecture à voix haute', flash:'de lecture flash', tables:'des tables', arbre:'de l\u2019arbre à calculs', fractions:'des fractions' };
 $('pa-eff-modules').addEventListener('click', function(e){
   var b = e.target.closest('[data-eff]'); if (!b) return;
   var k = b.dataset.eff, d = D();
@@ -2439,8 +2556,8 @@ function flashFin(){
 }
 
 /* ===== FUSION DES DONNÉES (code identique dans l'appli et sur le serveur) ===== */
-var FUS_VERSION = 2;
-var FUS_LISTES = ['tables.seances','arbre.seances','fractions.seances','lecture.seances','lecture.guidees','lecture.enigmes','flash.seances','anglais.seances'];
+var FUS_VERSION = 3;
+var FUS_LISTES = ['tables.seances','arbre.seances','fractions.seances','lecture.seances','lecture.guidees','lecture.enigmes','flash.seances','anglais.seances','maternelle.seances'];
 var FUS_EXCLUS = { seances:1, guidees:1, enigmes:1, mission:1, supprimes:1 };
 var FUS_CHAMPS_PROFIL = ['nom','classe','avatar','couleur','code'];
 function fusCopie(x){ return x === undefined ? undefined : JSON.parse(JSON.stringify(x)); }
@@ -2569,7 +2686,7 @@ function synchroniser(){
   tamponner();
   return appelServeur(sync.url, { action:'sync', cle:sync.cle, etat:JSON.parse(JSON.stringify(DB)) }).then(function(j){
     if (!j || !j.ok) throw new Error(j && j.erreur || 'erreur');
-    sync.serveurAncien = !(j.version >= 2);
+    sync.serveurAncien = !(j.version >= 3);
     tamponner();
     DB = fusionner(DB, j.etat);
     normaliserDB();
@@ -2616,7 +2733,7 @@ function majCarteSync(msg, ok){
   var on = !!sync.cle;
   $('sy-off').hidden = on; $('sy-on').hidden = !on;
   if (on) $('sy-appairage').value = codeAppairage();
-  if (on && sync.serveurAncien && msg === undefined){ $('sy-msg').className = 'retour ko'; $('sy-msg').textContent = 'Le serveur Google n\u2019est pas à jour : installe la nouvelle version du script (Gérer les déploiements, Nouvelle version), sinon l\u2019anglais et les suppressions d\u2019enfants ne se synchroniseront pas.'; }
+  if (on && sync.serveurAncien && msg === undefined){ $('sy-msg').className = 'retour ko'; $('sy-msg').textContent = 'Le serveur Google n\u2019est pas à jour : installe la nouvelle version du script (Gérer les déploiements, Nouvelle version), sinon la maternelle, l\u2019anglais et les suppressions d\u2019enfants ne se synchroniseront pas.'; }
   if (msg !== undefined){ $('sy-msg').className = 'retour ' + (ok ? 'ok' : 'ko'); $('sy-msg').textContent = msg; }
   majEtatSync();
 }
@@ -2792,7 +2909,7 @@ $('bv-rejoindre').addEventListener('click', function(){
     if (!j.etat){ msg.className = 'retour ko'; msg.textContent = 'Aucune donnée trouvée pour ce code.'; return; }
     DB = j.etat; normaliserDB();
     try { localStorage.setItem(CLE, JSON.stringify(DB)); } catch(e){}
-    sync = { url:o.u, cle:o.k, ombre:fusScalaires(DB), derniere:Date.now(), serveurAncien: !(j.version >= 2) }; sauverSync();
+    sync = { url:o.u, cle:o.k, ombre:fusScalaires(DB), derniere:Date.now(), serveurAncien: !(j.version >= 3) }; sauverSync();
     syncEtat = 'ok'; majEtatSync();
     dessinerProfils(); montrer('s-profils');
   }).catch(function(){ msg.className = 'retour ko'; msg.textContent = 'Impossible de joindre le serveur. Vérifie la connexion internet.'; });
@@ -2983,6 +3100,514 @@ function progresAnglais(){
   return h;
 }
 
+/* ================= MATERNELLE : données ================= */
+var MOTS_NB = ['zéro','un','deux','trois','quatre','cinq','six','sept','huit','neuf','dix'];
+var MAT_PORTES = {
+  nombres:{ nom:'Les nombres', ico:'🍬', niv:{ 1:'jusqu\u2019à 5', 2:'jusqu\u2019à 6', 3:'jusqu\u2019à 8', 4:'jusqu\u2019à 10' },
+    types:{ 1:['chiffre-collection','entendre','formes'], 2:['chiffre-collection','collection-chiffre','bocal','comparer','suites','formes'],
+            3:['collection-chiffre','bocal','comparer','completer','suites','formes','entendre'], 4:['collection-chiffre','bocal','comparer','completer','suites','formes','chiffre-collection'] } },
+  sons:{ nom:'Les sons', ico:'👂', niv:{ 1:'syllabes et lettres', 2:'les rimes', 3:'le son du début', 4:'toutes les lettres' },
+    types:{ 1:['syllabes','lettres','prenom'], 2:['syllabes','rimes','lettres','prenom'], 3:['syllabes','rimes','attaque','lettres'], 4:['syllabes','rimes','attaque','lettres'] } },
+  mots:{ nom:'Les mots', ico:'🦁', niv:{ 1:'les mots du quotidien', 2:'ranger et comparer', 3:'les devinettes', 4:'les mots rares' },
+    types:{ 1:['trouve','taille','trouve'], 2:['trouve','intrus','position','taille'], 3:['trouve','intrus','devinette','position','ranger'], 4:['trouve','intrus','devinette','position','ranger'] } }
+};
+var MAT_TYPES_FR = { 'chiffre-collection':'Chiffre → collection', entendre:'Nombre entendu → collection', 'collection-chiffre':'Collection → chiffre', bocal:'Compter dans le bocal',
+  comparer:'Comparer deux collections', completer:'Compléter la boîte', formes:'Reconnaître les formes', suites:'Suites logiques',
+  syllabes:'Compter les syllabes', rimes:'Trouver les rimes', attaque:'Le son du début', lettres:'Reconnaître les lettres', prenom:'Reconnaître son prénom',
+  trouve:'Trouver le mot entendu', intrus:'Trouver l\u2019intrus', devinette:'Devinettes', position:'Les positions (sur, sous…)', taille:'Le plus grand, le plus petit', ranger:'Ranger par taille' };
+var MAT_MAX = 4;
+/* vocabulaire : [mot avec article, emoji, thème, niveau] */
+var VOC_FR = [];
+function VF(theme, niv, l){ l.forEach(function(x){ VOC_FR.push({ m:x[0], e:x[1], t:theme, niv:niv }); }); }
+VF('ferme',1,[['la vache','🐄'],['le cochon','🐷'],['le mouton','🐑'],['la poule','🐔'],['le cheval','🐴'],['le lapin','🐰'],['le chien','🐶'],['le chat','🐱']]);
+VF('ferme',2,[['le canard','🦆'],['le coq','🐓'],['la chèvre','🐐']]);
+VF('savane',1,[['le lion','🦁'],['l\u2019éléphant','🐘'],['la girafe','🦒'],['le singe','🐒'],['le serpent','🐍']]);
+VF('savane',2,[['le zèbre','🦓'],['le tigre','🐯'],['le crocodile','🐊'],['l\u2019hippopotame','🦛']]);
+VF('savane',4,[['le rhinocéros','🦏'],['le gorille','🦍'],['le perroquet','🦜'],['le kangourou','🦘']]);
+VF('mer',1,[['le poisson','🐟'],['la baleine','🐳'],['la tortue','🐢']]);
+VF('mer',2,[['le dauphin','🐬'],['la pieuvre','🐙'],['le crabe','🦀'],['le requin','🦈'],['le coquillage','🐚']]);
+VF('mer',4,[['la méduse','🪼'],['le homard','🦞'],['le phoque','🦭']]);
+VF('petites bêtes',1,[['le papillon','🦋'],['l\u2019escargot','🐌']]);
+VF('petites bêtes',2,[['l\u2019abeille','🐝'],['la coccinelle','🐞'],['la fourmi','🐜']]);
+VF('petites bêtes',4,[['l\u2019araignée','🕷️'],['la chenille','🐛']]);
+VF('fruits',1,[['la pomme','🍎'],['la banane','🍌'],['la fraise','🍓'],['la poire','🍐'],['l\u2019orange','🍊']]);
+VF('fruits',2,[['le raisin','🍇'],['la cerise','🍒'],['le citron','🍋'],['l\u2019ananas','🍍'],['la pastèque','🍉']]);
+VF('fruits',4,[['la pêche','🍑'],['la noix de coco','🥥'],['le kiwi','🥝']]);
+VF('légumes',1,[['la carotte','🥕'],['la tomate','🍅']]);
+VF('légumes',2,[['le maïs','🌽'],['le champignon','🍄']]);
+VF('légumes',4,[['le brocoli','🥦'],['la pomme de terre','🥔'],['l\u2019aubergine','🍆'],['le poivron','🫑'],['l\u2019oignon','🧅']]);
+VF('vêtements',1,[['le tee-shirt','👕'],['la robe','👗'],['le pantalon','👖'],['la chaussette','🧦'],['la chaussure','👟']]);
+VF('vêtements',2,[['le chapeau','🎩'],['la casquette','🧢'],['l\u2019écharpe','🧣'],['les gants','🧤'],['le manteau','🧥'],['les lunettes','👓']]);
+VF('vêtements',4,[['la botte','👢'],['le maillot de bain','🩱']]);
+VF('corps',1,[['la main','✋'],['le pied','🦶'],['l\u2019oreille','👂'],['le nez','👃'],['la bouche','👄']]);
+VF('corps',2,[['l\u2019œil','👁️'],['la jambe','🦵'],['la dent','🦷']]);
+VF('maison',1,[['la maison','🏠'],['le lit','🛏️'],['la clé','🔑']]);
+VF('maison',2,[['la chaise','🪑'],['la porte','🚪'],['la cuillère','🥄'],['la fourchette','🍴'],['la tasse','☕'],['le parapluie','☂️']]);
+VF('maison',4,[['la fenêtre','🪟'],['le couteau','🔪'],['la poêle','🍳'],['la brosse à dents','🪥'],['le savon','🧼']]);
+VF('école',1,[['les ciseaux','✂️'],['le crayon','✏️'],['le livre','📕']]);
+VF('école',2,[['le cartable','🎒'],['le marteau','🔨']]);
+VF('école',4,[['la règle','📏'],['le pinceau','🖌️'],['la scie','🪚']]);
+VF('transports',1,[['la voiture','🚗'],['le bus','🚌'],['le vélo','🚲'],['le train','🚆'],['l\u2019avion','✈️'],['le bateau','⛵']]);
+VF('transports',2,[['la moto','🏍️'],['le tracteur','🚜'],['l\u2019hélicoptère','🚁'],['la fusée','🚀'],['le camion','🚚']]);
+VF('transports',4,[['la trottinette','🛴'],['l\u2019ambulance','🚑'],['le camion de pompiers','🚒']]);
+VF('métiers',2,[['le pompier','🧑‍🚒'],['le policier','👮'],['le cuisinier','🧑‍🍳']]);
+VF('métiers',4,[['le médecin','🧑‍⚕️'],['le fermier','🧑‍🌾'],['l\u2019astronaute','🧑‍🚀'],['le peintre','🧑‍🎨']]);
+VF('musique',2,[['la guitare','🎸'],['le tambour','🥁'],['le piano','🎹']]);
+VF('musique',4,[['la trompette','🎺'],['le violon','🎻'],['le saxophone','🎷']]);
+VF('nature',1,[['le soleil','☀️'],['la lune','🌙'],['l\u2019étoile','⭐'],['le nuage','☁️'],['l\u2019arbre','🌳'],['la fleur','🌸']]);
+VF('nature',2,[['la pluie','🌧️'],['la neige','❄️'],['l\u2019arc-en-ciel','🌈'],['le feu','🔥']]);
+VF('nature',4,[['la montagne','⛰️'],['la feuille','🍃'],['le volcan','🌋']]);
+VF('émotions',2,[['le visage content','😀'],['le visage triste','😢']]);
+VF('émotions',4,[['le visage en colère','😠'],['le visage fatigué','😴'],['le visage surpris','😮']]);
+var CATEGORIES = [
+  { nom:'un animal', pl:'des animaux', themes:['ferme','savane','mer','petites bêtes'] }, { nom:'un fruit', pl:'des fruits', themes:['fruits'] }, { nom:'un vêtement', pl:'des vêtements', themes:['vêtements'] },
+  { nom:'un véhicule', pl:'des véhicules', themes:['transports'] }, { nom:'un instrument de musique', pl:'des instruments de musique', themes:['musique'] }, { nom:'un légume', pl:'des légumes', themes:['légumes'] }
+];
+var DEVINETTES = [
+  ['Je vis dans la mer et j\u2019ai huit bras.','la pieuvre'],['Je fabrique du miel.','l\u2019abeille'],['J\u2019ai un très long cou et je mange les feuilles des arbres.','la girafe'],
+  ['Je suis le roi de la savane.','le lion'],['Je chante cocorico le matin.','le coq'],['Je brille dans le ciel la nuit.','la lune'],['Je suis jaune et les singes m\u2019adorent.','la banane'],
+  ['J\u2019éteins les incendies.','le pompier'],['Je porte ma maison sur mon dos.','l\u2019escargot'],['J\u2019ai des ailes de toutes les couleurs.','le papillon'],
+  ['On s\u2019en sert pour couper le papier.','les ciseaux'],['Je donne du lait.','la vache'],['Je roule sur des rails.','le train'],['Je vole dans le ciel avec des passagers.','l\u2019avion'],
+  ['Je suis orange et les lapins m\u2019adorent.','la carotte'],['Quand il pleut, on m\u2019ouvre au-dessus de la tête.','le parapluie'],['Je suis rouge et j\u2019ai des petits grains.','la fraise'],
+  ['J\u2019ai une trompe et de grandes oreilles.','l\u2019éléphant'],['On me met aux pieds pour marcher.','la chaussure'],['On dort dedans la nuit.','le lit'],
+  ['Je suis très chaud et je brille dans le ciel le jour.','le soleil'],['Je fais coin-coin.','le canard'],['J\u2019ai des rayures noires et blanches.','le zèbre'],['On m\u2019utilise pour ouvrir la porte.','la clé']
+];
+var NOMS_DISTRACTEURS = ['LÉO','EMMA','JADE','HUGO','LINA','TOM','ZOÉ','NOÉ','INÈS','NATHAN','CHLOÉ','LOUIS','MILA','GABRIEL','ROSE','ADAM','ALICE','PAUL','LUCAS','SARAH','JULES','MANON','ÉLIE','NINA'];
+/* syllabes : mot, emoji, syllabes à prononcer */
+var SYLLABES = [
+  ['chat','🐱',['chat']],['pain','🍞',['pain']],['lit','🛏️',['lit']],['train','🚆',['train']],['loup','🐺',['loup']],['main','✋',['main']],['clé','🔑',['clé']],['feu','🔥',['feu']],['bus','🚌',['bus']],
+  ['lapin','🐰',['la','pin']],['bateau','⛵',['ba','to']],['tortue','🐢',['tor','tu']],['maison','🏠',['mè','zon']],['vélo','🚲',['vé','lo']],['gâteau','🍰',['ga','to']],['cochon','🐷',['co','chon']],
+  ['mouton','🐑',['mou','ton']],['citron','🍋',['ci','tron']],['ballon','🎈',['ba','lon']],['cheval','🐴',['che','val']],['avion','✈️',['a','vion']],['crayon','✏️',['cré','yon']],
+  ['papillon','🦋',['pa','pi','yon']],['éléphant','🐘',['é','lé','fan']],['kangourou','🦘',['kan','gou','rou']],['ananas','🍍',['a','na','nas']],['chocolat','🍫',['cho','co','la']],
+  ['hérisson','🦔',['é','ri','son']],['parapluie','☂️',['pa','ra','pluie']],['coccinelle','🐞',['co','ci','nèle']],['dinosaure','🦕',['di','no','zor']],
+  ['ordinateur','💻',['or','di','na','teur']],['hippopotame','🦛',['i','po','po','tame']],['hélicoptère','🚁',['é','li','cop','tère']],['télévision','📺',['té','lé','vi','zion']]
+].map(function(x){ return { mot:x[0], e:x[1], s:x[2] }; });
+var RIMES = {
+  on:[['le mouton','🐑'],['le cochon','🐷'],['le citron','🍋'],['le camion','🚚'],['le lion','🦁'],['le poisson','🐟'],['le hérisson','🦔'],['le champignon','🍄']],
+  'in':[['le lapin','🐰'],['le sapin','🎄'],['le train','🚆'],['le pain','🍞'],['la main','✋'],['le raisin','🍇'],['le poussin','🐤'],['le dauphin','🐬']],
+  o:[['le bateau','⛵'],['le gâteau','🍰'],['le château','🏰'],['le vélo','🚲'],['le chapeau','🎩'],['l\u2019oiseau','🐦'],['la moto','🏍️'],['le piano','🎹']],
+  'é':[['la clé','🔑'],['le bébé','👶'],['le café','☕'],['la fusée','🚀'],['le nez','👃']],
+  an:[['le serpent','🐍'],['la dent','🦷'],['l\u2019éléphant','🐘'],['le volcan','🌋']],
+  eur:[['la fleur','🌸'],['le cœur','❤️'],['le tracteur','🚜'],['l\u2019ordinateur','💻']],
+  i:[['la souris','🐭'],['le lit','🛏️'],['le riz','🍚'],['la fourmi','🐜'],['le kiwi','🥝']],
+  ette:[['la chaussette','🧦'],['la fourchette','🍴'],['la trottinette','🛴'],['la chouette','🦉'],['les lunettes','👓']]
+};
+var ATTAQUES = {
+  s:[['le soleil','☀️'],['le serpent','🐍'],['le sapin','🎄'],['le singe','🐒'],['le citron','🍋'],['la salade','🥗']],
+  m:[['la maison','🏠'],['la moto','🏍️'],['le mouton','🐑'],['la main','✋'],['le melon','🍈']],
+  l:[['le lapin','🐰'],['le lion','🦁'],['la lune','🌙'],['le lit','🛏️'],['le loup','🐺'],['les lunettes','👓']],
+  r:[['le rat','🐀'],['le robot','🤖'],['le raisin','🍇'],['le renard','🦊']],
+  f:[['la fleur','🌸'],['la fusée','🚀'],['la fraise','🍓'],['le feu','🔥'],['la fourmi','🐜'],['le fromage','🧀']],
+  ch:[['le chat','🐱'],['le chapeau','🎩'],['le château','🏰'],['la chaussette','🧦'],['le cheval','🐴'],['le chocolat','🍫']],
+  p:[['la pomme','🍎'],['le pain','🍞'],['le poisson','🐟'],['le papillon','🦋'],['la poule','🐔'],['le piano','🎹']],
+  b:[['le bateau','⛵'],['le ballon','🎈'],['la banane','🍌'],['le bébé','👶'],['le bus','🚌']],
+  v:[['la vache','🐄'],['le vélo','🚲'],['la voiture','🚗'],['le violon','🎻'],['la valise','🧳']],
+  t:[['la tortue','🐢'],['le train','🚆'],['la tomate','🍅'],['le tigre','🐯'],['le tambour','🥁']]
+};
+var LETTRES_NIV = { 1:'AEIOU', 2:'AEIOUBMLRSPT', 3:'ABCDEFGHIJKLMNOPRSTUVZ', 4:'ABCDEFGHIJKLMNOPQRSTUVWXYZ' };
+var CONFUSABLES = { M:'NW', N:'MZ', E:'F', F:'EP', P:'RB', R:'PB', B:'PR', O:'QC', Q:'O', C:'GO', G:'C', I:'JL', J:'I', W:'MV', V:'WU', U:'V' };
+var FORMES = { rond:'le rond', 'carré':'le carré', triangle:'le triangle', rectangle:'le rectangle', losange:'le losange' };
+var FORMES_INFO = { rond:'Le rond n\u2019a pas de coin.', 'carré':'Le carré a quatre côtés tous pareils.', triangle:'Le triangle a trois côtés.', rectangle:'Le rectangle a deux grands côtés et deux petits côtés.', losange:'Le losange ressemble à un carré penché.' };
+var COULEURS_SUITE = [ ['rouge','#E5484D'], ['bleu','#3E7BFA'], ['jaune','#FFC94A'], ['vert','#2FB37E'] ];
+var COUL_BONBONS = ['#F0567F','#3FC1A0','#6CA8FF','#B38CFF','#FF9F43','#FFC94A'];
+/* ================= MATERNELLE : voix française ================= */
+var voixFr = null;
+function choisirVoixFr(){
+  if (!window.speechSynthesis) return;
+  var v = speechSynthesis.getVoices() || [];
+  voixFr = v.filter(function(x){ return /^fr[-_]FR/i.test(x.lang); })[0] || v.filter(function(x){ return /^fr/i.test(x.lang); })[0] || null;
+}
+choisirVoixFr();
+if (window.speechSynthesis){ var ancienVC = speechSynthesis.onvoiceschanged; speechSynthesis.onvoiceschanged = function(){ try { choisirVoix(); } catch(e){} choisirVoixFr(); }; }
+function taireFr(){ try { speechSynthesis.cancel(); } catch(e){} }
+function parlerFr(t, id){
+  var st = $('mt-st'); if (st) st.textContent = t;
+  return new Promise(function(res){
+    var fini = false, f = function(){ if (!fini){ fini = true; res(); } };
+    if (!window.speechSynthesis){ setTimeout(f, 800 + t.length * 70); return; }
+    try {
+      var u = new SpeechSynthesisUtterance(t); u.lang = 'fr-FR'; if (voixFr) u.voice = voixFr; u.rate = 0.92;
+      var parle = false;
+      u.onstart = function(){ parle = true; setTimeout(f, 2500 + t.length * 130); };
+      u.onend = f; u.onerror = f;
+      speechSynthesis.speak(u);
+      setTimeout(function(){ if (!parle) f(); }, 4000 + t.length * 70);
+    } catch(e){ setTimeout(f, 800 + t.length * 70); }
+  }).then(function(){ if (id != null && id !== matRun) throw 'stop'; return pausePr(120); });
+}
+function pausePr(ms){ return new Promise(function(r){ setTimeout(r, ms); }); }
+
+/* ================= MATERNELLE : aides d'affichage ================= */
+function bonbonHTML(c){ return '<span class="bb"><svg width="34" height="25" viewBox="0 0 30 22" aria-hidden="true"><polygon points="0,4 8,11 0,18" fill="' + c + '"/><polygon points="30,4 22,11 30,18" fill="' + c + '"/><circle cx="15" cy="11" r="8" fill="' + c + '"/><path d="M11 7 Q15 11 19 15" stroke="#FFFFFF" stroke-opacity=".55" stroke-width="2" fill="none"/></svg></span>'; }
+function bonbonsHTML(n, dec){ var h = ''; for (var i = 0; i < n; i++) h += bonbonHTML(COUL_BONBONS[(i + (dec || 0)) % COUL_BONBONS.length]); return h; }
+function nomSeul(m){ return m.replace(/^(le |la |les |l\u2019|l')/i, ''); }
+function nbMot(n){ return MOTS_NB[n] || String(n); }
+function cap(s){ return s.charAt(0).toUpperCase() + s.slice(1); }
+function bonbonsMot(n){ return nbMot(n) + ' bonbon' + (n > 1 ? 's' : ''); }
+function trois(n, max, nb){
+  var s = [n], essais = 0;
+  while (s.length < (nb || 3) && essais++ < 200){ var k = Math.max(1, Math.min(max, n + pick([-3,-2,-1,1,2,3]))); if (s.indexOf(k) < 0) s.push(k); }
+  while (s.length < (nb || 3)){ var k2 = rnd(1, max); if (s.indexOf(k2) < 0) s.push(k2); }
+  return melanger(s);
+}
+function formeSVG(f, c){
+  var s = { rond:'<circle cx="50" cy="50" r="38" fill="' + c + '"/>', 'carré':'<rect x="14" y="14" width="72" height="72" rx="4" fill="' + c + '"/>',
+    triangle:'<polygon points="50,10 92,86 8,86" fill="' + c + '"/>', rectangle:'<rect x="6" y="28" width="88" height="46" rx="4" fill="' + c + '"/>',
+    losange:'<polygon points="50,6 90,50 50,94 10,50" fill="' + c + '"/>' }[f];
+  return '<svg viewBox="0 0 100 100" width="84" height="84" aria-hidden="true">' + s + '</svg>';
+}
+function sceneSVG(pos, animal, objet){
+  var a = '<text x="{x}" y="{y}" font-size="30" text-anchor="middle">' + animal + '</text>', h = '';
+  if (objet === 'table'){
+    var p = { sur:[45,40], sous:[45,86], 'à côté de':[104,86] }[pos];
+    h = '<line x1="2" y1="90" x2="118" y2="90" stroke="#B7B3E3" stroke-width="2"/><rect x="8" y="44" width="74" height="8" rx="2" fill="#8A5A3B"/><rect x="14" y="52" width="6" height="38" fill="#8A5A3B"/><rect x="70" y="52" width="6" height="38" fill="#8A5A3B"/>' + a.replace('{x}', p[0]).replace('{y}', p[1]);
+  } else {
+    var q = { dans:[45,78], sur:[45,46], 'à côté de':[104,86] }[pos];
+    var boite = '<rect x="12" y="52" width="66" height="38" rx="3" fill="#C98B4E"/><rect x="12" y="52" width="66" height="6" fill="#A86E37"/>';
+    h = '<line x1="2" y1="90" x2="118" y2="90" stroke="#B7B3E3" stroke-width="2"/>' + (pos === 'dans' ? a.replace('{x}', q[0]).replace('{y}', q[1]) + '<rect x="12" y="64" width="66" height="26" rx="3" fill="#C98B4E"/><rect x="12" y="52" width="66" height="4" fill="#A86E37" opacity=".6"/>' : boite + a.replace('{x}', q[0]).replace('{y}', q[1]));
+  }
+  return '<svg viewBox="0 0 120 96" width="120" height="96" aria-hidden="true">' + h + '</svg>';
+}
+function boiteHTML(taille, k){
+  var h = '<div class="boite ' + (taille === 10 ? 'b10' : 'b5') + '">';
+  for (var i = 0; i < taille; i++) h += '<span class="' + (i < k ? 'plein' : 'vide') + '">' + (i < k ? bonbonHTML(COUL_BONBONS[i % COUL_BONBONS.length]) : '') + '</span>';
+  return h + '</div>';
+}
+function vocPool(niv){ var n = niv >= 4 ? 4 : niv >= 2 ? 2 : 1; return VOC_FR.filter(function(v){ return v.niv <= n; }); }
+
+/* ================= MATERNELLE : génération des questions ================= */
+var MAT_MAXN = { 1:5, 2:6, 3:8, 4:10 };
+function genQ(type, niv, demo){
+  var max = demo ? Math.min(4, MAT_MAXN[niv]) : MAT_MAXN[niv], q = { type:type, kind:'choix', grille:'c3' }, n, o, t;
+  if (type === 'chiffre-collection' || type === 'entendre'){
+    n = rnd(1, max); o = trois(n, max);
+    q.modele = type === 'chiffre-collection' ? '<span class="mt-chiffre">' + n + '</span>' : '';
+    q.choix = o.map(function(k, i){ return { h:bonbonsHTML(k, i), v:k }; }); q.classe = 'assiette'; q.bonne = n; q.cle = String(n);
+    q.consigne = type === 'chiffre-collection' ? 'Regarde le chiffre. Trouve l\u2019assiette qui a autant de bonbons.' : 'Trouve l\u2019assiette avec ' + bonbonsMot(n) + '.';
+    q.demoA = type === 'chiffre-collection' ? 'Regarde, c\u2019est le chiffre ' + nbMot(n) + '. Je cherche l\u2019assiette où il y a ' + bonbonsMot(n) + '.' : 'Je cherche l\u2019assiette avec ' + bonbonsMot(n) + '.';
+    q.compter = 'bonne'; q.demoB = cap(bonbonsMot(n)) + (type === 'chiffre-collection' ? ', comme le chiffre ' + nbMot(n) + ' !' : ', c\u2019est bien ça !');
+    q.bravo = bonbonsMot(n) + ' !';
+  } else if (type === 'collection-chiffre'){
+    n = rnd(1, max); o = trois(n, max);
+    q.modele = '<div class="mt-assiette">' + bonbonsHTML(n) + '</div>';
+    q.choix = o.map(function(k){ return { h:'<span class="mt-num">' + k + '</span>', v:k }; }); q.bonne = n; q.cle = String(n);
+    q.consigne = 'Combien y a-t-il de bonbons ? Touche le bon chiffre.';
+    q.demoA = 'Je compte les bonbons.'; q.compter = 'modele'; q.demoB = 'Il y en a ' + nbMot(n) + ', alors je touche le chiffre ' + nbMot(n) + ' !';
+  } else if (type === 'comparer'){
+    var a = rnd(1, max), b; do { b = rnd(1, max); } while (Math.abs(a - b) < (niv >= 4 ? 1 : 2));
+    var moins = niv >= 4 && Math.random() < 0.5;
+    q.grille = 'c2'; q.classe = 'assiette'; q.choix = [{ h:bonbonsHTML(a), v:a }, { h:bonbonsHTML(b, 2), v:b }];
+    q.bonne = moins ? Math.min(a, b) : Math.max(a, b); q.cle = moins ? 'moins' : 'plus';
+    q.consigne = moins ? 'Où y a-t-il le moins de bonbons ?' : 'Où y a-t-il le plus de bonbons ?';
+    q.demoB = moins ? 'Ici, il y a moins de bonbons !' : 'Ici, il y a plus de bonbons !';
+  } else if (type === 'completer'){
+    var taille = niv >= 4 ? 10 : 5, k = demo ? rnd(taille - 3, taille - 1) : rnd(1, taille - 1), manque = taille - k;
+    q.modele = boiteHTML(taille, k);
+    q.choix = trois(manque, taille - 1).map(function(x){ return { h:'<span class="mt-num">' + x + '</span>', v:x }; }); q.bonne = manque; q.cle = taille + '-' + k;
+    q.consigne = 'Combien de bonbons manque-t-il pour remplir la boîte ?';
+    q.demoA = 'La boîte a ' + nbMot(taille) + ' cases. Je compte les cases vides.'; q.compter = 'vides'; q.demoB = 'Il manque ' + bonbonsMot(manque) + ' !';
+  } else if (type === 'formes'){
+    var liste = niv >= 4 ? ['rond','carré','triangle','rectangle','losange'] : niv >= 2 ? ['rond','carré','triangle','rectangle'] : ['rond','carré','triangle'];
+    var cible = pick(liste), autres = melanger(liste.filter(function(x){ return x !== cible; })).slice(0, 2), cols = melanger(['#E5484D','#3E7BFA','#2FB37E','#FF9F43','#B38CFF']);
+    q.choix = melanger([cible].concat(autres)).map(function(f, i){ return { h:formeSVG(f, cols[i]), v:f }; }); q.bonne = cible; q.cle = cible;
+    q.consigne = 'Touche ' + FORMES[cible] + '.'; q.demoB = FORMES_INFO[cible];
+  } else if (type === 'suites'){
+    var motif = niv >= 4 ? [0,1,2] : niv >= 3 ? pick([[0,1,1],[0,0,1]]) : [0,1];
+    var cs = melanger(COULEURS_SUITE.slice()).slice(0, 3), long = 6, seq = [];
+    for (var i = 0; i < long; i++) seq.push(cs[motif[i % motif.length]]);
+    var suivant = cs[motif[long % motif.length]], opts = melanger(cs.slice(0, 3));
+    q.modele = '<div class="mt-suite">' + seq.map(function(c){ return '<i style="background:' + c[1] + '"></i>'; }).join('') + '<b>?</b></div>';
+    q.choix = opts.map(function(c){ return { h:'<i class="pastille" style="background:' + c[1] + '"></i>', v:c[0] }; }); q.bonne = suivant[0]; q.cle = motif.join('');
+    q.consigne = 'Regarde la suite de couleurs. Laquelle vient après ?';
+    q.demoA = 'Regarde : ' + seq.map(function(c){ return c[0]; }).join(', ') + '…'; q.demoB = 'Après, c\u2019est ' + suivant[0] + ' !';
+  } else if (type === 'bocal'){
+    n = rnd(1, max); q.kind = 'bocal'; q.bonne = n; q.cle = String(n); q.reserve = Math.max(n + 2, 6);
+    q.consigne = 'Mets ' + bonbonsMot(n) + ' dans le bocal, puis touche le bouton vert.';
+  } else if (type === 'syllabes'){
+    var maxs = niv >= 3 ? 4 : niv >= 2 ? 3 : 2, w = pick(SYLLABES.filter(function(x){ return x.s.length <= maxs; }));
+    q.kind = 'syllabes'; q.mot = w; q.bonne = w.s.length; q.cle = w.mot;
+    q.modele = '<span class="mt-emo">' + w.e + '</span>';
+    q.consigne = 'Écoute : ' + w.mot + '. Tape sur le tambour pour chaque morceau du mot, puis touche le bouton vert.';
+  } else if (type === 'rimes' || type === 'attaque'){
+    var groupes = type === 'rimes' ? RIMES : ATTAQUES, cles = Object.keys(groupes), g = pick(cles), deux = melanger(groupes[g].slice()).slice(0, 2);
+    var autresG = melanger(cles.filter(function(x){ return x !== g; })).slice(0, 2).map(function(x){ return pick(groupes[x].filter(function(y){ return y[0] !== deux[0][0] && y[0] !== deux[1][0]; })) || groupes[x][0]; });
+    var choixR = melanger([deux[1]].concat(autresG));
+    q.modele = '<span class="mt-emo">' + deux[0][1] + '</span>';
+    q.choix = choixR.map(function(x){ return { h:'<span class="mt-emo">' + x[1] + '</span>', v:x[0] }; }); q.bonne = deux[1][0]; q.cle = g;
+    var m0 = nomSeul(deux[0][0]), noms = choixR.map(function(x){ return nomSeul(x[0]); }).join(', ');
+    q.consigne = 'Écoute : ' + m0 + '. ' + noms + '. ' + (type === 'rimes' ? 'Lequel finit comme ' + m0 + ' ?' : 'Lequel commence comme ' + m0 + ' ?');
+    var m1 = nomSeul(deux[1][0]);
+    q.demoA = 'Écoute : ' + m0 + '… ' + m1 + '. ' + m0 + ', ' + m1 + ' : ' + (type === 'rimes' ? 'ça finit pareil, ça rime !' : 'ça commence pareil !');
+    q.demoB = 'Bravo !'; q.bravo = m0 + ', ' + m1 + ' !';
+  } else if (type === 'lettres'){
+    var set = LETTRES_NIV[niv], L = set.charAt(rnd(0, set.length - 1)), nbL = niv >= 3 ? 4 : 3, opL = [L];
+    if (niv >= 4 && CONFUSABLES[L]){ var cf = CONFUSABLES[L].charAt(rnd(0, CONFUSABLES[L].length - 1)); if (opL.indexOf(cf) < 0) opL.push(cf); }
+    while (opL.length < nbL){ var x2 = set.charAt(rnd(0, set.length - 1)); if (opL.indexOf(x2) < 0) opL.push(x2); }
+    q.grille = nbL === 4 ? 'c4' : 'c3'; q.choix = melanger(opL).map(function(x){ return { h:'<span class="mt-lettre">' + x + '</span>', v:x }; }); q.bonne = L; q.cle = L;
+    q.consigne = 'Touche la lettre ' + L + '.'; q.demoB = 'Voici la lettre ' + L + ' !';
+  } else if (type === 'prenom'){
+    var nom = (prof().nom || '').toLocaleUpperCase('fr-FR'), ini = nom.charAt(0);
+    var pool = NOMS_DISTRACTEURS.filter(function(x){ return x !== nom; }), memeIni = pool.filter(function(x){ return x.charAt(0) === ini; }), autresI = pool.filter(function(x){ return x.charAt(0) !== ini; });
+    var dist = niv >= 2 && memeIni.length ? [pick(memeIni)].concat(melanger(autresI).slice(0, 1)) : melanger(autresI).slice(0, 2);
+    q.choix = melanger([nom].concat(dist)).map(function(x){ return { h:'<span class="mt-nom">' + esc(x) + '</span>', v:x }; }); q.bonne = nom; q.cle = 'prenom'; q.grille = 'c1';
+    q.consigne = 'Où est ton prénom ? Touche-le.'; q.bravo = 'C\u2019est ton prénom, ' + prof().nom + ' !';
+  } else if (type === 'trouve'){
+    var P = vocPool(niv), cibleV = pick(P), memeT = melanger(P.filter(function(v){ return v.t === cibleV.t && v.m !== cibleV.m; })), autresV = melanger(P.filter(function(v){ return v.t !== cibleV.t; }));
+    var nbV = niv >= 2 ? 4 : 3, dv = (niv >= 2 ? memeT.slice(0, 2) : []).concat(autresV); dv = dv.slice(0, nbV - 1);
+    q.grille = nbV === 4 ? 'c4' : 'c3'; q.choix = melanger([cibleV].concat(dv)).map(function(v){ return { h:'<span class="mt-emo">' + v.e + '</span>', v:v.m }; }); q.bonne = cibleV.m; q.cle = cibleV.m;
+    q.consigne = 'Trouve ' + cibleV.m + '.'; q.demoB = 'Voici ' + cibleV.m + ' !';
+  } else if (type === 'intrus'){
+    var Pi = vocPool(niv), cats = CATEGORIES.filter(function(c){ return Pi.filter(function(v){ return c.themes.indexOf(v.t) >= 0; }).length >= 3; }), C = pick(cats);
+    var dans = melanger(Pi.filter(function(v){ return C.themes.indexOf(v.t) >= 0; })).slice(0, 3);
+    var interdit = niv < 4 && (C.nom === 'un fruit' || C.nom === 'un légume') ? ['fruits','légumes'] : C.themes;
+    var horsCats = CATEGORIES.filter(function(c){ return c !== C; }).reduce(function(a, c){ return a.concat(c.themes); }, []);
+    var intrus = pick(Pi.filter(function(v){ return horsCats.indexOf(v.t) >= 0 && interdit.indexOf(v.t) < 0; }));
+    q.grille = 'c4'; q.choix = melanger(dans.concat([intrus])).map(function(v){ return { h:'<span class="mt-emo">' + v.e + '</span>', v:v.m }; }); q.bonne = intrus.m; q.cle = C.nom;
+    q.consigne = 'Une de ces images n\u2019est pas ' + C.nom + '. Laquelle ?';
+    q.demoA = dans.map(function(v){ return v.m; }).join(', ') + ' : ce sont ' + C.pl + '.';
+    q.demoB = intrus.m.charAt(0).toUpperCase() + intrus.m.slice(1) + ' n\u2019est pas ' + C.nom + ' !';
+  } else if (type === 'devinette'){
+    var Pd = vocPool(4), dvt = pick(DEVINETTES), rep = VOC_FR.filter(function(v){ return v.m === dvt[1]; })[0];
+    var autresD = melanger(Pd.filter(function(v){ return v.m !== rep.m && v.t !== rep.t; })).slice(0, niv >= 4 ? 3 : 2);
+    q.grille = niv >= 4 ? 'c4' : 'c3'; q.choix = melanger([rep].concat(autresD)).map(function(v){ return { h:'<span class="mt-emo">' + v.e + '</span>', v:v.m }; }); q.bonne = rep.m; q.cle = rep.m;
+    q.consigne = dvt[0] + ' Qui suis-je ?'; q.demoB = 'C\u2019est ' + rep.m + ' !';
+  } else if (type === 'position'){
+    var animaux = [['le chat','🐱'],['le chien','🐶'],['le lapin','🐰'],['l\u2019ours','🐻'],['la grenouille','🐸']], an = pick(animaux);
+    var objet = niv >= 4 && Math.random() < 0.5 ? 'boite' : 'table';
+    var positions = objet === 'boite' ? ['dans','sur','à côté de'] : niv >= 3 ? ['sur','sous','à côté de'] : ['sur','sous'];
+    var pc = pick(positions), nomObj = objet === 'boite' ? 'la boîte' : 'la table';
+    q.grille = positions.length === 2 ? 'c2' : 'c3'; q.classe = 'scene';
+    q.choix = melanger(positions.slice()).map(function(p){ return { h:sceneSVG(p, an[1], objet), v:p }; }); q.bonne = pc; q.cle = pc;
+    q.consigne = 'Touche l\u2019image où ' + an[0] + ' est ' + pc + ' ' + nomObj + '.';
+    q.demoB = an[0].charAt(0).toUpperCase() + an[0].slice(1) + ' est ' + pc + ' ' + nomObj + ' !';
+  } else if (type === 'taille' || type === 'ranger'){
+    var it = pick(vocPool(1)), tailles = [1.5, 2.6, 3.9], ord = melanger([0,1,2]);
+    q.classe = 'taille'; q.choix = ord.map(function(k){ return { h:'<span style="font-size:' + tailles[k] + 'rem;line-height:1">' + it.e + '</span>', v:k }; });
+    if (type === 'taille'){
+      var grand = Math.random() < 0.5; q.bonne = grand ? 2 : 0; q.cle = grand ? 'grand' : 'petit';
+      q.consigne = grand ? 'Touche la plus grande image.' : 'Touche la plus petite image.'; q.demoB = grand ? 'Voici la plus grande !' : 'Voici la plus petite !';
+    } else {
+      q.kind = 'ranger'; q.cle = 'ranger';
+      q.consigne = 'Touche les images de la plus petite à la plus grande.';
+    }
+  }
+  return q;
+}
+
+/* ================= MATERNELLE : moteur ================= */
+var matRun = 0, jm = null;
+function ouvrirMaternelle(){
+  var M = D().maternelle;
+  $('mt-portes').innerHTML = Object.keys(MAT_PORTES).map(function(k){ var p = MAT_PORTES[k];
+    return '<button class="porte" data-porte="' + k + '"><span class="ico">' + p.ico + '</span><span><b>' + p.nom + '</b><small>Niveau ' + M.niveaux[k] + ' : ' + p.niv[M.niveaux[k]] + '</small></span></button>'; }).join('');
+  var avert = $('mt-voix'); choisirVoixFr();
+  avert.hidden = !(!window.speechSynthesis || (speechSynthesis.getVoices().length && !voixFr));
+  avert.textContent = 'Aucune voix française trouvée : les consignes ne pourront pas être lues à voix haute. Vérifie le son et les voix dans les réglages de l\u2019appareil.';
+  montrer('s-mat-menu');
+}
+$('mt-portes').addEventListener('click', function(e){
+  var b = e.target.closest('[data-porte]'); if (!b) return;
+  taireFr(); parlerFr(MAT_PORTES[b.dataset.porte].nom).catch(function(){});
+  matLancer(b.dataset.porte);
+});
+function matLancer(porte){
+  var M = D().maternelle;
+  jm = { porte:porte, niveau:M.niveaux[porte], niveauDepart:M.niveaux[porte], pos:0, total:6, items:[], suiteOk:0, suiteKo:0, vus:{}, dernier:null, date:new Date().toISOString(), verrou:true };
+  $('mt-titre').textContent = MAT_PORTES[porte].ico + ' ' + MAT_PORTES[porte].nom;
+  montrer('s-mat');
+  setTimeout(function(){ matQuestion(); }, 50);
+}
+function matEtoiles(){
+  $('mt-etoiles').innerHTML = Array.from({ length:jm.total }, function(_, i){ var it = jm.items[i]; return '<i class="' + (it ? (it.ok ? 'on' : 'mi') : '') + '">⭐</i>'; }).join('');
+}
+function choisirType(){
+  var liste = MAT_PORTES[jm.porte].types[jm.niveau], c = liste.filter(function(t){ return t !== jm.dernier; });
+  var t = pick(c.length ? c : liste); jm.dernier = t; return t;
+}
+async function matQuestion(){
+  if (!jm) return;
+  if (jm.pos >= jm.total){ matFin(); return; }
+  var id = ++matRun, type = choisirType();
+  matEtoiles();
+  try {
+    var dejaVu = (D().maternelle.vus[type] || 0);
+    if (dejaVu < 3 && !jm.vus[type]){ jm.vus[type] = true; await matDemo(type, id); }
+    jm.vus[type] = true;
+    var q = genQ(type, jm.niveau); jm.q = q; jm.essais = 0;
+    matAfficher(q); jm.verrou = false;
+    await parlerFr(q.consigne, id);
+  } catch(e){ if (e !== 'stop') throw e; }
+}
+function matAfficher(q){
+  $('mt-modele').innerHTML = q.modele || ''; $('mt-modele').hidden = !q.modele;
+  $('mt-special').innerHTML = ''; $('mt-special').hidden = true; $('mt-choix').hidden = false;
+  $('mt-choix').className = 'mt-choix ' + (q.grille || 'c3') + (q.classe ? ' ' + q.classe : '');
+  $('mt-passer').hidden = true; $('mt-main').style.opacity = 0;
+  if (q.kind === 'choix' || q.kind === 'ranger'){
+    $('mt-choix').innerHTML = q.choix.map(function(c, i){ return '<button data-i="' + i + '">' + c.h + '</button>'; }).join('');
+    q.ordre = 0;
+  } else if (q.kind === 'bocal'){
+    $('mt-choix').hidden = true; $('mt-special').hidden = false;
+    var h = '<div class="mt-pool" id="mt-pool">';
+    for (var i = 0; i < q.reserve; i++) h += '<button data-b="' + i + '">' + bonbonHTML(COUL_BONBONS[i % COUL_BONBONS.length]) + '</button>';
+    $('mt-special').innerHTML = h + '</div><div class="bocal" id="mt-bocal"></div><div class="mt-actions"><button class="mt-raz" id="mt-raz" aria-label="Recommencer">↺</button><button class="mt-ok" id="mt-ok" aria-label="Valider">✓</button></div>';
+    q.dedans = 0;
+  } else if (q.kind === 'syllabes'){
+    $('mt-choix').hidden = true; $('mt-special').hidden = false;
+    $('mt-special').innerHTML = '<button class="tambour" id="mt-tambour" aria-label="Tambour">🥁</button><div class="mt-points" id="mt-points"></div><div class="mt-actions"><button class="mt-raz" id="mt-raz" aria-label="Recommencer">↺</button><button class="mt-ecoute" id="mt-ecoute" aria-label="Réécouter le mot">🔊</button><button class="mt-ok" id="mt-ok" aria-label="Valider">✓</button></div>';
+    q.coups = 0;
+  }
+}
+function viserMat(el, dx, dy){
+  var r = el.getBoundingClientRect(), z = $('mt-zone').getBoundingClientRect(), m = $('mt-main');
+  m.style.opacity = 1; m.style.left = (r.left - z.left + r.width / 2 - 12 + (dx || 0)) + 'px'; m.style.top = (r.top - z.top + r.height / 2 - 4 + (dy || 0)) + 'px';
+  return pausePr(650);
+}
+function taperMat(){ var m = $('mt-main'); m.style.transform = 'scale(.8)'; return pausePr(160).then(function(){ m.style.transform = ''; }); }
+function boutonBon(q){ var i = q.choix.map(function(c){ return c.v; }).indexOf(q.bonne); return $('mt-choix').querySelector('[data-i="' + i + '"]'); }
+async function matDemo(type, id){
+  var q = genQ(type, jm.niveau, true);
+  if (type === 'prenom'){
+    q.choix = melanger(['LÉO','EMMA','JADE']).map(function(x){ return { h:'<span class="mt-nom">' + x + '</span>', v:x }; }); q.bonne = 'EMMA';
+    q.demoA = 'Regarde, je cherche le prénom Emma. Emma commence par la lettre E.'; q.demoB = 'Le voici : E, M, M, A. Emma !';
+  }
+  jm.q = q; jm.verrou = true; matAfficher(q); $('mt-passer').hidden = false;
+  await parlerFr('Regarde, je te montre.', id);
+  if (q.kind === 'bocal'){
+    await parlerFr('Je dois mettre ' + bonbonsMot(q.bonne) + ' dans le bocal.', id);
+    for (var i = 0; i < q.bonne; i++){ var c = $('mt-pool').querySelector('[data-b]:not([hidden])'); await viserMat(c); await taperMat(); bocalAjouter(c); await parlerFr(nbMot(i + 1), id); }
+    await viserMat($('mt-ok')); await taperMat(); await parlerFr(bonbonsMot(q.bonne).charAt(0).toUpperCase() + bonbonsMot(q.bonne).slice(1) + ' dans le bocal. Bravo !', id);
+  } else if (q.kind === 'syllabes'){
+    await viserMat($('mt-modele')); await parlerFr('Écoute : ' + q.mot.mot + '. Je tape une fois pour chaque morceau.', id);
+    for (var s = 0; s < q.mot.s.length; s++){ await viserMat($('mt-tambour')); await taperMat(); tambourCoup(); await parlerFr(q.mot.s[s], id); }
+    await viserMat($('mt-ok')); await taperMat(); await parlerFr(q.mot.s.join(', ') + ' : ' + nbMot(q.mot.s.length) + ' morceau' + (q.mot.s.length > 1 ? 'x' : '') + '. Bravo !', id);
+  } else if (q.kind === 'ranger'){
+    await parlerFr('Je touche d\u2019abord la plus petite, puis la moyenne, puis la plus grande.', id);
+    for (var k = 0; k < 3; k++){ var bi = q.choix.map(function(c){ return c.v; }).indexOf(k), bt = $('mt-choix').querySelector('[data-i="' + bi + '"]'); await viserMat(bt); await taperMat(); rangerMarquer(bt, k + 1); await pausePr(250); }
+    await parlerFr('De la plus petite à la plus grande. Bravo !', id);
+  } else {
+    if (q.modele) await viserMat($('mt-modele'), 30, 20);
+    await parlerFr(q.demoA || q.consigne, id);
+    var bon = boutonBon(q), aCompter = q.compter === 'bonne' ? bon.querySelectorAll('.bb') : q.compter === 'modele' ? $('mt-modele').querySelectorAll('.bb') : q.compter === 'vides' ? $('mt-modele').querySelectorAll('.vide') : [];
+    for (var j = 0; j < aCompter.length; j++){ await viserMat(aCompter[j], 2, 4); aCompter[j].classList.add('hop'); await parlerFr(nbMot(j + 1), id); aCompter[j].classList.remove('hop'); }
+    await viserMat(bon); await taperMat(); bon.classList.add('ok');
+    await parlerFr(q.demoB || 'Bravo !', id);
+  }
+  $('mt-main').style.opacity = 0;
+  await parlerFr('À toi maintenant !', id);
+}
+function bocalAjouter(b){ b.hidden = true; jm.q.dedans++; $('mt-bocal').insertAdjacentHTML('beforeend', bonbonHTML(COUL_BONBONS[(+b.dataset.b) % COUL_BONBONS.length])); }
+function tambourCoup(){ var t = $('mt-tambour'); t.classList.add('tape'); setTimeout(function(){ t.classList.remove('tape'); }, 150); jm.q.coups++; $('mt-points').insertAdjacentHTML('beforeend', '<i></i>'); }
+function rangerMarquer(b, n){ b.classList.add('ok'); b.insertAdjacentHTML('beforeend', '<em class="ordre">' + n + '</em>'); }
+$('mt-choix').addEventListener('click', function(e){
+  var b = e.target.closest('[data-i]'); if (!b || !jm || jm.verrou) return;
+  var q = jm.q, c = q.choix[+b.dataset.i];
+  if (q.kind === 'ranger'){
+    if (b.classList.contains('ok')) return;
+    if (c.v === q.ordre){ q.ordre++; rangerMarquer(b, q.ordre); taireFr(); if (q.ordre === 3) matReussi(); return; }
+    q.ordre = 0; $('mt-choix').querySelectorAll('button').forEach(function(x){ x.classList.remove('ok'); var o = x.querySelector('.ordre'); if (o) o.remove(); });
+    matRate(b); return;
+  }
+  if (c.v === q.bonne){ b.classList.add('ok'); matReussi(); } else matRate(b);
+});
+$('mt-special').addEventListener('click', function(e){
+  if (!jm || jm.verrou) return;
+  var q = jm.q, t = e.target;
+  if (t.closest('[data-b]')){ bocalAjouter(t.closest('[data-b]')); return; }
+  if (t.closest('#mt-tambour')){ tambourCoup(); return; }
+  if (t.closest('#mt-ecoute')){ taireFr(); parlerFr(q.mot.mot).catch(function(){}); return; }
+  if (t.closest('#mt-raz')){ matAfficher(q); return; }
+  if (t.closest('#mt-ok')){
+    var val = q.kind === 'bocal' ? q.dedans : q.coups;
+    if (val === q.bonne) matReussi(); else matRate($('mt-ok'));
+  }
+});
+function matReussi(){
+  var j = jm, q = j.q; j.verrou = true; taireFr();
+  j.items.push({ type:q.type, cle:q.cle, ok:j.essais === 0, essais:j.essais + 1 });
+  var msg = '';
+  if (j.essais === 0){ j.suiteOk++; j.suiteKo = 0; if (j.suiteOk >= 4 && j.niveau < MAT_MAX){ j.niveau++; j.suiteOk = 0; msg = 'Nouveau niveau : ' + MAT_PORTES[j.porte].niv[j.niveau] + '.'; } }
+  if (msg){ D().maternelle.niveaux[j.porte] = j.niveau; sauver(); }
+  matEtoiles();
+  var id = ++matRun;
+  parlerFr(pick(['Bravo !','Super !','Génial !','Bien joué !']) + (q.bravo ? ' ' + q.bravo : ''), id).then(function(){ if (msg) $('mt-st').textContent = msg; return pausePr(msg ? 900 : 300); })
+    .then(function(){ j.pos++; matQuestion(); }).catch(function(){});
+}
+function matRate(b){
+  var j = jm, q = j.q; j.essais++;
+  if (b){ b.classList.remove('ko'); void b.offsetWidth; b.classList.add('ko'); setTimeout(function(){ b.classList.remove('ko'); }, 600); }
+  var id = ++matRun; taireFr();
+  if (j.essais < 2){
+    if (q.kind === 'bocal' || q.kind === 'syllabes') matAfficher(q);
+    parlerFr('Essaie encore ! ' + q.consigne, id).catch(function(){});
+    return;
+  }
+  j.verrou = true; j.suiteKo++; j.suiteOk = 0;
+  var msg = '';
+  if (j.suiteKo >= 2 && j.niveau > 1){ j.niveau--; j.suiteKo = 0; D().maternelle.niveaux[j.porte] = j.niveau; sauver(); msg = 'On revient au niveau ' + j.niveau + '.'; }
+  j.items.push({ type:q.type, cle:q.cle, ok:false, essais:2 });
+  matEtoiles();
+  (async function(){
+    try {
+      if (q.kind === 'choix'){ var bon = boutonBon(q); await viserMat(bon); bon.classList.add('ok'); await parlerFr('Regarde, c\u2019était celle-ci. ' + (q.demoB || ''), id); }
+      else if (q.kind === 'bocal'){ await parlerFr('Il fallait ' + bonbonsMot(q.bonne) + '. On essaiera encore !', id); }
+      else if (q.kind === 'syllabes'){ await parlerFr('Écoute : ' + q.mot.s.join(', ') + '. Ça fait ' + nbMot(q.mot.s.length) + ' morceau' + (q.mot.s.length > 1 ? 'x' : '') + '.', id); }
+      else { await parlerFr('On essaiera encore la prochaine fois !', id); }
+      $('mt-main').style.opacity = 0;
+      if (msg) $('mt-st').textContent = msg;
+      await pausePr(400);
+      j.pos++; matQuestion();
+    } catch(e){ if (e !== 'stop') throw e; }
+  })();
+}
+$('mt-voix-btn').addEventListener('click', function(){ if (jm && jm.q && !jm.verrou){ taireFr(); parlerFr(jm.q.consigne).catch(function(){}); } });
+$('mt-montre').addEventListener('click', function(){
+  if (!jm || !jm.q) return; taireFr();
+  var id = ++matRun, type = jm.q.type;
+  matDemo(type, id).then(function(){ var q = genQ(type, jm.niveau); jm.q = q; jm.essais = 0; matAfficher(q); jm.verrou = false; return parlerFr(q.consigne, id); }).catch(function(e){ if (e !== 'stop') throw e; });
+});
+$('mt-passer').addEventListener('click', function(){
+  if (!jm) return; taireFr();
+  var id = ++matRun, type = jm.q.type, q = genQ(type, jm.niveau); jm.q = q; jm.essais = 0; matAfficher(q); jm.verrou = false;
+  parlerFr(q.consigne, id).catch(function(){});
+});
+$('mt-stop').addEventListener('click', function(){ ++matRun; taireFr(); matFin(); });
+function matFin(){
+  var j = jm; if (!j) return; jm = null; ++matRun;
+  var M = D().maternelle;
+  Object.keys(j.vus).forEach(function(t){ M.vus[t] = (M.vus[t] || 0) + 1; });
+  if (j.items.length){
+    M.niveaux[j.porte] = j.niveau;
+    M.seances.push({ date:j.date, porte:j.porte, niveauDepart:j.niveauDepart, niveauFin:j.niveau, items:j.items });
+  }
+  sauver();
+  var etoiles = j.items.filter(function(x){ return x.ok; }).length;
+  bilan({ titre:'Bravo !', gros:'⭐ ' + etoiles, sur:'étoile' + (etoiles > 1 ? 's' : '') + ' sur ' + j.items.length, mot: MAT_PORTES[j.porte].nom + ', niveau ' + j.niveau + ' : ' + MAT_PORTES[j.porte].niv[j.niveau] + '.',
+    carteTitre:'', liste:'', legende:'', erreurs:null, rejouer:function(){ matLancer(j.porte); }, onglet:'maternelle' });
+  if (j.items.length) parlerFr('Bravo ! Tu as gagné ' + nbMot(etoiles) + ' étoile' + (etoiles > 1 ? 's' : '') + ' !').catch(function(){});
+}
+function progresMaternelle(){
+  var M = D().maternelle, S = M.seances, h = '';
+  Object.keys(MAT_PORTES).forEach(function(k){
+    var P = MAT_PORTES[k], items = []; S.filter(function(s){ return s.porte === k; }).forEach(function(s){ items = items.concat(s.items); });
+    var corps = '<p class="legende" style="font-size:1.05rem">Niveau ' + M.niveaux[k] + ' : ' + P.niv[M.niveaux[k]] + '</p>';
+    if (items.length){
+      var types = {}; items.forEach(function(x){ var o = types[x.type] || (types[x.type] = { n:0, ok:0 }); o.n++; if (x.ok) o.ok++; });
+      corps += Object.keys(types).map(function(t){ var o = types[t], p = pct(o.ok, o.n); return jauge(MAT_TYPES_FR[t] || t, p, p + '% · ' + o.n); }).join('');
+      if (k === 'nombres'){
+        var parN = {}; items.filter(function(x){ return ['chiffre-collection','entendre','collection-chiffre','bocal'].indexOf(x.type) >= 0; }).forEach(function(x){ var o = parN[x.cle] || (parN[x.cle] = { n:0, ok:0 }); o.n++; if (x.ok) o.ok++; });
+        var sur = 0; for (var n = 1; n <= 10; n++){ var o2 = parN[n]; if (o2 && o2.n >= 2 && o2.ok / o2.n >= 0.8) sur = n; else if (o2) break; }
+        if (sur) corps += '<p class="legende">Dénombre sans erreur jusqu\u2019à ' + sur + ' (au moins 80 % de réussite, sur au moins deux essais par nombre).</p>';
+      }
+      var rates = {}; items.forEach(function(x){ if (!x.ok && ['lettres','trouve','devinette','syllabes'].indexOf(x.type) >= 0) rates[x.cle] = (rates[x.cle] || 0) + 1; });
+      var rk = Object.keys(rates).sort(function(a, b){ return rates[b] - rates[a]; }).slice(0, 10);
+      if (rk.length) corps += '<p class="etiq" style="margin-top:6px">À revoir</p><div class="puces">' + rk.map(function(r){ return '<span class="fait r">' + esc(r) + (rates[r] > 1 ? ' ×' + rates[r] : '') + '</span>'; }).join('') + '</div>';
+    } else corps += '<p class="legende">Pas encore de séance.</p>';
+    h += carte(P.ico + ' ' + P.nom, corps);
+  });
+  return h + carte('Comment lire ce suivi', '<p class="legende">Une étoile correspond à une bonne réponse du premier coup. Chaque exercice laisse un deuxième essai ; après deux erreurs, l\u2019appli montre la bonne réponse. Le niveau de chaque partie monte après 4 réussites d\u2019affilée et redescend après 2 échecs d\u2019affilée.</p>');
+}
+
 /* ================= démarrage ================= */
 dessinerProfils();
 $('pr-version').textContent = 'Version ' + APP_VERSION; $('pa-version').textContent = 'Version ' + APP_VERSION;
@@ -2994,7 +3619,7 @@ if ('serviceWorker' in navigator && /^https?:$/.test(location.protocol)){
   window.addEventListener('load', function(){ navigator.serviceWorker.register('sw.js').catch(function(){}); });
 }
 try { if (navigator.storage && navigator.storage.persist) navigator.storage.persist(); } catch(e){}
-window.__test = { fusionner:fusionner, get DB(){ return DB; }, sync:function(){ return sync; }, diagnostiquer:diagnostiquer, ARBRE_NIV:ARBRE_NIV, nbRetenues:nbRetenues, somme:somme, colonnes:colonnes };
+window.__test = { matJeu:function(){ return jm; }, fusionner:fusionner, get DB(){ return DB; }, sync:function(){ return sync; }, diagnostiquer:diagnostiquer, ARBRE_NIV:ARBRE_NIV, nbRetenues:nbRetenues, somme:somme, colonnes:colonnes };
 })();
 </script>
 </body>
