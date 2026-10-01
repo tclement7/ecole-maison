@@ -1,6 +1,6 @@
 /* L'école à la maison : copie hors ligne.
    À CHAQUE MISE À JOUR de index.html, change le numéro de VERSION ci-dessous. */
-const VERSION = 'v2';
+const VERSION = 'v3';
 const CACHE = 'ecole-maison-' + VERSION;
 const FICHIERS = ['./', './index.html', './manifest.webmanifest', './icon-192.png', './icon-512.png', './apple-touch-icon.png'];
 

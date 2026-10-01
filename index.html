@@ -211,6 +211,26 @@ input.champ{font-family:var(--police);font-size:1.1rem;font-weight:700;padding:1
 .points-code{display:flex;justify-content:center;gap:18px;margin:6px 0}
 .points-code i{width:22px;height:22px;border-radius:50%;border:3px solid var(--craie)}
 .points-code i.plein{background:var(--craie)}
+.animaux{display:grid;grid-template-columns:repeat(auto-fill,minmax(58px,1fr));gap:8px}
+.animaux button{font-size:2.1rem;aspect-ratio:1;border:3px solid var(--encre-clair);background:var(--encre-fonce);border-radius:16px;padding:0}
+.animaux button[aria-pressed="true"]{border-color:var(--citron);background:var(--encre-clair)}
+.panneau{position:fixed;inset:0;z-index:30;background:rgba(26,23,64,.75);display:grid;place-items:center;padding:20px}
+.panneau > .carte{width:100%;max-width:460px;max-height:90vh;overflow:auto}
+.segments.petits button{font-size:.95rem;padding:8px 2px}
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.chips button{font-weight:800;font-size:.98rem;border:2.5px solid var(--encre-clair);background:transparent;border-radius:999px;padding:6px 12px}
+.chips button[aria-pressed="true"]{background:var(--accent);border-color:var(--accent);color:var(--encre)}
+.en-emo{font-size:3.6rem;line-height:1}
+.en-pastille{display:inline-block;width:64px;height:64px;border-radius:50%;border:3px solid #221E4E}
+.en-chiffre{font-size:3.4rem;font-weight:800;line-height:1}
+.choix.en-mots button{font-size:1.5rem;font-weight:800;min-height:78px}
+.imagier{display:grid;grid-template-columns:repeat(auto-fill,minmax(110px,1fr));gap:10px}
+.imagier button{background:var(--craie);color:var(--encre);border:0;border-radius:18px;padding:12px 6px;display:flex;flex-direction:column;align-items:center;gap:6px;min-height:130px;justify-content:center}
+.imagier b{font-size:1.15rem}
+.imagier small{color:#5E5A96;font-weight:700}
+.sons{display:flex;justify-content:center;gap:12px}
+.sons .bouton{font-size:1.6rem;padding:10px 22px}
+.enq-en{text-align:center;font-size:2.4rem;font-weight:800}
 .enq{font-weight:800;font-size:1.2rem;line-height:1.35}
 .compte{text-align:center;font-size:3rem;font-weight:800;color:var(--citron);line-height:1}
 .proso{display:grid;gap:8px}
@@ -234,8 +254,79 @@ input.champ{font-family:var(--police);font-size:1.1rem;font-weight:700;padding:1
   <div class="profils" id="liste-profils"></div>
   <button class="bouton second" id="pr-parents">Suivi des parents</button>
   <p class="legende etat-sync" hidden style="text-align:center"></p>
+  <p class="legende" id="pr-vide" hidden style="text-align:center">Aucun enfant pour l'instant : ajoute-les depuis le suivi des parents.</p>
   <p class="alerte" id="alerte-stock" hidden>Ce navigateur bloque l'enregistrement : les séances ne seront pas gardées après fermeture.</p>
 </section>
+
+<!-- ===== Bienvenue ===== -->
+<section class="ecran" id="s-bienvenue" hidden>
+  <h1>Bienvenue dans l'école à la maison 👋</h1>
+  <p class="consigne">Des exercices courts pour réviser à la maison : tables, calcul, fractions, lecture et anglais, avec un suivi pour les parents. Les données restent sur cet appareil : rien n'est envoyé nulle part.</p>
+  <div class="carte">
+    <h2>1. Vos enfants</h2>
+    <ul id="bv-liste"></ul>
+    <button class="bouton" id="bv-ajouter">Ajouter un enfant</button>
+  </div>
+  <div class="carte">
+    <h2>2. Le code parents</h2>
+    <p class="legende">Un code à 4 chiffres protège l'espace parents : réglages, suivi et suppressions.</p>
+    <button class="bouton" id="bv-go" disabled>Choisir le code et commencer</button>
+  </div>
+  <div class="carte">
+    <h2>Déjà utilisée sur un autre appareil ?</h2>
+    <p class="legende">Si la synchronisation est activée sur un autre appareil, colle ici son code d'appairage (Suivi des parents, puis Réglages, carte Synchronisation).</p>
+    <input class="champ" id="bv-code" autocomplete="off" placeholder="Code d'appairage (EM1…)">
+    <button class="bouton second" id="bv-rejoindre">Rejoindre ma famille</button>
+    <p class="retour" id="bv-msg" aria-live="polite"></p>
+  </div>
+</section>
+
+<!-- ===== Fiche enfant ===== -->
+<section class="ecran" id="s-enfant" hidden>
+  <div class="barre-haut"><button class="bouton second petit" id="en-annuler">Annuler</button><span class="titre" id="en-titre">Nouvel enfant</span></div>
+  <div class="carte">
+    <label class="etiq" for="en-nom">Prénom ou surnom</label>
+    <input class="champ" id="en-nom" maxlength="20" autocomplete="off">
+    <div><span class="etiq">Classe</span><div class="segments petits" id="en-classe"></div></div>
+    <div><span class="etiq">Son animal</span><div class="animaux" id="en-animaux"></div></div>
+    <p class="legende" id="en-leg"></p>
+    <p class="retour ko" id="en-msg" aria-live="polite"></p>
+    <button class="bouton" id="en-ok">Enregistrer</button>
+  </div>
+  <button class="lien" id="en-suppr" hidden>Supprimer ce profil et tout son historique</button>
+</section>
+
+<!-- ===== Anglais ===== -->
+<section class="ecran" id="s-anglais-menu" hidden>
+  <div class="barre-haut"><button class="bouton second petit" data-retour>Retour</button><span class="titre">Anglais 🇬🇧</span></div>
+  <p class="alerte" id="an-voix" hidden></p>
+  <button class="module" id="an-jouer" style="--c:var(--bleu)"><span class="ico">▶</span><span><b>S'entraîner</b><small id="an-sub"></small></span></button>
+  <button class="module" id="an-imagier-btn" style="--c:var(--citron)"><span class="ico">🖼️</span><span><b>L'imagier</b><small>Touche une image pour entendre le mot</small></span></button>
+</section>
+<section class="ecran" id="s-imagier" hidden>
+  <div class="barre-haut"><button class="bouton second petit" id="im-retour">Retour</button><span class="titre">L'imagier</span></div>
+  <div class="chips" id="im-themes"></div>
+  <div class="segments" id="im-mots"><button data-v="non">Images seules</button><button data-v="oui">Avec les mots</button></div>
+  <div class="imagier" id="im-grille"></div>
+</section>
+<section class="ecran" id="s-anglais" hidden>
+  <div class="barre-haut"><span class="titre" id="an-titre"></span><button class="bouton second petit" id="an-stop">Arrêter</button></div>
+  <div class="progres"><i id="an-prog"></i></div>
+  <p class="consigne" id="an-consigne" style="text-align:center;font-size:1.2rem"></p>
+  <div class="modele" id="an-modele"></div>
+  <div class="sons" id="an-sons"><button class="bouton" id="an-ecouter" aria-label="Écouter">🔊</button><button class="bouton second" id="an-lent" aria-label="Écouter lentement">🐢</button></div>
+  <button class="lien" id="an-voir" hidden>Voir la phrase</button>
+  <div class="choix" id="an-choix"></div>
+  <p class="retour" id="an-retour" aria-live="polite"></p>
+  <p class="aide" id="an-diag" hidden></p>
+  <p class="monte" id="an-monte" hidden></p>
+  <button class="bouton" id="an-suivant" hidden>Suivant</button>
+</section>
+
+<!-- ===== Choix de l'animal ===== -->
+<div class="panneau" id="choix-animal" hidden>
+  <div class="carte"><h2>Choisis ton animal</h2><div class="animaux" id="ca-grille"></div><button class="bouton second" id="ca-fermer">Fermer</button></div>
+</div>
 
 <!-- ===== Code parents ===== -->
 <section class="ecran" id="s-code" hidden>
@@ -263,6 +354,7 @@ input.champ{font-family:var(--police);font-size:1.1rem;font-weight:700;padding:1
 <section class="ecran" id="s-vue-parents" hidden>
   <div class="barre-haut"><button class="bouton second petit" id="vp-retour">Retour</button><span class="titre">Suivi des parents</span></div>
   <p class="legende etat-sync" hidden></p>
+  <button class="bouton" id="vp-ajouter">Ajouter un enfant</button>
   <div class="pile" id="vp-contenu"></div>
 </section>
 
@@ -290,6 +382,8 @@ input.champ{font-family:var(--police);font-size:1.1rem;font-weight:700;padding:1
       <span><b>Lecture à voix haute</b><small>Chronométrée ou guidée, avec un adulte</small></span></button>
     <button class="module" data-module="flash" style="--c:#FF9F43"><span class="ico">⚡</span>
       <span><b>Lecture flash</b><small id="a-sub-flash"></small></span></button>
+    <button class="module" data-module="anglais" style="--c:#B38CFF"><span class="ico">🇬🇧</span>
+      <span><b>Anglais</b><small id="a-sub-anglais"></small></span></button>
   </div>
   <button class="bouton" id="a-progres">Mes progrès</button>
   <button class="lien" id="a-parents">Espace parents</button>
@@ -457,7 +551,7 @@ input.champ{font-family:var(--police);font-size:1.1rem;font-weight:700;padding:1
 <section class="ecran" id="s-progres" hidden>
   <div class="barre-haut"><button class="bouton second petit" data-retour>Retour</button><span class="titre" id="p-titre">Mes progrès</span></div>
   <div class="onglets" id="p-onglets">
-    <button data-o="tables">Tables</button><button data-o="arbre">Arbre</button><button data-o="fractions">Fractions</button><button data-o="lecture">Lecture</button>
+    <button data-o="tables">Tables</button><button data-o="arbre">Arbre</button><button data-o="fractions">Fractions</button><button data-o="lecture">Lecture</button><button data-o="anglais">Anglais</button>
   </div>
   <div class="pile" id="p-contenu"></div>
 </section>
@@ -507,12 +601,14 @@ input.champ{font-family:var(--police);font-size:1.1rem;font-weight:700;padding:1
   </div>
   <div class="carte">
     <h2>Mission du jour</h2>
-    <p class="legende">Quand c'est activé, l'arbre à calculs ne s'ouvre qu'après une séance terminée de tables, de fractions, de lecture à voix haute et de lecture flash dans la journée.</p>
+    <p class="legende">Quand c'est activé, l'arbre à calculs ne s'ouvre qu'après une séance réussie de chaque étape choisie ci-dessous, dans la journée.</p>
     <div class="segments" id="pa-verrou"><button data-v="oui">Activée</button><button data-v="non">Désactivée</button></div>
+    <div><span class="etiq">Étapes de la mission</span><div class="chips" id="pa-etapes"></div></div>
     <p class="legende">Réussite minimale pour valider chaque étape :</p>
     <div><span class="etiq">Tables : réponses justes</span><div class="segments" data-seuil="tables"><button data-v="50">50 %</button><button data-v="60">60 %</button><button data-v="70">70 %</button><button data-v="80">80 %</button><button data-v="90">90 %</button></div></div>
     <div><span class="etiq">Fractions : justes du premier coup</span><div class="segments" data-seuil="fractions"><button data-v="50">50 %</button><button data-v="60">60 %</button><button data-v="70">70 %</button><button data-v="80">80 %</button></div></div>
     <div><span class="etiq">Lecture flash : mots lus</span><div class="segments" data-seuil="flash"><button data-v="50">50 %</button><button data-v="60">60 %</button><button data-v="70">70 %</button><button data-v="80">80 %</button></div></div>
+    <div><span class="etiq">Anglais : bonnes réponses</span><div class="segments" data-seuil="anglais"><button data-v="50">50 %</button><button data-v="60">60 %</button><button data-v="70">70 %</button><button data-v="80">80 %</button></div></div>
     <div><span class="etiq">Lecture chronométrée : part de sa moyenne récente</span><div class="segments" data-seuil="lecture"><button data-v="75">75 %</button><button data-v="80">80 %</button><button data-v="85">85 %</button><button data-v="90">90 %</button><button data-v="100">100 %</button></div></div>
     <p class="legende">La moyenne récente est celle de ses 5 dernières lectures chronométrées. Tant qu'il y en a moins de 2, la lecture est validée d'office. La lecture guidée est validée sauf si tu indiques que le guide allait trop vite.</p>
   </div>
@@ -522,6 +618,7 @@ input.champ{font-family:var(--police);font-size:1.1rem;font-weight:700;padding:1
     <div><span class="etiq">Arbre à calculs</span><div class="segments" id="pa-niv-arbre"></div></div>
     <div><span class="etiq">Fractions</span><div class="segments" id="pa-niv-fractions"></div></div>
     <div><span class="etiq">Lecture flash</span><div class="segments" id="pa-niv-flash"></div></div>
+    <div><span class="etiq">Anglais</span><div class="segments" id="pa-niv-anglais"></div></div>
   </div>
   <div class="carte">
     <h2>Effacer un historique</h2>
@@ -532,6 +629,7 @@ input.champ{font-family:var(--police);font-size:1.1rem;font-weight:700;padding:1
       <button class="bouton second petit" data-eff="tables">Tables de multiplication</button>
       <button class="bouton second petit" data-eff="arbre">Arbre à calculs</button>
       <button class="bouton second petit" data-eff="fractions">Fractions</button>
+      <button class="bouton second petit" data-eff="anglais">Anglais</button>
     </div>
     <p class="retour ok" id="pa-eff-msg" aria-live="polite"></p>
   </div>
@@ -572,17 +670,32 @@ function vide(na, nf){
   return { tables:{ seances:[], limite:20, longueur:'10', choix:[2,3,5] },
            arbre:{ niveau:na, seances:[] }, fractions:{ niveau:nf, seances:[] }, lecture:{ seances:[] } };
 }
-function base(){
-  return { email:'', profils:[
-    { id:'julia',  nom:'Julia',  classe:'CM1', avatar:'🦊', couleur:'#3FC1A0' },
-    { id:'louise', nom:'Louise', classe:'CE2', avatar:'🐼', couleur:'#F0567F' } ],
-    donnees:{ julia:vide(3,2), louise:vide(1,1) } };
-}
+function base(){ return { email:'', profils:[], donnees:{} }; }
+var CLASSES = ['GS','CP','CE1','CE2','CM1','CM2'];
+var MODULES_CLASSE = {
+  GS:['anglais'], CP:['flash','anglais'],
+  CE1:['tables','arbre','fractions','lecture','flash','anglais'],
+  CE2:['tables','arbre','fractions','lecture','flash','anglais'], CM1:['tables','arbre','fractions','lecture','flash','anglais'], CM2:['tables','arbre','fractions','lecture','flash','anglais']
+};
+function modulesClasse(c){ return MODULES_CLASSE[c] || MODULES_CLASSE.CE2; }
+var NIV_DEF = { arbre:{ CE1:1, CE2:1, CM1:3, CM2:4 }, fractions:{ CE1:1, CE2:1, CM1:2, CM2:3 }, flash:{ CP:1, CE1:1, CE2:1, CM1:2, CM2:3 }, anglais:{ GS:1, CP:1, CE1:2, CE2:3, CM1:4, CM2:4 } };
+function nivDef(m, c){ return NIV_DEF[m][c] || 1; }
+var ANIMAUX = ['🦛','🐶','🐱','🐰','🐼','🦊','🐨','🐯','🦁','🐵','🐘','🐬','🐢','🦄','🐸','🦉'];
+var COULEURS_PROFIL = ['#3FC1A0','#F0567F','#6CA8FF','#FFC94A','#B38CFF','#FF9F43'];
 var DB;
 try { var brut = localStorage.getItem(CLE); DB = brut ? JSON.parse(brut) : base(); }
 catch(e){ stockOK = false; DB = base(); }
 function aujourdhui(){ var d = new Date(); return d.getFullYear() + '-' + String(d.getMonth()+1).padStart(2,'0') + '-' + String(d.getDate()).padStart(2,'0'); }
-var ACTIVITES = [ {k:'tables', nom:'Tables'}, {k:'fractions', nom:'Fractions'}, {k:'lecture', nom:'Lecture à voix haute'}, {k:'flash', nom:'Lecture flash'} ];
+var TOUTES_ACT = [ {k:'tables', nom:'Tables'}, {k:'fractions', nom:'Fractions'}, {k:'lecture', nom:'Lecture à voix haute'}, {k:'flash', nom:'Lecture flash'}, {k:'anglais', nom:'Anglais'} ];
+var ACT_DEFAUT = ['tables','fractions','lecture','flash'];
+var ACTIVITES = TOUTES_ACT.filter(function(a){ return ACT_DEFAUT.indexOf(a.k) >= 0; });
+function classeDe(d){ var p = DB.profils.filter(function(x){ return DB.donnees[x.id] === d; })[0]; return p ? p.classe : 'CE2'; }
+function activitesDe(d){
+  var dispo = modulesClasse(classeDe(d)), choix = d.missionActs || ACT_DEFAUT;
+  return TOUTES_ACT.filter(function(a){ return dispo.indexOf(a.k) >= 0 && choix.indexOf(a.k) >= 0; });
+}
+function missionActiveDe(d){ return d.verrouArbre !== false && modulesClasse(classeDe(d)).indexOf('arbre') >= 0 && activitesDe(d).length > 0; }
+function missionActive(){ return missionActiveDe(D()); }
 function missionDe(d){
   if (!d.mission) d.mission = { jour:null, faits:{}, jours:[], totalAncien:0 };
   var m = d.mission;
@@ -598,20 +711,21 @@ function missionDe(d){
 function totalMissions(m){ return (m.totalAncien || 0) + (m.jours || []).length; }
 function retirerJour(m){ var i = m.jours.indexOf(aujourdhui()); if (i >= 0) m.jours.splice(i, 1); }
 function mission(){ return missionDe(D()); }
-function nbFaits(m){ return ACTIVITES.filter(function(a){ return m.faits[a.k]; }).length; }
-function missionFaite(){ return nbFaits(mission()) === ACTIVITES.length; }
+function nbFaitsDe(d){ var m = missionDe(d); return activitesDe(d).filter(function(a){ return m.faits[a.k]; }).length; }
+function nbFaits(){ return nbFaitsDe(D()); }
+function missionFaite(){ return nbFaits() === activitesDe(D()).length; }
 function marquer(k){
   var m = mission(); if (m.faits[k]) return;
   m.faits[k] = true;
   if (missionFaite()){ if (m.jours.indexOf(aujourdhui()) < 0) m.jours.push(aujourdhui()); m.aFeter = true; }
   sauver();
 }
-var SEUILS_DEF = { tables:70, fractions:60, flash:70, lecture:85 };
+var SEUILS_DEF = { tables:70, fractions:60, flash:70, lecture:85, anglais:70 };
 function seuil(k){ var s = D().seuils || {}; return s[k] != null ? s[k] : SEUILS_DEF[k]; }
 var messageEtape = null;
 /* tente de valider une étape ; renvoie true si validée. Le message d'échec s'affiche au bilan. */
 function tenterEtape(k, ok, echec){
-  if (D().verrouArbre === false || mission().faits[k]) return ok;
+  if (!missionActive() || mission().faits[k] || activitesDe(D()).every(function(a){ return a.k !== k; })) return ok;
   if (ok) marquer(k); else messageEtape = echec + ' Tu peux refaire une séance pour valider l\u2019étape.';
   return ok;
 }
@@ -620,18 +734,19 @@ function moyenneLecture(){
   if (S.length < 2) return null;
   return S.reduce(function(a,s){ return a + s.mclm; }, 0) / S.length;
 }
-function arbreVerrouille(){ return D().verrouArbre !== false && !missionFaite(); }
+function arbreVerrouille(){ return missionActive() && !missionFaite(); }
 function texteMission(){
-  var m = mission(), n = nbFaits(m);
-  if (D().verrouArbre === false) return '';
-  if (n === ACTIVITES.length) return 'Mission du jour accomplie : l\u2019arbre à calculs est débloqué !';
-  return 'Mission du jour : ' + n + ' sur ' + ACTIVITES.length + '. Encore ' + ACTIVITES.filter(function(a){ return !m.faits[a.k]; }).map(function(a){ return a.nom.toLowerCase(); }).join(', ') + ' pour débloquer l\u2019arbre à calculs.';
+  if (!missionActive()) return '';
+  var m = mission(), acts = activitesDe(D()), n = nbFaits();
+  if (n === acts.length) return 'Mission du jour accomplie : l\u2019arbre à calculs est débloqué !';
+  return 'Mission du jour : ' + n + ' sur ' + acts.length + '. Encore ' + acts.filter(function(a){ return !m.faits[a.k]; }).map(function(a){ return a.nom.toLowerCase(); }).join(', ') + ' pour débloquer l\u2019arbre à calculs.';
 }
 function completer(d, classe){
   if (!d.lecture) d.lecture = { seances:[] };
   var L = d.lecture;
   if (!L.guidees) L.guidees = []; if (L.groupes == null) L.groupes = false; if (!L.mode) L.mode = 'chrono'; if (L.vitesseGuidee === undefined) L.vitesseGuidee = null;
-  if (!d.flash) d.flash = { niveau: classe === 'CM1' ? 2 : 1, ms:1300, seances:[] };
+  if (!d.flash) d.flash = { niveau: nivDef('flash', classe), ms:1300, seances:[] };
+  if (!d.anglais) d.anglais = { niveau: nivDef('anglais', classe), seances:[] };
 }
 DB.profils.forEach(function(p){ if (!DB.donnees[p.id]) DB.donnees[p.id] = vide(1,1); completer(DB.donnees[p.id], p.classe); });
 function sauver(){ try { localStorage.setItem(CLE, JSON.stringify(DB)); } catch(e){ stockOK = false; $('alerte-stock').hidden = false; } planifierSynchro(); }
@@ -640,10 +755,11 @@ if (!stockOK) $('alerte-stock').hidden = false;
 var P = null;
 function prof(){ return DB.profils.filter(function(p){ return p.id===P; })[0]; }
 function D(){ return DB.donnees[P]; }
-var AVATARS = ['🦊','🐼','🦄','🐱','🐶','🐸','🦉','🐰','🐯','🐨','🐙','🦋'];
+
 
 /* ================= profils & accueil ================= */
 function dessinerProfils(){
+  $('pr-vide').hidden = DB.profils.length > 0;
   $('liste-profils').innerHTML = DB.profils.map(function(p){
     return '<button class="profil" data-p="'+p.id+'" style="border-color:'+p.couleur+'"><span class="ava">'+p.avatar+
       '</span><b>'+esc(p.nom)+'</b><small>'+p.classe+(p.code ? ' · 🔒' : '')+'</small></button>';
@@ -667,9 +783,12 @@ function ouvrirAccueil(){
   $('a-sub-arbre').textContent = 'Niveau ' + D().arbre.niveau + ' : ' + ARBRE_NIV[D().arbre.niveau].nom;
   $('a-sub-flash').textContent = 'Niveau ' + D().flash.niveau + ' : ' + FLASH[D().flash.niveau].nom + ', avec un adulte';
   $('a-sub-fractions').textContent = 'Niveau ' + D().fractions.niveau + ' : ' + FRAC_NIV[D().fractions.niveau].nom;
-  var m = mission(), verrou = D().verrouArbre !== false;
+  $('a-sub-anglais').textContent = 'Niveau ' + D().anglais.niveau + ' : ' + ANGLAIS_NIV[D().anglais.niveau].nom;
+  var dispo = modulesClasse(p.classe);
+  document.querySelectorAll('#s-accueil [data-module]').forEach(function(b){ b.hidden = dispo.indexOf(b.dataset.module) < 0; });
+  var m = mission(), verrou = missionActive();
   $('a-mission').hidden = !verrou;
-  $('a-etapes').innerHTML = ACTIVITES.map(function(a){ return '<span class="etape' + (m.faits[a.k] ? ' fait' : '') + '">' + (m.faits[a.k] ? '✓ ' : '○ ') + a.nom + '</span>'; }).join('');
+  $('a-etapes').innerHTML = activitesDe(D()).map(function(a){ return '<span class="etape' + (m.faits[a.k] ? ' fait' : '') + '">' + (m.faits[a.k] ? '✓ ' : '○ ') + a.nom + '</span>'; }).join('');
   var tm = totalMissions(m);
   $('a-etoiles').textContent = '🌟 ' + tm + ' mission' + (tm > 1 ? 's' : '') + ' réussie' + (tm > 1 ? 's' : '');
   $('a-mission-leg').textContent = missionFaite() ? 'Bravo, tout est fait ! L\u2019arbre à calculs est à toi.' : 'Fais un exercice de chaque pour débloquer l\u2019arbre à calculs.';
@@ -681,10 +800,16 @@ function ouvrirAccueil(){
   montrer('s-accueil');
 }
 $('a-changer').addEventListener('click', function(){ dessinerProfils(); montrer('s-profils'); });
-$('a-ava').addEventListener('click', function(){
-  var p = prof(); var i = AVATARS.indexOf(p.avatar);
-  p.avatar = AVATARS[(i+1) % AVATARS.length]; sauver(); $('a-ava').textContent = p.avatar;
+function grilleAnimaux(el, actuel){
+  el.innerHTML = ANIMAUX.map(function(a){ return '<button data-a="' + a + '" aria-pressed="' + (a === actuel) + '">' + a + '</button>'; }).join('');
+}
+$('a-ava').addEventListener('click', function(){ grilleAnimaux($('ca-grille'), prof().avatar); $('choix-animal').hidden = false; });
+$('ca-grille').addEventListener('click', function(e){
+  var b = e.target.closest('[data-a]'); if (!b) return;
+  prof().avatar = b.dataset.a; sauver(); $('a-ava').textContent = b.dataset.a; $('choix-animal').hidden = true;
 });
+$('ca-fermer').addEventListener('click', function(){ $('choix-animal').hidden = true; });
+$('choix-animal').addEventListener('click', function(e){ if (e.target === $('choix-animal')) $('choix-animal').hidden = true; });
 document.querySelectorAll('[data-module]').forEach(function(b){
   b.addEventListener('click', function(){
     var m = b.dataset.module;
@@ -698,11 +823,12 @@ document.querySelectorAll('[data-module]').forEach(function(b){
       arbreLancer(null);
     }
     else if (m==='lecture') ouvrirTextes(null);
+    else if (m==='anglais') ouvrirAnglais();
     else if (m==='flash') flashLancer(null);
     else fractionsLancer();
   });
 });
-$('a-progres').addEventListener('click', function(){ ouvrirProgres('tables'); });
+$('a-progres').addEventListener('click', function(){ ouvrirProgres(null); });
 $('a-parents').addEventListener('click', function(){ exigerCode(ouvrirParents, ouvrirAccueil); });
 var origine = 'enfant';
 function retourner(){ if (origine === 'parents') ouvrirVueParents(); else ouvrirAccueil(); }
@@ -775,10 +901,12 @@ function ouvrirVueParents(){
   origine = 'parents';
   document.documentElement.style.setProperty('--accent', 'var(--menthe)');
   $('vp-contenu').innerHTML = DB.profils.map(function(p){
-    var d = DB.donnees[p.id], m = missionDe(d), L = [];
-    var n = nbFaits(m);
-    L.push('<li>Mission du jour : ' + n + ' / ' + ACTIVITES.length + (d.verrouArbre === false ? ' (désactivée)' : '') + '<small>' +
-      ACTIVITES.map(function(a){ return (m.faits[a.k] ? '✓ ' : '○ ') + a.nom; }).join(' · ') + ' · 🌟 ' + totalMissions(m) + ' au total</small></li>');
+    var d = DB.donnees[p.id], m = missionDe(d), L = [], acts = activitesDe(d), dispo = modulesClasse(p.classe);
+    var n = nbFaitsDe(d);
+    if (missionActiveDe(d)) L.push('<li>Mission du jour : ' + n + ' / ' + acts.length + '<small>' +
+      acts.map(function(a){ return (m.faits[a.k] ? '✓ ' : '○ ') + a.nom; }).join(' · ') + ' · 🌟 ' + totalMissions(m) + ' au total</small></li>');
+    var an = derniere(d.anglais.seances);
+    if (dispo.indexOf('anglais') >= 0) L.push('<li>Anglais : niveau ' + d.anglais.niveau + '<small>' + (an ? dateCourte(an.date) + ' : ' + an.items.filter(function(x){ return x.ok; }).length + ' / ' + an.items.length + ' justes' : 'aucune séance') + '</small></li>');
     var t = derniere(d.tables.seances);
     L.push('<li>Tables<small>' + (t ? dateCourte(t.date) + ' : tables ' + t.tables.join(', ') + ', ' + pct(t.points, t.maxi) + '% des points, ' + t.fautes + ' erreur' + (t.fautes>1?'s':'') : 'aucune séance') + '</small></li>');
     var a = derniere(d.arbre.seances);
@@ -793,7 +921,9 @@ function ouvrirVueParents(){
     L.push('<li>Lecture flash : niveau ' + d.flash.niveau + '<small>' + (fl2 ? dateCourte(fl2.date) + ' : ' + fl2.items.filter(function(x){ return x.ok; }).length + ' / ' + fl2.items.length + ' mots, affichage ' + secondes(d.flash.ms) : 'aucune séance') + '</small></li>');
     var E = d.lecture.enigmes || [];
     if (E.length) L.push('<li>Énigmes<small>' + E.filter(function(x){ return x.ok; }).length + ' résolue(s) sur ' + E.length + '</small></li>');
-    return '<div class="carte p-profil" style="border-color:' + p.couleur + '"><h2 style="color:' + p.couleur + '">' + p.avatar + ' ' + esc(p.nom) + ' <small style="color:var(--pale)">' + p.classe + '</small></h2><ul>' + L.join('') + '</ul>' +
+    L = L.filter(function(li){ return !/^<li>(Tables|Arbre|Fractions|Lecture chrono|Lecture guidée|Énigmes)/.test(li) || dispo.indexOf(/^<li>Tables/.test(li) ? 'tables' : /^<li>Arbre/.test(li) ? 'arbre' : /^<li>Fractions/.test(li) ? 'fractions' : 'lecture') >= 0; })
+      .filter(function(li){ return !/^<li>Lecture flash/.test(li) || dispo.indexOf('flash') >= 0; });
+    return '<div class="carte p-profil" style="border-color:' + p.couleur + '"><h2 style="color:' + p.couleur + '">' + p.avatar + ' ' + esc(p.nom) + ' <small style="color:var(--pale)">' + p.classe + '</small> <button class="bouton second petit" data-modif="' + p.id + '" style="margin-left:auto">Modifier</button></h2><ul>' + L.join('') + '</ul>' +
       '<div class="ligne" style="justify-content:space-between"><span>Code de connexion : <b data-code="' + p.id + '">' + (p.code ? '••••' : 'aucun') + '</b></span>' +
         (p.code ? '<button class="bouton second petit" data-voir="' + p.id + '">Afficher</button>' : '') +
         '<button class="bouton second petit" data-chg="' + p.id + '">' + (p.code ? 'Changer' : 'Créer un code') + '</button>' +
@@ -812,10 +942,12 @@ $('vp-contenu').addEventListener('click', function(e){
     afficherCode(); montrer('s-code'); return; }
   var sc = e.target.closest('[data-supcode]');
   if (sc){ confirmer(sc, 'Sûr ?', function(){ delete pid(sc.dataset.supcode).code; sauver(); ouvrirVueParents(); }); return; }
+  var md = e.target.closest('[data-modif]');
+  if (md){ ouvrirFicheEnfant(md.dataset.modif, ouvrirVueParents); return; }
   var b = e.target.closest('[data-suivi],[data-regl]'); if (!b) return;
   P = b.dataset.suivi || b.dataset.regl;
   document.documentElement.style.setProperty('--accent', prof().couleur);
-  if (b.dataset.suivi) ouvrirProgres('tables'); else ouvrirParents();
+  if (b.dataset.suivi) ouvrirProgres(null); else ouvrirParents();
 });
 
 /* ================= clavier numérique partagé ================= */
@@ -1131,7 +1263,7 @@ function arbreFin(){
   var mot = !items.length ? 'Aucun calcul fait cette fois.'
     : justes === items.length ? 'Sans faute !' : justes >= items.length*0.7 ? 'Très bien, encore un petit effort.' : 'On continue à s\u2019entraîner, ça va venir.';
   if (!jeu.rejeu && jeu.niveau !== jeu.niveauDepart)
-    mot += jeu.niveau > jeu.niveauDepart ? ' Tu es montée au niveau ' + jeu.niveau + '.' : ' Tu reprends au niveau ' + jeu.niveau + ' la prochaine fois.';
+    mot += jeu.niveau > jeu.niveauDepart ? ' Nouveau niveau atteint : ' + jeu.niveau + '.' : ' Tu reprends au niveau ' + jeu.niveau + ' la prochaine fois.';
   var liste = fautes.map(function(x){
     return '<li class="faute">' + x.n.map(fmt).join(' + ') + ' = ' + fmt(somme(x.n)) +
       '<small>Tu avais écrit ' + fmt(x.rep) + ' : ' + ERR_ARBRE[x.err].toLowerCase() + '</small></li>';
@@ -1357,7 +1489,7 @@ function fracFin(){
   var mot = !items.length ? 'Aucun exercice fait cette fois.'
     : justes === items.length ? 'Sans faute !' : justes >= items.length*0.7 ? 'Très bien, encore un petit effort.' : 'On continue, les fractions vont venir.';
   if (items.length && jeu.niveau !== jeu.niveauDepart)
-    mot += jeu.niveau > jeu.niveauDepart ? ' Tu es montée au niveau ' + jeu.niveau + '.' : ' Tu reprends au niveau ' + jeu.niveau + ' la prochaine fois.';
+    mot += jeu.niveau > jeu.niveauDepart ? ' Nouveau niveau atteint : ' + jeu.niveau + '.' : ' Tu reprends au niveau ' + jeu.niveau + ' la prochaine fois.';
   var liste = items.filter(function(x){ return !x.ok; }).map(function(x){
     if (x.type === 'paires') return '<li class="faute">Jeu des paires<small>' + x.fautes + ' erreur' + (x.fautes>1?'s':'') + '</small></li>';
     return '<li class="faute">' + fracHTML(x.n,x.d,'1.1rem') + ' <small>' + ERR_FRAC[x.err] + '</small></li>';
@@ -1400,12 +1532,15 @@ function carte(titre, corps, legende){ return '<div class="carte"><h2>'+titre+'<
 var ongletProgres = 'tables';
 function ouvrirProgres(o){
   ongletProgres = o || ongletProgres;
+  var dispoP = modulesClasse(prof().classe).map(function(k){ return k === 'flash' ? 'lecture' : k; });
+  $('p-onglets').querySelectorAll('button').forEach(function(b){ b.hidden = dispoP.indexOf(b.dataset.o) < 0; });
+  if (dispoP.indexOf(ongletProgres) < 0) ongletProgres = dispoP[0];
   $('p-titre').textContent = 'Les progrès de ' + prof().nom;
   $('p-onglets').querySelectorAll('button').forEach(function(b){ b.setAttribute('aria-pressed', b.dataset.o === ongletProgres); });
   var y = ecranCourant === 's-progres' && garderScroll ? window.scrollY : 0; garderScroll = false;
   var hist = peutEffacer() ? (ongletProgres === 'lecture' ? histoire('lecture') + histoire('guidees') + histoire('enigmes') + histoire('flash') : histoire(ongletProgres)) : '';
   $('p-contenu').innerHTML = (ongletProgres === 'tables' ? progresTables() : ongletProgres === 'arbre' ? progresArbre()
-    : ongletProgres === 'lecture' ? progresLecture() : progresFractions()) + hist;
+    : ongletProgres === 'lecture' ? progresLecture() : ongletProgres === 'anglais' ? progresAnglais() : progresFractions()) + hist;
   montrer('s-progres');
   if (y) window.scrollTo(0, y);
 }
@@ -1429,6 +1564,8 @@ var HIST = {
               txt:function(s){ return esc(s.titre) + '<small>' + s.vitesse + ' mots/min' + (s.groupes ? ', en groupes' : '') + ', avis : ' + esc(String(s.avis).toLowerCase()) + '</small>'; } },
   enigmes:  { titre:'Énigmes', liste:function(){ return D().lecture.enigmes || []; }, mission:null,
               txt:function(s){ return esc(s.titre) + '<small>' + (s.ok ? 'résolue' : 'non résolue') + ', ' + s.essais + ' essai' + (s.essais>1?'s':'') + '</small>'; } },
+  anglais:  { titre:'Séances d\u2019anglais', liste:function(){ return D().anglais.seances; }, mission:'anglais',
+              txt:function(s){ return 'Niveau ' + s.niveauDepart + (s.niveauFin !== s.niveauDepart ? ' → ' + s.niveauFin : '') + '<small>' + nbJustes(s) + ' / ' + s.items.length + ' justes</small>'; } },
   flash:    { titre:'Séances de lecture flash', liste:function(){ return D().flash.seances; }, mission:'flash',
               txt:function(s){ return (s.rejeu ? 'Mots ratés refaits' : 'Niveau ' + s.niveauDepart + (s.niveauFin !== s.niveauDepart ? ' → ' + s.niveauFin : '')) + '<small>' + nbJustes(s) + ' / ' + s.items.length + ' mots lus</small>'; } }
 };
@@ -1452,7 +1589,7 @@ $('p-contenu').addEventListener('click', function(e){
   var b = e.target.closest('[data-del]'); if (!b) return;
   confirmer(b, 'Supprimer ?', function(){ supprimerSeance(b.dataset.del); });
 });
-var CHEMIN_HIST = { tables:'tables.seances', arbre:'arbre.seances', fractions:'fractions.seances', lecture:'lecture.seances', guidees:'lecture.guidees', enigmes:'lecture.enigmes', flash:'flash.seances' };
+var CHEMIN_HIST = { anglais:'anglais.seances', tables:'tables.seances', arbre:'arbre.seances', fractions:'fractions.seances', lecture:'lecture.seances', guidees:'lecture.guidees', enigmes:'lecture.enigmes', flash:'flash.seances' };
 function enterrer(d, chemin, liste){ d.supprimes = d.supprimes || {}; (liste || []).forEach(function(s){ d.supprimes[fusIdSeance(chemin, s)] = Date.now(); }); }
 function supprimerSeance(ref){
   var parts = ref.split(':'), k = parts[0], i = +parts[1], H = HIST[k], L = H.liste(), s = L[i];
@@ -1584,6 +1721,9 @@ function ouvrirParents(){
   $('pa-niv-fractions').innerHTML = Object.keys(FRAC_NIV).map(function(k){ return '<button data-v="'+k+'" aria-pressed="'+(+k===D().fractions.niveau)+'">'+k+'</button>'; }).join('');
   majSegments('pa-verrou', D().verrouArbre === false ? 'non' : 'oui');
   document.querySelectorAll('[data-seuil]').forEach(function(z){ z.querySelectorAll('button').forEach(function(b){ b.setAttribute('aria-pressed', +b.dataset.v === seuil(z.dataset.seuil)); }); });
+  $('pa-niv-anglais').innerHTML = Object.keys(ANGLAIS_NIV).map(function(k){ return '<button data-v="'+k+'" aria-pressed="'+(+k===D().anglais.niveau)+'">'+k+'</button>'; }).join('');
+  var dispoM = modulesClasse(prof().classe), choixM = D().missionActs || ACT_DEFAUT;
+  $('pa-etapes').innerHTML = TOUTES_ACT.filter(function(a){ return dispoM.indexOf(a.k) >= 0; }).map(function(a){ return '<button data-k="' + a.k + '" aria-pressed="' + (choixM.indexOf(a.k) >= 0) + '">' + a.nom + '</button>'; }).join('');
   $('pa-niv-flash').innerHTML = Object.keys(FLASH).map(function(k){ return '<button data-v="'+k+'" aria-pressed="'+(+k===D().flash.niveau)+'">'+k+'</button>'; }).join('');
   montrer('s-parents');
 }
@@ -1593,6 +1733,13 @@ document.querySelectorAll('[data-seuil]').forEach(function(z){
     z.querySelectorAll('button').forEach(function(x){ x.setAttribute('aria-pressed', x === b); }); });
 });
 $('pa-verrou').addEventListener('click', function(e){ var b = e.target.closest('button'); if (!b) return; D().verrouArbre = b.dataset.v === 'oui'; sauver(); majSegments('pa-verrou', b.dataset.v); });
+$('pa-niv-anglais').addEventListener('click', function(e){ var b = e.target.closest('button'); if (!b) return; D().anglais.niveau = +b.dataset.v; sauver(); majSegments('pa-niv-anglais', b.dataset.v); });
+$('pa-etapes').addEventListener('click', function(e){
+  var b = e.target.closest('[data-k]'); if (!b) return;
+  var choix = (D().missionActs || ACT_DEFAUT).slice(), i = choix.indexOf(b.dataset.k);
+  if (i >= 0) choix.splice(i, 1); else choix.push(b.dataset.k);
+  D().missionActs = choix; sauver(); b.setAttribute('aria-pressed', i < 0);
+});
 $('pa-niv-flash').addEventListener('click', function(e){ var b = e.target.closest('button'); if (!b) return; D().flash.niveau = +b.dataset.v; D().flash.ms = 1200; sauver(); majSegments('pa-niv-flash', b.dataset.v); });
 $('pa-niv-arbre').addEventListener('click', function(e){ var b = e.target.closest('button'); if (!b) return; D().arbre.niveau = +b.dataset.v; sauver(); majSegments('pa-niv-arbre', b.dataset.v); });
 $('pa-niv-fractions').addEventListener('click', function(e){ var b = e.target.closest('button'); if (!b) return; D().fractions.niveau = +b.dataset.v; sauver(); majSegments('pa-niv-fractions', b.dataset.v); });
@@ -1650,6 +1797,17 @@ function texteBilan(){
     L.push('Lecture guidée : ' + d.lecture.guidees.length + ' séance(s), dernière à ' + gl.vitesse + ' mots/min (avis : ' + gl.avis.toLowerCase() + '). Prochaine à ' + (d.lecture.vitesseGuidee || gl.vitesse) + ' mots/min.');
   }
   L.push('');
+  L.push('ANGLAIS');
+  L.push('Niveau actuel : ' + d.anglais.niveau + ' (' + ANGLAIS_NIV[d.anglais.niveau].nom + ')');
+  var san = d.anglais.seances;
+  if (san.length){
+    var sa2 = san[san.length-1];
+    L.push('Dernière séance (' + dateCourte(sa2.date) + ') : ' + sa2.items.filter(function(x){ return x.ok; }).length + '/' + sa2.items.length + ' justes.');
+    var ra = {}; san.forEach(function(s){ s.items.forEach(function(x){ if (!x.ok) ra[x.en] = (ra[x.en]||0) + 1; }); });
+    var rka = Object.keys(ra).sort(function(a,b){ return ra[b]-ra[a]; }).slice(0,12);
+    if (rka.length) L.push('Mots à revoir : ' + rka.join(', '));
+  }
+  L.push('');
   L.push('LECTURE FLASH');
   L.push('Niveau actuel : ' + d.flash.niveau + ' (' + FLASH[d.flash.niveau].nom + '), temps d’affichage ' + secondes(d.flash.ms));
   if (d.flash.seances.length){
@@ -1674,6 +1832,8 @@ $('pa-csv').addEventListener('click', function(){
   d.lecture.seances.forEach(function(s){ L.push([new Date(s.date).toLocaleString('fr-FR'), '"'+s.titre+'"', s.classe, String(s.temps).replace('.',','), s.mots, s.erreurs, s.mclm, s.prosodie ? PROSO[s.prosodie-1].nom : '', '"'+s.rates.join(', ')+'"'].join(';')); });
   L.push(''); L.push('LECTURE GUIDEE'); L.push('date;texte;vitesse_mots_min;groupes;avis');
   d.lecture.guidees.forEach(function(s){ L.push([new Date(s.date).toLocaleString('fr-FR'), '"'+s.titre+'"', s.vitesse, s.groupes?'oui':'non', s.avis].join(';')); });
+  L.push(''); L.push('ANGLAIS'); L.push('date;niveau;exercice;theme;mot;juste;choisi');
+  d.anglais.seances.forEach(function(s){ s.items.forEach(function(x){ L.push([new Date(s.date).toLocaleString('fr-FR'), x.niv, x.type, x.t, '"'+x.en+'"', x.ok?'oui':'non', x.choisi ? '"'+x.choisi+'"' : ''].join(';')); }); });
   L.push(''); L.push('LECTURE FLASH'); L.push('date;niveau;mot;affichage_ms;lu');
   d.flash.seances.forEach(function(s){ s.items.forEach(function(x){ L.push([new Date(s.date).toLocaleString('fr-FR'), s.niveauDepart, '"'+x.mot+'"', x.ms, x.ok?'oui':'non'].join(';')); }); });
   var blob = new Blob(['\ufeff' + L.join('\n')], { type:'text/csv;charset=utf-8' });
@@ -1682,7 +1842,7 @@ $('pa-csv').addEventListener('click', function(){
   document.body.appendChild(a); a.click(); document.body.removeChild(a);
   setTimeout(function(){ URL.revokeObjectURL(a.href); }, 2000);
 });
-var NOMS_EFF = { lecture:'de lecture à voix haute', flash:'de lecture flash', tables:'des tables', arbre:'de l\u2019arbre à calculs', fractions:'des fractions' };
+var NOMS_EFF = { anglais:'des séances d\u2019anglais', lecture:'de lecture à voix haute', flash:'de lecture flash', tables:'des tables', arbre:'de l\u2019arbre à calculs', fractions:'des fractions' };
 $('pa-eff-modules').addEventListener('click', function(e){
   var b = e.target.closest('[data-eff]'); if (!b) return;
   var k = b.dataset.eff, d = D();
@@ -1697,7 +1857,7 @@ $('pa-eff-modules').addEventListener('click', function(e){
   $('pa-eff-msg').textContent = 'Historique ' + NOMS_EFF[k] + ' de ' + prof().nom + ' effacé.';
   });
 });
-$('pa-seances').addEventListener('click', function(){ gestion = true; ouvrirProgres('tables'); });
+$('pa-seances').addEventListener('click', function(){ gestion = true; ouvrirProgres(null); });
 /* sauvegarde complète JSON */
 $('pa-json').addEventListener('click', function(){
   var blob = new Blob([JSON.stringify({ app:'ecole-maison', version:1, date:new Date().toISOString(), donnees:DB }, null, 1)], { type:'application/json' });
@@ -1796,7 +1956,7 @@ function seancesTexte(id){ return D().lecture.seances.filter(function(s){ return
 
 var classeTextes = 'CE2';
 function ouvrirTextes(c){
-  classeTextes = c || (prof().classe === 'CM1' ? 'CM1' : 'CE2');
+  classeTextes = c || (/CM/.test(prof().classe) ? 'CM1' : 'CE2');
   $('l-classes').querySelectorAll('button').forEach(function(b){ b.setAttribute('aria-pressed', b.dataset.c === classeTextes); });
   var L = D().lecture;
   majSegments('l-mode', L.mode); majSegments('l-groupes', L.groupes ? 'oui' : 'non');
@@ -1819,7 +1979,7 @@ function vitesseGuidee(){
   var L = D().lecture;
   if (L.vitesseGuidee) return L.vitesseGuidee;
   if (L.seances.length) return borneV(L.seances[L.seances.length-1].mclm * 1.1);
-  return prof().classe === 'CM1' ? 80 : 60;
+  return /CM/.test(prof().classe) ? 80 : 60;
 }
 function majVitesse(){
   var L = D().lecture, v = vitesseGuidee();
@@ -1907,7 +2067,7 @@ $('l-demarrer').addEventListener('click', function(){
   initAudio();
   var l = lec, n = 3;
   $('l-demarrer').hidden = true;
-  $('l-consigne').textContent = 'Prête ? Le texte apparaît dans…';
+  $('l-consigne').textContent = 'Attention, le texte apparaît dans…';
   $('l-compte').hidden = false; $('l-compte').textContent = n;
   var y = $('l-compte').getBoundingClientRect().top + window.scrollY - 12;
   window.scrollTo(0, Math.max(0, y));
@@ -2206,7 +2366,7 @@ function flashLancer(liste){
   $('fl-titre').innerHTML = 'Lecture flash <span class="badge">niveau ' + F.niveau + '</span>';
   $('fl-prog').style.width = '0%';
   $('fl-consigne').textContent = 'Un mot va apparaître très vite puis disparaître : lis-le à voix haute. Pour l\u2019adulte : touche « Lu » s\u2019il est bien lu, « Pas lu » sinon. Le temps d\u2019affichage raccourcit quand ça marche.';
-  $('fl-zone').className = 'flash'; $('fl-zone').textContent = 'Prête ?';
+  $('fl-zone').className = 'flash'; $('fl-zone').textContent = 'On y va ?';
   $('fl-go').hidden = false; $('fl-duo').hidden = true; $('fl-monte').hidden = true;
   montrer('s-flash');
 }
@@ -2260,7 +2420,7 @@ function flashFin(){
   if (f.res.length){ F.seances.push({ date:f.date, rejeu:f.rejeu, niveauDepart:f.niveauDepart, niveauFin:F.niveau, msDebut:f.msDebut, msFin:F.ms, items:f.res, valideMission:valFl }); sauver(); }
   var lus = f.res.filter(function(x){ return x.ok; }).length, rat = f.res.filter(function(x){ return !x.ok; }).map(function(x){ return x.mot; });
   var mot = !f.res.length ? 'Aucun mot lu cette fois.' : 'Temps d\u2019affichage : ' + secondes(f.msDebut) + ' au début, ' + secondes(F.ms) + ' à la fin.';
-  if (F.niveau > f.niveauDepart) mot += ' Tu es montée au niveau ' + F.niveau + ' !';
+  if (F.niveau > f.niveauDepart) mot += ' Nouveau niveau atteint : ' + F.niveau + ' !';
   fl = null;
   bilan({ titre:'Bilan de lecture flash', gros:lus, sur:'lu' + (lus>1?'s':'') + ' sur ' + f.res.length, mot:mot, carteTitre:'À relire',
     liste: rat.map(function(m){ return '<li class="faute">'+esc(m)+'</li>'; }).join(''), legende:'',
@@ -2268,7 +2428,8 @@ function flashFin(){
 }
 
 /* ===== FUSION DES DONNÉES (code identique dans l'appli et sur le serveur) ===== */
-var FUS_LISTES = ['tables.seances','arbre.seances','fractions.seances','lecture.seances','lecture.guidees','lecture.enigmes','flash.seances'];
+var FUS_VERSION = 2;
+var FUS_LISTES = ['tables.seances','arbre.seances','fractions.seances','lecture.seances','lecture.guidees','lecture.enigmes','flash.seances','anglais.seances'];
 var FUS_EXCLUS = { seances:1, guidees:1, enigmes:1, mission:1, supprimes:1 };
 var FUS_CHAMPS_PROFIL = ['nom','classe','avatar','couleur','code'];
 function fusCopie(x){ return x === undefined ? undefined : JSON.parse(JSON.stringify(x)); }
@@ -2315,6 +2476,9 @@ function fusionner(a, b){
     if (ta > tb || (ta === tb && !(c in sb) && (c in sa))) fusPoser(r, c, c in sa ? sa[c] : null);
   });
   r.maj = maj;
+  var profSupp = {};
+  [a.profilsSupprimes || {}, b.profilsSupprimes || {}].forEach(function(s){ Object.keys(s).forEach(function(k){ profSupp[k] = Math.max(profSupp[k] || 0, s[k]); }); });
+  r.profilsSupprimes = profSupp;
   var ids = {};
   Object.keys(a.donnees || {}).concat(Object.keys(b.donnees || {})).forEach(function(id){ ids[id] = 1; });
   r.donnees = r.donnees || {};
@@ -2347,6 +2511,9 @@ function fusionner(a, b){
     m.aFeter = !!mA.aFeter;
     dr.mission = m;
   });
+  r.profils = (r.profils || []).filter(function(p){ return !profSupp[p.id]; });
+  Object.keys(profSupp).forEach(function(id){ delete r.donnees[id]; });
+  Object.keys(r.maj).forEach(function(c){ var q = c.split('.'); if ((q[0] === 'profils' || q[0] === 'donnees') && profSupp[q[1]]) delete r.maj[c]; });
   return r;
 }
 
@@ -2367,7 +2534,7 @@ function appelServeur(url, corps){
     .then(function(r){ return r.json(); });
 }
 function recalculerMissions(){
-  var SOURCES = { tables:['tables.seances'], fractions:['fractions.seances'], flash:['flash.seances'], lecture:['lecture.seances','lecture.guidees'] }, auj = aujourdhui();
+  var SOURCES = { tables:['tables.seances'], fractions:['fractions.seances'], flash:['flash.seances'], lecture:['lecture.seances','lecture.guidees'], anglais:['anglais.seances'] }, auj = aujourdhui();
   DB.profils.forEach(function(p){
     var d = DB.donnees[p.id]; if (!d) return;
     var m = missionDe(d);
@@ -2375,7 +2542,8 @@ function recalculerMissions(){
       if (m.faits[k]) return;
       if (SOURCES[k].some(function(ch){ var q = ch.split('.'); return ((d[q[0]] || {})[q[1]] || []).some(function(s){ return s.valideMission === true && jourDe(s.date) === auj; }); })) m.faits[k] = true;
     });
-    if (ACTIVITES.every(function(a){ return m.faits[a.k]; }) && m.jours.indexOf(auj) < 0) m.jours.push(auj);
+    var acts = activitesDe(d);
+    if (acts.length && acts.every(function(a){ return m.faits[a.k]; }) && m.jours.indexOf(auj) < 0) m.jours.push(auj);
   });
 }
 function normaliserDB(){
@@ -2390,6 +2558,7 @@ function synchroniser(){
   tamponner();
   return appelServeur(sync.url, { action:'sync', cle:sync.cle, etat:JSON.parse(JSON.stringify(DB)) }).then(function(j){
     if (!j || !j.ok) throw new Error(j && j.erreur || 'erreur');
+    sync.serveurAncien = !(j.version >= 2);
     tamponner();
     DB = fusionner(DB, j.etat);
     normaliserDB();
@@ -2413,7 +2582,8 @@ function majEtatSync(etat){
   document.querySelectorAll('.etat-sync').forEach(function(el){ el.hidden = !txt; el.textContent = txt; });
 }
 function rafraichirApresSync(){
-  if (ecranCourant === 's-vue-parents') ouvrirVueParents();
+  if (ecranCourant === 's-bienvenue' && DB.profils.length && DB.codeHash){ dessinerProfils(); montrer('s-profils'); }
+  else if (ecranCourant === 's-vue-parents') ouvrirVueParents();
   else if (ecranCourant === 's-profils') dessinerProfils();
   else if (ecranCourant === 's-progres' && P){ garderScroll = true; ouvrirProgres(ongletProgres); }
   else if (ecranCourant === 's-accueil' && P) ouvrirAccueil();
@@ -2435,6 +2605,7 @@ function majCarteSync(msg, ok){
   var on = !!sync.cle;
   $('sy-off').hidden = on; $('sy-on').hidden = !on;
   if (on) $('sy-appairage').value = codeAppairage();
+  if (on && sync.serveurAncien && msg === undefined){ $('sy-msg').className = 'retour ko'; $('sy-msg').textContent = 'Le serveur Google n\u2019est pas à jour : installe la nouvelle version du script (Gérer les déploiements, Nouvelle version), sinon l\u2019anglais et les suppressions d\u2019enfants ne se synchroniseront pas.'; }
   if (msg !== undefined){ $('sy-msg').className = 'retour ' + (ok ? 'ok' : 'ko'); $('sy-msg').textContent = msg; }
   majEtatSync();
 }
@@ -2491,8 +2662,319 @@ document.addEventListener('visibilitychange', function(){ if (document.visibilit
 window.addEventListener('online', function(){ planifierSynchro(500); });
 setInterval(function(){ if (sync.cle && document.visibilityState !== 'hidden') synchroniser(); }, 5 * 60 * 1000);
 
+/* ================= ANGLAIS : vocabulaire ================= */
+var VOCAB = [];
+function V(t, niv, liste){ liste.forEach(function(x){ VOCAB.push({ t:t, niv:niv, en:x[0], fr:x[1], e:x[2] || null, c:x[3] || null, n:x[4] != null ? x[4] : null }); }); }
+V('couleurs', 1, [['red','rouge',null,'#E53935'],['blue','bleu',null,'#1E88E5'],['green','vert',null,'#43A047'],['yellow','jaune',null,'#FDD835'],['pink','rose',null,'#F48FB1'],['black','noir',null,'#212121']]);
+V('couleurs', 2, [['white','blanc',null,'#FFFFFF'],['orange','orange',null,'#FB8C00'],['purple','violet',null,'#8E24AA'],['brown','marron',null,'#6D4C41']]);
+V('couleurs', 3, [['grey','gris',null,'#9E9E9E']]);
+V('nombres', 1, [['one','un',null,null,1],['two','deux',null,null,2],['three','trois',null,null,3],['four','quatre',null,null,4],['five','cinq',null,null,5],['six','six',null,null,6],['seven','sept',null,null,7],['eight','huit',null,null,8],['nine','neuf',null,null,9],['ten','dix',null,null,10]]);
+V('nombres', 3, [['eleven','onze',null,null,11],['twelve','douze',null,null,12],['thirteen','treize',null,null,13],['fourteen','quatorze',null,null,14],['fifteen','quinze',null,null,15],['sixteen','seize',null,null,16],['seventeen','dix-sept',null,null,17],['eighteen','dix-huit',null,null,18],['nineteen','dix-neuf',null,null,19],['twenty','vingt',null,null,20]]);
+V('animaux', 1, [['cat','chat','🐱'],['dog','chien','🐶'],['rabbit','lapin','🐰'],['fish','poisson','🐟'],['bird','oiseau','🐦'],['cow','vache','🐮'],['pig','cochon','🐷'],['horse','cheval','🐴']]);
+V('animaux', 2, [['duck','canard','🦆'],['sheep','mouton','🐑'],['mouse','souris','🐭'],['frog','grenouille','🐸'],['lion','lion','🦁'],['tiger','tigre','🐯'],['elephant','éléphant','🐘'],['monkey','singe','🐵'],['bear','ours','🐻'],['hippo','hippopotame','🦛']]);
+V('animaux', 3, [['giraffe','girafe','🦒'],['snake','serpent','🐍'],['spider','araignée','🕷️'],['owl','hibou','🦉'],['turtle','tortue','🐢'],['dolphin','dauphin','🐬']]);
+V('nourriture', 1, [['apple','pomme','🍎'],['banana','banane','🍌'],['strawberry','fraise','🍓'],['pear','poire','🍐']]);
+V('nourriture', 2, [['grapes','raisin','🍇'],['lemon','citron','🍋'],['cherry','cerise','🍒'],['carrot','carotte','🥕'],['tomato','tomate','🍅'],['bread','pain','🍞'],['cheese','fromage','🧀'],['egg','œuf','🥚'],['milk','lait','🥛'],['cake','gâteau','🍰'],['ice cream','glace','🍦']]);
+V('nourriture', 3, [['chocolate','chocolat','🍫'],['water','eau','💧']]);
+V('corps', 2, [['eye','œil','👁️'],['ear','oreille','👂'],['nose','nez','👃'],['mouth','bouche','👄'],['hand','main','✋'],['foot','pied','🦶'],['leg','jambe','🦵']]);
+V('corps', 3, [['arm','bras','💪'],['tooth','dent','🦷']]);
+V('vêtements', 2, [['hat','chapeau','🎩'],['shoe','chaussure','👟'],['sock','chaussette','🧦'],['T-shirt','tee-shirt','👕'],['dress','robe','👗']]);
+V('vêtements', 3, [['cap','casquette','🧢'],['trousers','pantalon','👖'],['coat','manteau','🧥'],['scarf','écharpe','🧣'],['gloves','gants','🧤']]);
+V('famille', 2, [['mum','maman','👩'],['dad','papa','👨'],['baby','bébé','👶'],['girl','fille','👧'],['boy','garçon','👦']]);
+V('famille', 3, [['grandma','mamie','👵'],['grandpa','papi','👴']]);
+V('famille', 4, [['sister','sœur'],['brother','frère'],['family','famille']]);
+V('transports', 2, [['car','voiture','🚗'],['bus','bus','🚌'],['bike','vélo','🚲'],['train','train','🚆'],['plane','avion','✈️'],['boat','bateau','⛵']]);
+V('maison', 2, [['house','maison','🏠']]);
+V('maison', 3, [['door','porte','🚪'],['window','fenêtre','🪟'],['bed','lit','🛏️'],['chair','chaise','🪑'],['bath','baignoire','🛁'],['key','clé','🔑']]);
+V('école', 3, [['book','livre','📕'],['pencil','crayon','✏️'],['pen','stylo','🖊️'],['ruler','règle','📏'],['scissors','ciseaux','✂️'],['schoolbag','cartable','🎒'],['computer','ordinateur','💻']]);
+V('école', 4, [['teacher','maître, maîtresse'],['classroom','salle de classe'],['homework','devoirs']]);
+V('météo', 3, [['sun','soleil','☀️'],['rain','pluie','🌧️'],['snow','neige','❄️'],['cloud','nuage','☁️'],['wind','vent','💨'],['rainbow','arc-en-ciel','🌈']]);
+V('émotions', 3, [['happy','content','😀'],['sad','triste','😢'],['angry','en colère','😠'],['tired','fatigué','😴'],['scared','effrayé','😨']]);
+V('jours', 4, [['Monday','lundi'],['Tuesday','mardi'],['Wednesday','mercredi'],['Thursday','jeudi'],['Friday','vendredi'],['Saturday','samedi'],['Sunday','dimanche']]);
+V('mois', 4, [['January','janvier'],['February','février'],['March','mars'],['April','avril'],['May','mai'],['June','juin'],['July','juillet'],['August','août'],['September','septembre'],['October','octobre'],['November','novembre'],['December','décembre']]);
+var PHRASES = [
+  ['Hello!','Bonjour !'],['Goodbye!','Au revoir !'],['What\u2019s your name?','Comment tu t\u2019appelles ?'],['My name is Tom.','Je m\u2019appelle Tom.'],
+  ['How old are you?','Quel âge as-tu ?'],['I am nine years old.','J\u2019ai neuf ans.'],['How are you?','Comment vas-tu ?'],['I am fine, thank you.','Je vais bien, merci.'],
+  ['I like apples.','J\u2019aime les pommes.'],['I don\u2019t like milk.','Je n\u2019aime pas le lait.'],['I have got a dog.','J\u2019ai un chien.'],['It is sunny today.','Il fait beau aujourd\u2019hui.'],
+  ['It is raining.','Il pleut.'],['The cat is black.','Le chat est noir.'],['Open the door, please.','Ouvre la porte, s\u2019il te plaît.'],['Sit down, please.','Assieds-toi, s\u2019il te plaît.'],
+  ['Where do you live?','Où habites-tu ?'],['I live in France.','J\u2019habite en France.'],['What time is it?','Quelle heure est-il ?'],['Can I have some water, please?','Est-ce que je peux avoir de l\u2019eau, s\u2019il te plaît ?'],
+  ['What colour is it?','De quelle couleur est-ce ?'],['I can swim.','Je sais nager.'],['My favourite colour is blue.','Ma couleur préférée est le bleu.'],['Happy birthday!','Joyeux anniversaire !']
+].map(function(p){ return { en:p[0], fr:p[1], t:'phrases' }; });
+var ANGLAIS_NIV = {
+  1:{ nom:'écoute et images', choix:3, types:['ecoute'] },
+  2:{ nom:'plus de mots à écouter', choix:4, types:['ecoute'] },
+  3:{ nom:'lire les mots', choix:4, types:['ecoute','image-mot','mot-image'] },
+  4:{ nom:'traduire', choix:4, types:['traduction','ecoute-mot','image-mot'] },
+  5:{ nom:'petites phrases', choix:4, types:['phrase','phrase','traduction','ecoute-mot'] }
+};
+var ANGLAIS_MAX = 5;
+var THEMES_FR = { couleurs:'Les couleurs', nombres:'Les nombres', animaux:'Les animaux', nourriture:'La nourriture', corps:'Le corps', 'vêtements':'Les vêtements',
+  famille:'La famille', transports:'Les transports', maison:'La maison', 'école':'L\u2019école', 'météo':'La météo', 'émotions':'Les émotions', jours:'Les jours', mois:'Les mois', phrases:'Les phrases' };
+
+/* ================= FICHE ENFANT ================= */
+var fiche = null;
+function ouvrirFicheEnfant(id, retour){
+  var p = id ? DB.profils.filter(function(x){ return x.id === id; })[0] : null;
+  fiche = { id:id, retour:retour, classe: p ? p.classe : 'CE2', avatar: p ? p.avatar : ANIMAUX[DB.profils.length % ANIMAUX.length] };
+  $('en-titre').textContent = p ? 'Modifier ' + p.nom : 'Nouvel enfant';
+  $('en-nom').value = p ? p.nom : '';
+  $('en-classe').innerHTML = CLASSES.map(function(c){ return '<button data-v="' + c + '">' + c + '</button>'; }).join('');
+  majSegments('en-classe', fiche.classe);
+  grilleAnimaux($('en-animaux'), fiche.avatar);
+  $('en-leg').textContent = p ? 'Changer de classe ne modifie pas les niveaux déjà atteints : tu peux les régler dans ses réglages.' : 'La classe règle les exercices proposés et les niveaux de départ.';
+  $('en-msg').textContent = '';
+  $('en-suppr').hidden = !p;
+  montrer('s-enfant');
+  if (!p) $('en-nom').focus();
+}
+$('en-classe').addEventListener('click', function(e){ var b = e.target.closest('button'); if (!b) return; fiche.classe = b.dataset.v; majSegments('en-classe', fiche.classe); });
+$('en-animaux').addEventListener('click', function(e){ var b = e.target.closest('[data-a]'); if (!b) return; fiche.avatar = b.dataset.a; grilleAnimaux($('en-animaux'), fiche.avatar); });
+$('en-annuler').addEventListener('click', function(){ fiche.retour(); });
+$('en-ok').addEventListener('click', function(){
+  var nom = $('en-nom').value.trim().slice(0, 20);
+  if (!nom){ $('en-msg').textContent = 'Écris un prénom ou un surnom.'; return; }
+  if (fiche.id){
+    var p = DB.profils.filter(function(x){ return x.id === fiche.id; })[0];
+    p.nom = nom; p.classe = fiche.classe; p.avatar = fiche.avatar;
+  } else {
+    var id = 'p' + Math.random().toString(36).slice(2, 10), c = fiche.classe;
+    DB.profils.push({ id:id, nom:nom, classe:c, avatar:fiche.avatar, couleur:COULEURS_PROFIL[DB.profils.length % COULEURS_PROFIL.length] });
+    DB.donnees[id] = vide(nivDef('arbre', c), nivDef('fractions', c));
+    completer(DB.donnees[id], c);
+  }
+  sauver(); fiche.retour();
+});
+$('en-suppr').addEventListener('click', function(){
+  var p = DB.profils.filter(function(x){ return x.id === fiche.id; })[0];
+  confirmer($('en-suppr'), 'Touche encore pour supprimer ' + esc(p.nom) + ' définitivement', function(){
+    DB.profilsSupprimes = DB.profilsSupprimes || {}; DB.profilsSupprimes[p.id] = Date.now();
+    DB.profils = DB.profils.filter(function(x){ return x.id !== p.id; }); delete DB.donnees[p.id];
+    if (P === p.id) P = null;
+    sauver();
+    if (!DB.profils.length){ ouvrirBienvenue(); return; }
+    fiche.retour();
+  });
+});
+$('vp-ajouter').addEventListener('click', function(){ ouvrirFicheEnfant(null, ouvrirVueParents); });
+
+/* ================= BIENVENUE ================= */
+function ouvrirBienvenue(){
+  $('bv-liste').innerHTML = DB.profils.map(function(p){ return '<li>' + p.avatar + ' ' + esc(p.nom) + ' <small>' + p.classe + '</small></li>'; }).join('') || '<li><small>Aucun enfant pour l\u2019instant.</small></li>';
+  $('bv-go').disabled = !DB.profils.length; $('bv-go').style.opacity = DB.profils.length ? 1 : .5;
+  $('bv-go').textContent = DB.codeHash ? 'Commencer' : 'Choisir le code et commencer';
+  montrer('s-bienvenue');
+}
+$('bv-ajouter').addEventListener('click', function(){ ouvrirFicheEnfant(null, ouvrirBienvenue); });
+$('bv-go').addEventListener('click', function(){
+  if (!DB.profils.length) return;
+  var fin = function(){ codeOk = false; dessinerProfils(); montrer('s-profils'); };
+  if (DB.codeHash){ fin(); return; }
+  co = { etape:'creer1', saisie:'', premier:'', suite:fin, annuler:ouvrirBienvenue, fautes:0, bloque:0 };
+  afficherCode(); montrer('s-code');
+});
+$('bv-rejoindre').addEventListener('click', function(){
+  var o = lireAppairage($('bv-code').value), msg = $('bv-msg');
+  if (!o){ msg.className = 'retour ko'; msg.textContent = 'Ce code d\u2019appairage n\u2019est pas valide. Il commence par EM1.'; return; }
+  msg.className = 'retour ok'; msg.textContent = 'Connexion au serveur…';
+  appelServeur(o.u, { action:'lire', cle:o.k }).then(function(j){
+    if (!j || !j.ok) throw new Error('reponse');
+    if (!j.etat){ msg.className = 'retour ko'; msg.textContent = 'Aucune donnée trouvée pour ce code.'; return; }
+    DB = j.etat; normaliserDB();
+    try { localStorage.setItem(CLE, JSON.stringify(DB)); } catch(e){}
+    sync = { url:o.u, cle:o.k, ombre:fusScalaires(DB), derniere:Date.now(), serveurAncien: !(j.version >= 2) }; sauverSync();
+    syncEtat = 'ok'; majEtatSync();
+    dessinerProfils(); montrer('s-profils');
+  }).catch(function(){ msg.className = 'retour ko'; msg.textContent = 'Impossible de joindre le serveur. Vérifie la connexion internet.'; });
+});
+
+/* ================= ANGLAIS : voix ================= */
+var voixEn = null, voixListe = false;
+function choisirVoix(){
+  if (!window.speechSynthesis) return;
+  var v = speechSynthesis.getVoices() || [];
+  voixListe = v.length > 0;
+  voixEn = v.filter(function(x){ return /^en[-_]GB/i.test(x.lang); })[0] || v.filter(function(x){ return /^en[-_]US/i.test(x.lang); })[0] || v.filter(function(x){ return /^en/i.test(x.lang); })[0] || null;
+}
+choisirVoix();
+if (window.speechSynthesis && 'onvoiceschanged' in speechSynthesis) speechSynthesis.onvoiceschanged = choisirVoix;
+function dire(txt, lent){
+  if (!window.speechSynthesis || !txt) return;
+  try {
+    speechSynthesis.cancel();
+    var u = new SpeechSynthesisUtterance(txt);
+    u.lang = voixEn ? voixEn.lang : 'en-GB'; if (voixEn) u.voice = voixEn;
+    u.rate = lent ? 0.6 : 0.85;
+    speechSynthesis.speak(u);
+  } catch(e){}
+}
+function avertirVoix(){
+  var el = $('an-voix');
+  if (!window.speechSynthesis){ el.hidden = false; el.textContent = 'Ce navigateur ne sait pas prononcer les mots. Essaie avec Safari (iPad) ou Chrome (Android).'; return; }
+  choisirVoix();
+  el.hidden = !(voixListe && !voixEn);
+  el.textContent = 'Aucune voix anglaise trouvée sur cet appareil. Sur iPad : Réglages, Accessibilité, Contenu énoncé, Voix, puis ajoute une voix anglaise.';
+}
+
+/* ================= ANGLAIS : menu et imagier ================= */
+function ouvrirAnglais(){
+  $('an-sub').textContent = 'Niveau ' + D().anglais.niveau + ' : ' + ANGLAIS_NIV[D().anglais.niveau].nom;
+  avertirVoix(); montrer('s-anglais-menu');
+}
+$('an-jouer').addEventListener('click', function(){ anglaisLancer(); });
+var imTheme = null;
+function themesImagier(){
+  var niv = Math.min(D().anglais.niveau, 4), vus = [];
+  VOCAB.forEach(function(v){ if (v.niv <= Math.max(niv, 2) && (v.e || v.c || v.n != null) && vus.indexOf(v.t) < 0) vus.push(v.t); });
+  return vus;
+}
+function ouvrirImagier(){
+  var th = themesImagier(); if (th.indexOf(imTheme) < 0) imTheme = th[0];
+  if (D().anglais.imMots === undefined) D().anglais.imMots = ['GS','CP'].indexOf(prof().classe) < 0;
+  majSegments('im-mots', D().anglais.imMots ? 'oui' : 'non');
+  $('im-themes').innerHTML = th.map(function(t){ return '<button data-t="' + t + '" aria-pressed="' + (t === imTheme) + '">' + THEMES_FR[t] + '</button>'; }).join('');
+  var niv = Math.max(Math.min(D().anglais.niveau, 4), 2);
+  $('im-grille').innerHTML = VOCAB.filter(function(v){ return v.t === imTheme && v.niv <= niv && (v.e || v.c || v.n != null); }).map(function(v){
+    return '<button data-en="' + esc(v.en) + '">' + imageEn(v) + (D().anglais.imMots ? '<b>' + esc(v.en) + '</b><small>' + esc(v.fr) + '</small>' : '') + '</button>';
+  }).join('');
+  montrer('s-imagier');
+}
+$('an-imagier-btn').addEventListener('click', ouvrirImagier);
+$('im-retour').addEventListener('click', ouvrirAnglais);
+$('im-themes').addEventListener('click', function(e){ var b = e.target.closest('[data-t]'); if (!b) return; imTheme = b.dataset.t; ouvrirImagier(); });
+$('im-mots').addEventListener('click', function(e){ var b = e.target.closest('button'); if (!b) return; D().anglais.imMots = b.dataset.v === 'oui'; sauver(); ouvrirImagier(); });
+$('im-grille').addEventListener('click', function(e){ var b = e.target.closest('[data-en]'); if (b) dire(b.dataset.en); });
+
+/* ================= ANGLAIS : exercices ================= */
+function imageEn(v){
+  if (v.e) return '<span class="en-emo">' + v.e + '</span>';
+  if (v.c) return '<span class="en-pastille" style="background:' + v.c + '"></span>';
+  if (v.n != null) return '<span class="en-chiffre">' + v.n + '</span>';
+  return '';
+}
+function aImage(v){ return !!(v.e || v.c || v.n != null); }
+function poolAnglais(niv, avecImage){
+  var n = Math.min(niv, 4);
+  return VOCAB.filter(function(v){ return v.niv <= n && (!avecImage || aImage(v)); });
+}
+function distracteurs(bon, pool, nb, parImage){
+  var memeTheme = melanger(pool.filter(function(v){ return v.t === bon.t && v.en !== bon.en; }));
+  var autres = melanger(pool.filter(function(v){ return v.t !== bon.t && v.en !== bon.en; }));
+  var res = [];
+  memeTheme.concat(autres).forEach(function(v){
+    if (res.length >= nb) return;
+    if (res.some(function(x){ return x.en === v.en || (parImage && imageEn(x) === imageEn(v)) || x.fr === v.fr; })) return;
+    if (v.fr === bon.fr || (parImage && imageEn(v) === imageEn(bon))) return;
+    res.push(v);
+  });
+  return res;
+}
+var jeuEn = null;
+function anglaisLancer(){
+  var A = D().anglais;
+  jeuEn = { niveau:A.niveau, niveauDepart:A.niveau, pos:0, total:10, items:[], suiteOk:0, suiteKo:0, date:new Date().toISOString(), deja:[] };
+  montrer('s-anglais');
+  anglaisQuestion();
+}
+function anglaisQuestion(){
+  var j = jeuEn, cfg = ANGLAIS_NIV[j.niveau], type = pick(cfg.types), nb = cfg.choix - 1, bon, choix, q = {};
+  $('an-titre').innerHTML = 'Anglais <span class="badge">niveau ' + j.niveau + '</span>';
+  $('an-prog').style.width = pct(j.pos, j.total) + '%';
+  $('an-retour').textContent = ''; $('an-retour').className = 'retour';
+  $('an-diag').hidden = true; $('an-monte').hidden = true; $('an-suivant').hidden = true; $('an-voir').hidden = true;
+  $('an-choix').dataset.fini = '0';
+  if (type === 'phrase'){
+    bon = pick(PHRASES.filter(function(x){ return j.deja.indexOf(x.en) < 0; }).length ? PHRASES.filter(function(x){ return j.deja.indexOf(x.en) < 0; }) : PHRASES);
+    choix = melanger([bon].concat(melanger(PHRASES.filter(function(x){ return x.en !== bon.en; })).slice(0, nb)));
+    $('an-consigne').textContent = 'Écoute la phrase. Que veut-elle dire ?';
+    $('an-modele').innerHTML = ''; $('an-modele').hidden = true;
+    $('an-sons').hidden = false; $('an-voir').hidden = false;
+    $('an-choix').className = 'choix en-mots';
+    $('an-choix').innerHTML = choix.map(function(c, i){ return '<button data-i="' + i + '" style="font-size:1.1rem">' + esc(c.fr) + '</button>'; }).join('');
+  } else {
+    var pool = poolAnglais(j.niveau, type !== 'traduction' && type !== 'ecoute-mot');
+    var candidats = pool.filter(function(v){ return j.deja.indexOf(v.en) < 0; });
+    bon = pick(candidats.length ? candidats : pool);
+    choix = melanger([bon].concat(distracteurs(bon, pool, nb, type === 'ecoute' || type === 'mot-image')));
+    var imgChoix = type === 'ecoute' || type === 'mot-image';
+    $('an-choix').className = 'choix' + (imgChoix ? '' : ' en-mots');
+    $('an-choix').innerHTML = choix.map(function(c, i){ return '<button data-i="' + i + '" aria-label="choix ' + (i+1) + '">' + (imgChoix ? imageEn(c) : esc(c.en)) + '</button>'; }).join('');
+    $('an-modele').hidden = false;
+    if (type === 'ecoute'){ $('an-consigne').textContent = 'Écoute et touche la bonne image.'; $('an-modele').innerHTML = ''; $('an-modele').hidden = true; $('an-sons').hidden = false; }
+    else if (type === 'ecoute-mot'){ $('an-consigne').textContent = 'Écoute et touche le bon mot.'; $('an-modele').innerHTML = ''; $('an-modele').hidden = true; $('an-sons').hidden = false; }
+    else if (type === 'image-mot'){ $('an-consigne').textContent = 'Comment dit-on en anglais ?'; $('an-modele').innerHTML = imageEn(bon); $('an-sons').hidden = true; }
+    else if (type === 'mot-image'){ $('an-consigne').textContent = 'Lis le mot et touche la bonne image.'; $('an-modele').innerHTML = '<span class="enq-en">' + esc(bon.en) + '</span>'; $('an-sons').hidden = true; }
+    else { $('an-consigne').textContent = 'Comment dit-on en anglais ?'; $('an-modele').innerHTML = '<span class="enq-en" style="color:var(--citron)">' + esc(bon.fr) + '</span>'; $('an-sons').hidden = true; }
+  }
+  j.deja.push(bon.en);
+  j.courant = { type:type, bon:bon, choix:choix, t0:performance.now() };
+  if (type === 'ecoute' || type === 'ecoute-mot' || type === 'phrase') setTimeout(function(){ if (jeuEn === j) dire(bon.en); }, 250);
+}
+$('an-ecouter').addEventListener('click', function(){ if (jeuEn && jeuEn.courant) dire(jeuEn.courant.bon.en); });
+$('an-lent').addEventListener('click', function(){ if (jeuEn && jeuEn.courant) dire(jeuEn.courant.bon.en, true); });
+$('an-voir').addEventListener('click', function(){ $('an-modele').hidden = false; $('an-modele').innerHTML = '<span class="enq-en" style="font-size:1.6rem">' + esc(jeuEn.courant.bon.en) + '</span>'; $('an-voir').hidden = true; });
+$('an-choix').addEventListener('click', function(e){
+  var b = e.target.closest('[data-i]'); if (!b || !jeuEn || $('an-choix').dataset.fini === '1') return;
+  $('an-choix').dataset.fini = '1';
+  var j = jeuEn, q = j.courant, c = q.choix[+b.dataset.i], ok = c.en === q.bon.en;
+  b.classList.add(ok ? 'ok' : 'ko');
+  if (!ok) $('an-choix').querySelectorAll('[data-i]').forEach(function(x){ if (q.choix[+x.dataset.i].en === q.bon.en) x.classList.add('ok'); });
+  j.items.push({ type:q.type, en:q.bon.en, t:q.bon.t, ok:ok, choisi: ok ? null : c.en, niv:j.niveau });
+  $('an-retour').className = 'retour ' + (ok ? 'ok' : 'ko');
+  $('an-retour').textContent = ok ? pick(['Great!','Well done!','Super !','Bravo !']) : 'Ce n\u2019était pas ça.';
+  if (q.type !== 'phrase') { $('an-diag').hidden = false; $('an-diag').textContent = q.bon.en + ' = ' + q.bon.fr + (ok ? '' : ' (tu as choisi ' + c.en + ' = ' + c.fr + ')'); }
+  else { $('an-diag').hidden = false; $('an-diag').textContent = '« ' + q.bon.en + ' » = ' + q.bon.fr; }
+  dire(q.bon.en);
+  var msg = '';
+  if (ok){ j.suiteOk++; j.suiteKo = 0; if (j.suiteOk >= 4 && j.niveau < ANGLAIS_MAX){ j.niveau++; j.suiteOk = 0; msg = 'Tu passes au niveau ' + j.niveau + ' : ' + ANGLAIS_NIV[j.niveau].nom + ' !'; } }
+  else { j.suiteKo++; j.suiteOk = 0; if (j.suiteKo >= 2 && j.niveau > 1){ j.niveau--; j.suiteKo = 0; msg = 'On revient au niveau ' + j.niveau + ' pour s\u2019entraîner.'; } }
+  if (msg){ $('an-monte').hidden = false; $('an-monte').textContent = msg; D().anglais.niveau = j.niveau; sauver(); }
+  var suite = function(){ if (jeuEn !== j) return; j.pos++; if (j.pos < j.total) anglaisQuestion(); else { j.complet = true; anglaisFin(); } };
+  if (ok && !msg) minuteurSuivant = setTimeout(suite, 1500);
+  else { $('an-suivant').hidden = false; $('an-suivant').onclick = suite; }
+});
+$('an-stop').addEventListener('click', function(){ clearTimeout(minuteurSuivant); anglaisFin(); });
+function anglaisFin(){
+  var j = jeuEn; if (!j) return; jeuEn = null;
+  try { if (window.speechSynthesis) speechSynthesis.cancel(); } catch(e){}
+  var items = j.items, justes = items.filter(function(x){ return x.ok; }).length, pctA = pct(justes, items.length), val = false;
+  if (j.complet) val = tenterEtape('anglais', pctA >= seuil('anglais'), 'Étape « Anglais » pas encore validée : ' + pctA + ' % de bonnes réponses, il en faut ' + seuil('anglais') + ' %.');
+  if (items.length){
+    D().anglais.niveau = j.niveau;
+    D().anglais.seances.push({ date:j.date, niveauDepart:j.niveauDepart, niveauFin:j.niveau, items:items, valideMission:val });
+    sauver();
+  }
+  var mot = !items.length ? 'Aucun exercice fait cette fois.' : justes === items.length ? 'Perfect! Sans faute !' : justes >= items.length * 0.7 ? 'Très bien, well done!' : 'On continue, ça va venir.';
+  if (items.length && j.niveau !== j.niveauDepart) mot += j.niveau > j.niveauDepart ? ' Nouveau niveau atteint : ' + j.niveau + '.' : ' Tu reprends au niveau ' + j.niveau + ' la prochaine fois.';
+  var rates = items.filter(function(x){ return !x.ok; });
+  bilan({ titre:'Bilan d\u2019anglais', gros:justes, sur:'juste' + (justes > 1 ? 's' : '') + ' sur ' + items.length, mot:mot, carteTitre:'Mots à revoir',
+    liste: rates.map(function(x){ var v = VOCAB.filter(function(y){ return y.en === x.en; })[0] || PHRASES.filter(function(y){ return y.en === x.en; })[0];
+      return '<li class="faute">' + esc(x.en) + (v ? ' <small>' + esc(v.fr) + '</small>' : '') + '</li>'; }).join(''), legende:'',
+    erreurs:null, rejouer:anglaisLancer, onglet:'anglais' });
+}
+function progresAnglais(){
+  var A = D().anglais, S = A.seances, h = '';
+  h += carte('Niveau actuel : ' + A.niveau, '<p class="legende" style="font-size:1.05rem">' + ANGLAIS_NIV[A.niveau].nom + '</p>',
+    'Le niveau monte après 4 réponses justes d\u2019affilée et redescend après 2 erreurs d\u2019affilée.');
+  if (!S.length) return h + carte('Pas encore de séance', '<p class="legende">Fais une première série pour voir tes progrès ici.</p>');
+  var items = []; S.forEach(function(s){ items = items.concat(s.items); });
+  var vals = S.slice(-20).map(function(s){ return pct(s.items.filter(function(x){ return x.ok; }).length, s.items.length); });
+  if (vals.length >= 2) h += carte('Séance après séance', courbe(vals, 100, function(v){ return v + '%'; }), 'Pourcentage de bonnes réponses.');
+  var parT = {}; items.forEach(function(x){ var o = parT[x.t] || (parT[x.t] = { n:0, ok:0 }); o.n++; if (x.ok) o.ok++; });
+  h += carte('Réussite par thème', Object.keys(parT).sort(function(a, b){ return parT[b].n - parT[a].n; }).map(function(t){ var o = parT[t], p = pct(o.ok, o.n); return jauge(THEMES_FR[t] || t, p, p + '% · ' + o.n); }).join(''));
+  var types = { ecoute:'Écouter et trouver l\u2019image', 'ecoute-mot':'Écouter et trouver le mot', 'image-mot':'Lire : image vers mot', 'mot-image':'Lire : mot vers image', traduction:'Traduire du français', phrase:'Comprendre une phrase' };
+  h += carte('Réussite par type d\u2019exercice', Object.keys(types).map(function(t){ var l = items.filter(function(x){ return x.type === t; }); if (!l.length) return ''; var p = pct(l.filter(function(x){ return x.ok; }).length, l.length); return jauge(types[t], p, p + '% · ' + l.length); }).join(''));
+  var rat = {}; items.forEach(function(x){ if (!x.ok) rat[x.en] = (rat[x.en] || 0) + 1; });
+  var rk = Object.keys(rat).sort(function(a, b){ return rat[b] - rat[a]; }).slice(0, 15);
+  if (rk.length) h += carte('Mots à revoir', '<div class="puces">' + rk.map(function(m){ var v = VOCAB.filter(function(y){ return y.en === m; })[0]; return '<span class="fait r" style="font-size:1.05rem">' + esc(m) + (v ? ' · ' + esc(v.fr) : '') + (rat[m] > 1 ? ' ×' + rat[m] : '') + '</span>'; }).join('') + '</div>');
+  var conf = {}; items.forEach(function(x){ if (!x.ok && x.choisi && x.type !== 'phrase'){ var k = x.en + ' ↔ ' + x.choisi; conf[k] = (conf[k] || 0) + 1; } });
+  var ck = Object.keys(conf).sort(function(a, b){ return conf[b] - conf[a]; }).slice(0, 8);
+  if (ck.length) h += carte('Confusions fréquentes', '<ul>' + ck.map(function(k){ return '<li>' + esc(k) + (conf[k] > 1 ? ' <small>' + conf[k] + ' fois</small>' : '') + '</li>'; }).join('') + '</ul>', 'Le mot demandé, puis celui qui a été choisi à la place.');
+  return h;
+}
+
 /* ================= démarrage ================= */
 dessinerProfils();
+if (!DB.profils.length) ouvrirBienvenue();
 majEtatSync();
 if (sync.cle) synchroniser();
 /* PWA : copie hors ligne et stockage persistant */
