@@ -812,7 +812,7 @@ function modulesClasse(c){ return MODULES_CLASSE[c] || MODULES_CLASSE.CE2; }
 var NIV_DEF = { arbre:{ CE1:1, CE2:1, CM1:3, CM2:4 }, fractions:{ CE1:1, CE2:1, CM1:2, CM2:3 }, flash:{ CP:1, CE1:1, CE2:1, CM1:2, CM2:3 }, anglais:{ GS:1, CP:1, CE1:2, CE2:3, CM1:4, CM2:4 }, maternelle:{ GS:1, CP:3 } };
 function nivDef(m, c){ return NIV_DEF[m][c] || 1; }
 var ANIMAUX = ['🦛','🐶','🐱','🐰','🐼','🦊','🐨','🐯','🦁','🐵','🐘','🪿','🐬','🐢','🦄','🐸','🦉'];
-var APP_VERSION = '3.2.10';
+var APP_VERSION = '3.3.0';
 var AVATARS_DESSINES = {
   '🦛': '<svg class="ava-svg" viewBox="-66 -66 132 132" aria-hidden="true"><circle cx="-38" cy="-43" r="13" fill="#9C8FC9"/><circle cx="-38" cy="-43" r="6" fill="#F2A7C3"/><circle cx="38" cy="-43" r="13" fill="#9C8FC9"/><circle cx="38" cy="-43" r="6" fill="#F2A7C3"/><ellipse cx="0" cy="-15" rx="48" ry="40" fill="#9C8FC9"/><ellipse cx="0" cy="23" rx="58" ry="36" fill="#BCB2E3"/><circle cx="-20" cy="-25" r="11" fill="#FFFFFF"/><circle cx="-18" cy="-23" r="5.5" fill="#2E2650"/><circle cx="20" cy="-25" r="11" fill="#FFFFFF"/><circle cx="18" cy="-23" r="5.5" fill="#2E2650"/><ellipse cx="-20" cy="11" rx="6" ry="8" fill="#5A4E8C"/><ellipse cx="20" cy="11" rx="6" ry="8" fill="#5A4E8C"/><path d="M-26 33 Q0 51 26 33" fill="#5A4E8C" stroke="#5A4E8C" stroke-width="3" stroke-linejoin="round"/><rect x="-12" y="34" width="9" height="9" rx="2" fill="#FFFFFF"/><rect x="3" y="34" width="9" height="9" rx="2" fill="#FFFFFF"/><circle cx="-48" cy="25" r="7" fill="#F2A7C3" opacity="0.7"/><circle cx="48" cy="25" r="7" fill="#F2A7C3" opacity="0.7"/></svg>',
   '🐘': '<svg class="ava-svg" viewBox="-86 -78 172 172" aria-hidden="true"><ellipse cx="-50" cy="-8" rx="34" ry="40" fill="#A7B1BF"/><ellipse cx="-52" cy="-6" rx="20" ry="26" fill="#F2B8CB"/><ellipse cx="50" cy="-8" rx="34" ry="40" fill="#A7B1BF"/><ellipse cx="52" cy="-6" rx="20" ry="26" fill="#F2B8CB"/><ellipse cx="0" cy="-12" rx="40" ry="42" fill="#A7B1BF"/><path d="M0 10 Q-2 44 14 54" fill="none" stroke="#A7B1BF" stroke-width="20" stroke-linecap="round"/><path d="M-7 26 L7 26 M-6 38 L8 38" fill="none" stroke="#7D8796" stroke-width="2.5" stroke-linecap="round"/><circle cx="-15" cy="-20" r="9" fill="#FFFFFF"/><circle cx="-13" cy="-18" r="4.5" fill="#2A2F3A"/><circle cx="15" cy="-20" r="9" fill="#FFFFFF"/><circle cx="13" cy="-18" r="4.5" fill="#2A2F3A"/><circle cx="-28" cy="8" r="6" fill="#F2A7C3" opacity="0.6"/><circle cx="28" cy="8" r="6" fill="#F2A7C3" opacity="0.6"/></svg>',
@@ -897,6 +897,14 @@ function completer(d, classe){
   var L = d.lecture;
   if (!L.guidees) L.guidees = []; if (L.groupes == null) L.groupes = false; if (!L.mode) L.mode = 'chrono'; if (L.vitesseGuidee === undefined) L.vitesseGuidee = null;
   if (!d.flash) d.flash = { niveau: nivDef('flash', classe), ms:1300, seances:[] };
+  if (!d.flash.seances) d.flash.seances = [];
+  if (!(d.flash.niveau >= 1)) d.flash.niveau = nivDef('flash', classe);
+  if (d.flash.niveau > 6) d.flash.niveau = 6; /* 6 = FLASH_MAX */
+  if (!(d.flash.ms > 0)) d.flash.ms = 1200;
+  if (!d.flash.echelle){ /* v3.3.0 : 6 niveaux ; l'ancien niveau 5 devient le nouveau 5, plus facile */
+    d.flash.echelle = 2;
+    if (d.flash.niveau === 5 && d.flash.ms < 1100) d.flash.ms = 1100;
+  }
   if (!d.anglais) d.anglais = { niveau: nivDef('anglais', classe), seances:[] };
   var nm = nivDef('maternelle', classe);
   if (!d.maternelle) d.maternelle = {};
@@ -2559,10 +2567,11 @@ var FLASH = {
   1:{ nom:'petits mots outils', l:['le','la','les','un','une','des','et','est','il','elle','ils','on','je','nous','vous','dans','sur','sous','avec','pour','par','sans','chez','mais','ou','qui','que','pas','plus','très','tout','tous','bien','aussi','alors','puis','encore','déjà','avant','après','jamais','rien','comme','quand','avoir','être','fait','dit','sont','ont','était','avait','leur','cette','ces','mon','son','aux','du'] },
   2:{ nom:'mots fréquents', l:['beaucoup','toujours','aujourd\u2019hui','maintenant','quelquefois','longtemps','souvent','ensemble','pendant','derrière','devant','dehors','dedans','parce que','peut-être','pourquoi','comment','combien','autour','ensuite','enfin','soudain','femme','monsieur','second','oignon','fille','famille','gentil','oiseau','yeux','cœur','sœur','loin','près','plusieurs','chaque','quelque chose','presque','vraiment','d\u2019abord','tellement','pourtant','depuis','bientôt','hier','demain','matin','soir','maison','enfant'] },
   3:{ nom:'mots de 2 ou 3 syllabes', l:['jardin','fenêtre','voiture','chocolat','papillon','montagne','bicyclette','boulangerie','cuisine','escalier','grenouille','parapluie','tortue','dauphin','éléphant','citrouille','cartable','crayon','histoire','musique','animal','lumière','printemps','automne','journée','soleil','nuage','orage','tempête','château','chemin','rivière','forêt','poisson','champignon','écureuil','hérisson','ordinateur','téléphone','mercredi','dimanche','anniversaire','récréation','maîtresse','camarade','pantalon','chaussure','bibliothèque','dinosaure','hélicoptère'] },
-  4:{ nom:'petits groupes de mots', l:['dans le jardin','tout à coup','il y avait','un petit chat','sur la table','avec son ami','il était une fois','à la maison','le grand arbre','sous le lit','près de l\u2019école','tout le monde','de temps en temps','un beau matin','il fait beau','elle court vite','le chien noir','à côté de','au bord de l\u2019eau','ce soir-là','les deux amis','un peu plus loin','très content','pas du tout','en haut','le lendemain','sans rien dire','au fond du bois','une grosse pomme','dans la cour'] },
-  5:{ nom:'groupes de mots plus longs', l:['au bord de la mer','pendant les grandes vacances','sous la grande table ronde','le lendemain matin très tôt','il ouvre doucement la porte','les enfants jouent dans la cour','au milieu de la nuit','elle regarde par la fenêtre','un gros chien marron aboie','le soleil se couche derrière la colline','tout le monde éclate de rire','nous partons à la montagne','il pleut depuis ce matin','la maîtresse lit une histoire','mon petit frère dort encore','les feuilles tombent en automne','il cherche ses clés partout','elle range ses crayons de couleur','le train arrive à la gare','nous mangeons une tarte aux pommes'] }
+  4:{ nom:'petits groupes de 2 ou 3 mots', l:['dans le jardin','tout à coup','il y avait','un petit chat','sur la table','avec son ami','à la maison','le grand arbre','sous le lit','près de l\u2019école','tout le monde','un beau matin','il fait beau','elle court vite','le chien noir','à côté de','ce soir-là','les deux amis','très content','pas du tout','en haut','le lendemain','sans rien dire','une grosse pomme','dans la cour','il pleut','mon vélo rouge','la nuit tombe','un peu','chez moi','le petit pont','elle chante','sur le toit','au revoir','le vieux loup'] },
+  5:{ nom:'groupes de 3 ou 4 mots', l:['il était une fois','de temps en temps','un peu plus loin','au bord de l\u2019eau','au fond du bois','sur la plage','le chat dort','il ouvre la porte','dans la grande cour','elle lit un livre','un gros chien marron','le train arrive','près de la rivière','sous un parapluie','mon petit frère dort','la maîtresse arrive','il fait très froid','nous allons au parc','une tarte aux pommes','les oiseaux chantent','au milieu du lac','par la fenêtre','le lendemain matin','sur le chemin','les feuilles tombent','il cherche ses clés','dans la forêt sombre','un matin d\u2019hiver','elle rit très fort','le loup a faim'] },
+  6:{ nom:'groupes de mots plus longs', l:['pendant les grandes vacances','sous la grande table ronde','le lendemain matin très tôt','il ouvre doucement la porte','les enfants jouent dans la cour','au milieu de la nuit','elle regarde par la fenêtre','un gros chien marron aboie','le soleil se couche déjà','tout le monde éclate de rire','nous partons à la montagne','il pleut depuis ce matin','la maîtresse lit une histoire','mon petit frère dort encore','les feuilles tombent en automne','il cherche ses clés partout','elle range ses crayons de couleur','le train arrive à la gare','nous mangeons une tarte aux pommes','ma sœur joue avec le chat','le vent souffle très fort','nous rentrons de l\u2019école','il a perdu son cartable'] }
 };
-var FLASH_MAX = 5, fl = null;
+var FLASH_MAX = 6, fl = null; /* si on change FLASH_MAX, changer aussi la limite dans completer() */
 function dureeFlash(mot){
   var n = mot.split(/\s+/).length, L = lettres(mot);
   var f = n > 1 ? 1 + 0.35*(n-1) : 1 + Math.max(0, L-6)*0.05;
@@ -2609,9 +2618,10 @@ function flashNote(ok){
   f.etat = 'note'; $('fl-duo').hidden = true;
   var F = D().flash, mot = f.items[f.pos];
   f.res.push({ mot:mot, ms:f.ms, ok:ok });
-  F.ms = Math.max(300, Math.min(2500, Math.round(F.ms * (ok ? 0.92 : 1.12))));
-  if (ok && F.ms <= 600 && F.niveau < FLASH_MAX && !f.rejeu){
+  F.ms = Math.max(300, Math.min(3000, Math.round(F.ms * (ok ? 0.93 : 1.3)))); /* équilibre vers ~78 % de mots lus */
+  if (ok && F.ms <= 600 && F.niveau < FLASH_MAX && !f.rejeu && F.niveau === f.niveauDepart){ /* une seule montée par série */
     F.niveau++; F.ms = 1200; feteNiveau('🎉 Niveau ' + F.niveau + ' !');
+    f.items = f.items.slice(0, f.pos + 1).concat(melanger(FLASH[F.niveau].l).slice(0, f.items.length - f.pos - 1)); /* la suite de la série passe au nouveau niveau */
     $('fl-monte').hidden = false; $('fl-monte').textContent = 'Tu passes au niveau ' + F.niveau + ' : ' + FLASH[F.niveau].nom + ' !';
     $('fl-titre').innerHTML = 'Lecture flash <span class="badge">niveau ' + F.niveau + '</span>';
   }
@@ -2631,10 +2641,15 @@ function flashFin(){
     if (f.rejeu) valFl = tenterEtape('flash', false, 'Refaire ses mots ratés, c\u2019est très bien, mais pour la mission il faut une série complète.');
     else valFl = tenterEtape('flash', pctL >= seuil('flash'), 'Étape « Lecture flash » pas encore validée : ' + pctL + ' % de mots lus, il en faut ' + seuil('flash') + ' %.');
   }
+  var redescend = false;
+  if (f.complet && !f.rejeu && f.res.length >= 10 && pctL < 50 && F.niveau === f.niveauDepart && F.niveau > 1){
+    F.niveau--; F.ms = 1100; redescend = true;
+  }
   if (f.res.length){ F.seances.push({ date:f.date, rejeu:f.rejeu, niveauDepart:f.niveauDepart, niveauFin:F.niveau, msDebut:f.msDebut, msFin:F.ms, items:f.res, valideMission:valFl }); sauver(); }
   var lus = f.res.filter(function(x){ return x.ok; }).length, rat = f.res.filter(function(x){ return !x.ok; }).map(function(x){ return x.mot; });
   var mot = !f.res.length ? 'Aucun mot lu cette fois.' : 'Temps d\u2019affichage : ' + secondes(f.msDebut) + ' au début, ' + secondes(F.ms) + ' à la fin.';
   if (F.niveau > f.niveauDepart) mot += ' Nouveau niveau atteint : ' + F.niveau + ' !';
+  if (redescend) mot += ' La prochaine fois, on s\u2019entraîne au niveau ' + F.niveau + ' : ' + FLASH[F.niveau].nom + '.';
   fl = null;
   bilan({ titre:'Bilan de lecture flash', gros:lus, sur:'lu' + (lus>1?'s':'') + ' sur ' + f.res.length, mot:mot, carteTitre:'À relire',
     liste: rat.map(function(m){ return '<li class="faute">'+esc(m)+'</li>'; }).join(''), legende:'',

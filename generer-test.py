@@ -1,5 +1,5 @@
 # Génère test/index.html à partir de index.html :
-# clés de stockage à part, bandeau orange, pas de service worker, synchro coupée, bouton « Outils ».
+# clés de stockage à part, bandeau orange fixé en haut, pas de service worker, synchro coupée, bouton « Outils ».
 import sys, pathlib
 src = pathlib.Path(sys.argv[1] if len(sys.argv) > 1 else 'index.html')
 dst = pathlib.Path(sys.argv[2] if len(sys.argv) > 2 else 'test/index.html')
@@ -14,11 +14,11 @@ rep("function appelServeur(url, corps){", "function appelServeur(url, corps){ re
 rep("function planifierSynchro(delai){", "function planifierSynchro(delai){ return;")
 rep("if ('serviceWorker' in navigator && /^https?:$/.test(location.protocol)){", "if (false){")
 rep("<title>", "<title>TEST · ")
-BANDEAU = '''<div id="test-bandeau" style="position:sticky;top:0;z-index:999;background:#FF8A00;color:#1A1740;font-weight:800;padding:6px 10px;display:flex;gap:8px;align-items:center;justify-content:space-between;font-family:inherit">
+BANDEAU = '''<div id="test-bandeau" style="position:fixed;top:0;left:0;right:0;box-sizing:border-box;z-index:999;background:#FF8A00;color:#1A1740;font-weight:800;padding:6px 10px;display:flex;gap:8px;align-items:center;justify-content:space-between;font-family:inherit">
   <span>VERSION DE TEST · données séparées</span>
   <button id="test-outils" style="background:#1A1740;color:#fff;border:0;border-radius:10px;padding:6px 12px;font-weight:800">Outils</button>
 </div>
-<div id="test-panneau" hidden style="position:sticky;top:40px;z-index:999;background:#2B2660;border:3px solid #FF8A00;border-radius:14px;margin:6px;padding:10px;display:grid;gap:8px">
+<div id="test-panneau" hidden style="position:fixed;top:48px;left:0;right:0;max-width:560px;margin:6px auto;z-index:999;background:#2B2660;border:3px solid #FF8A00;border-radius:14px;padding:10px;display:grid;gap:8px">
   <button class="bouton" id="test-demo">Créer 4 enfants d'exemple (code parents 0000)</button>
   <button class="bouton second" id="test-raz">Remettre les démos à zéro</button>
   <button class="bouton second" id="test-tout">Tout effacer</button>
@@ -31,6 +31,9 @@ OUTILS = r'''
 (function(){
   var DEMO = [ ['Lina','GS','🪿'], ['Tom','CP','🐶'], ['Emma','CE2','🦛'], ['Hugo','CM1','🐘'] ];
   var LECT = { CE2:{ t:'ce2-herisson', v:[52,55,54,60,63,61,67,70] }, CM1:{ t:'cm1-phare', v:[84,88,86,91,95,94,101] } };
+  var pt0 = parseFloat(getComputedStyle(document.body).paddingTop) || 0;
+  function caler(){ document.body.style.paddingTop = (pt0 + $('test-bandeau').offsetHeight) + 'px'; }
+  caler(); window.addEventListener('resize', caler);
   function creerDemos(){
     DEMO.forEach(function(x, k){
       var id = 'demo' + k, c = x[1];
