@@ -812,7 +812,7 @@ function modulesClasse(c){ return MODULES_CLASSE[c] || MODULES_CLASSE.CE2; }
 var NIV_DEF = { arbre:{ CE1:1, CE2:1, CM1:3, CM2:4 }, fractions:{ CE1:1, CE2:1, CM1:2, CM2:3 }, flash:{ CP:1, CE1:1, CE2:1, CM1:2, CM2:3 }, anglais:{ GS:1, CP:1, CE1:2, CE2:3, CM1:4, CM2:4 }, maternelle:{ GS:1, CP:3 } };
 function nivDef(m, c){ return NIV_DEF[m][c] || 1; }
 var ANIMAUX = ['🦛','🐶','🐱','🐰','🐼','🦊','🐨','🐯','🦁','🐵','🐘','🪿','🐬','🐢','🦄','🐸','🦉'];
-var APP_VERSION = '3.2.9';
+var APP_VERSION = '3.2.10';
 var AVATARS_DESSINES = {
   '🦛': '<svg class="ava-svg" viewBox="-66 -66 132 132" aria-hidden="true"><circle cx="-38" cy="-43" r="13" fill="#9C8FC9"/><circle cx="-38" cy="-43" r="6" fill="#F2A7C3"/><circle cx="38" cy="-43" r="13" fill="#9C8FC9"/><circle cx="38" cy="-43" r="6" fill="#F2A7C3"/><ellipse cx="0" cy="-15" rx="48" ry="40" fill="#9C8FC9"/><ellipse cx="0" cy="23" rx="58" ry="36" fill="#BCB2E3"/><circle cx="-20" cy="-25" r="11" fill="#FFFFFF"/><circle cx="-18" cy="-23" r="5.5" fill="#2E2650"/><circle cx="20" cy="-25" r="11" fill="#FFFFFF"/><circle cx="18" cy="-23" r="5.5" fill="#2E2650"/><ellipse cx="-20" cy="11" rx="6" ry="8" fill="#5A4E8C"/><ellipse cx="20" cy="11" rx="6" ry="8" fill="#5A4E8C"/><path d="M-26 33 Q0 51 26 33" fill="#5A4E8C" stroke="#5A4E8C" stroke-width="3" stroke-linejoin="round"/><rect x="-12" y="34" width="9" height="9" rx="2" fill="#FFFFFF"/><rect x="3" y="34" width="9" height="9" rx="2" fill="#FFFFFF"/><circle cx="-48" cy="25" r="7" fill="#F2A7C3" opacity="0.7"/><circle cx="48" cy="25" r="7" fill="#F2A7C3" opacity="0.7"/></svg>',
   '🐘': '<svg class="ava-svg" viewBox="-86 -78 172 172" aria-hidden="true"><ellipse cx="-50" cy="-8" rx="34" ry="40" fill="#A7B1BF"/><ellipse cx="-52" cy="-6" rx="20" ry="26" fill="#F2B8CB"/><ellipse cx="50" cy="-8" rx="34" ry="40" fill="#A7B1BF"/><ellipse cx="52" cy="-6" rx="20" ry="26" fill="#F2B8CB"/><ellipse cx="0" cy="-12" rx="40" ry="42" fill="#A7B1BF"/><path d="M0 10 Q-2 44 14 54" fill="none" stroke="#A7B1BF" stroke-width="20" stroke-linecap="round"/><path d="M-7 26 L7 26 M-6 38 L8 38" fill="none" stroke="#7D8796" stroke-width="2.5" stroke-linecap="round"/><circle cx="-15" cy="-20" r="9" fill="#FFFFFF"/><circle cx="-13" cy="-18" r="4.5" fill="#2A2F3A"/><circle cx="15" cy="-20" r="9" fill="#FFFFFF"/><circle cx="13" cy="-18" r="4.5" fill="#2A2F3A"/><circle cx="-28" cy="8" r="6" fill="#F2A7C3" opacity="0.6"/><circle cx="28" cy="8" r="6" fill="#F2A7C3" opacity="0.6"/></svg>',
@@ -1684,14 +1684,23 @@ $('b-progres').addEventListener('click', function(){ ouvrirProgres(ongletBilan);
 function jauge(label, p, detail){
   return '<div class="jauge"><span>'+label+'</span><span class="fond"><i style="width:'+p+'%;background:'+couleurPct(p)+'"></i></span><span>'+detail+'</span></div>';
 }
-function courbe(vals, ymax, etiq){
+function courbe(vals, ymax, etiq, opt){
   if (vals.length < 2) return '';
-  var W = 320, H = 130, g = 30, pts = vals.map(function(v,i){ return [g + i*(W-g-10)/(vals.length-1), H-18 - v/ymax*(H-34)]; });
+  opt = opt || {};
+  var ymin = opt.min || 0, reps = opt.reperes || [], marge = reps.length ? 64 : 0;
+  var W = 320, H = 130, g = 30, x1 = W - 10 - marge;
+  function Y(v){ return H-18 - (v-ymin)/(ymax-ymin)*(H-34); }
+  var pts = vals.map(function(v,i){ return [g + i*(x1-g)/(vals.length-1), Y(Math.min(v, ymax)), v > ymax ? v : null]; });
   var h = '<svg class="courbe" viewBox="0 0 '+W+' '+H+'" role="img" aria-label="courbe de progression">';
-  [0, ymax/2, ymax].forEach(function(v){ var y = H-18 - v/ymax*(H-34);
-    h += '<line x1="'+g+'" x2="'+(W-6)+'" y1="'+y+'" y2="'+y+'" stroke="#3A3579" stroke-width="1"/><text x="'+(g-6)+'" y="'+(y+4)+'" fill="#A9A4E0" font-size="11" text-anchor="end" font-family="inherit">'+etiq(v)+'</text>'; });
+  var grille = opt.graduations || [ymin, (ymin+ymax)/2, ymax];
+  grille.forEach(function(v){ var y = Y(v);
+    h += '<line x1="'+g+'" x2="'+(marge ? x1+4 : W-6)+'" y1="'+y+'" y2="'+y+'" stroke="#3A3579" stroke-width="1"/><text x="'+(g-6)+'" y="'+(y+4)+'" fill="#A9A4E0" font-size="11" text-anchor="end" font-family="inherit">'+etiq(v)+'</text>'; });
+  reps.forEach(function(r){ var y = Y(r.v).toFixed(1);
+    h += '<line x1="'+g+'" x2="'+(x1+4)+'" y1="'+y+'" y2="'+y+'" stroke="'+r.couleur+'" stroke-width="1.5" stroke-dasharray="5 4"/>' +
+      '<text x="'+(x1+8)+'" y="'+(+y+3.5)+'" fill="'+r.couleur+'" font-size="10" font-family="inherit">'+r.nom+'</text>'; });
   h += '<polyline fill="none" stroke="var(--accent)" stroke-width="3" stroke-linejoin="round" points="'+pts.map(function(p){ return p[0].toFixed(1)+','+p[1].toFixed(1); }).join(' ')+'"/>';
-  pts.forEach(function(p){ h += '<circle cx="'+p[0].toFixed(1)+'" cy="'+p[1].toFixed(1)+'" r="4" fill="var(--citron)"/>'; });
+  pts.forEach(function(p){ h += '<circle cx="'+p[0].toFixed(1)+'" cy="'+p[1].toFixed(1)+'" r="4" fill="'+(p[2] ? 'var(--framboise)' : 'var(--citron)')+'"/>' +
+    (p[2] ? '<text x="'+p[0].toFixed(1)+'" y="'+(p[1]-8).toFixed(1)+'" fill="#F0567F" font-size="10" font-weight="700" text-anchor="middle" font-family="inherit">'+etiq(p[2])+' ?</text>' : ''); });
   return h + '</svg>';
 }
 function carte(titre, corps, legende){ return '<div class="carte"><h2>'+titre+'</h2>'+corps+(legende?'<p class="legende">'+legende+'</p>':'')+'</div>'; }
@@ -2136,7 +2145,8 @@ var PROSO = [
   { nom:'Fluide', det:'Lit par groupes de sens et respecte la plupart des points et des virgules.' },
   { nom:'Fluide et expressive', det:'Intonation, ponctuation respectée, voix des personnages.' }
 ];
-var REPERES = { CE2:'environ 70 en début d\u2019année et 90 en fin d\u2019année', CM1:'environ 90 en début d\u2019année et 110 en fin d\u2019année' };
+/* Attendus de fin d'année (Éduscol) : CP 50, CE1 70, CE2 90, CM1 110, CM2 120. Début = attendu de fin de la classe précédente ; milieu = estimé entre les deux. */
+var REPERES = { CE1:[50,60,70], CE2:[70,80,90], CM1:[90,100,110], CM2:[110,115,120] };
 var LETTRE = /[0-9A-Za-zÀ-ÖØ-öø-ÿœŒ]/;
 function jetons(t){ return t.split(/\s+/).filter(Boolean); }
 function estMot(j){ return LETTRE.test(j); }
@@ -2389,13 +2399,26 @@ function progresFlash(){
   if (k.length) h += carte('Lecture flash : mots à revoir', '<div class="puces">' + k.map(function(m){ return '<span class="fait r" style="font-size:1.05rem">'+esc(m)+(c[m]>1?' ×'+c[m]:'')+'</span>'; }).join('') + '</div>');
   return h;
 }
+/* échelle resserrée autour des lectures et des repères, au lieu de partir de 0 */
+function plafondLecture(R){ return Math.max(250, R ? 2 * R[2] : 0); }
+function echelleLecture(vals, R){
+  var ok = vals.filter(function(v){ return v <= plafondLecture(R); }); if (!ok.length) ok = vals;
+  var lo = Math.min.apply(null, ok.concat(R ? [R[0]] : [])), hi = Math.max.apply(null, ok.concat(R ? [R[2]] : []));
+  lo = Math.max(0, lo - 10); hi = hi + 10;
+  var pas = [10, 20, 25, 50, 100, 200].filter(function(p){ return (Math.ceil(hi/p) - Math.floor(lo/p)) <= 5; })[0] || 500;
+  var min = Math.floor(lo/pas)*pas, max = Math.ceil(hi/pas)*pas, grad = [];
+  for (var v = min; v <= max; v += pas) grad.push(v);
+  return { min:min, max:max, grad:grad };
+}
 function progresChrono(){
   var S = D().lecture.seances, h = '';
   if (!S.length) return '';
   var vals = S.slice(-20).map(function(s){ return s.mclm; });
-  var ymax = Math.max(120, Math.ceil((Math.max.apply(null, vals) + 10) / 20) * 20);
-  var rep = REPERES[prof().classe] ? 'Repères indicatifs en ' + prof().classe + ' : ' + REPERES[prof().classe] + '. Ce sont des ordres de grandeur qui varient selon les textes et les études.' : '';
-  h += carte('Mots correctement lus par minute', (vals.length >= 2 ? courbe(vals, ymax, function(v){ return Math.round(v); }) : '<p class="score"><span class="gros">'+vals[0]+'</span></p>'), rep);
+  var R = REPERES[prof().classe], ech = echelleLecture(vals, R);
+  var reps = R ? [ { v:R[0], nom:'début ' + R[0], couleur:'#A9A4E0' }, { v:R[1], nom:'milieu ' + R[1], couleur:'#6CA8FF' }, { v:R[2], nom:'fin ' + R[2], couleur:'#FFC94A' } ] : [];
+  var rep = R ? 'Pointillés : niveaux attendus en ' + prof().classe + ', en mots correctement lus par minute (' + R[0] + ' en début d\u2019année, ' + R[1] + ' en milieu d\u2019année, ' + R[2] + ' en fin d\u2019année). Le début et la fin viennent des repères de l\u2019Éducation nationale ; le milieu est estimé entre les deux. Ce sont des moyennes, qui varient selon les textes.' : '';
+  if (vals.some(function(v){ return v > ech.max; })) rep += (rep ? ' ' : '') + 'Le point rouge, hors échelle, est une lecture invraisemblable (sans doute le bouton de fin touché trop tôt) : tu peux la supprimer dans « Voir et gérer les séances ».';
+  h += carte('Mots correctement lus par minute', (vals.length >= 2 ? courbe(vals, ech.max, function(v){ return Math.round(v); }, { min:ech.min, graduations:ech.grad, reperes:reps }) : '<p class="score"><span class="gros">'+vals[0]+'</span></p>'), rep);
   var parTexte = {};
   S.forEach(function(s){ (parTexte[s.texte] = parTexte[s.texte] || []).push(s); });
   h += carte('Texte par texte', '<ul>'+Object.keys(parTexte).map(function(id){ var l = parTexte[id];
